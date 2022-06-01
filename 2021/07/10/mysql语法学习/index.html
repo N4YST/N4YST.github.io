@@ -15,30 +15,30 @@ document.addEventListener("pjax:success", initScrollReveal);
 <meta property="og:site_name" content="Nayst-blog">
 <meta property="og:description" content="前言本篇博客是学习mysql时的一些笔记，主要是SQL语言的学习，例表来源于尚硅谷，在B站上有视频资料可以学习。 进阶1-基础查询 语法：   SELECT 	查询列表 FROM 	表名;    类似于System.out.println(“”);  特点： 查询列表可以是：字段、常量、表达式、函数   查单个字段SELECT 	last_name  FROM 	employees;  查多个字段">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105013183.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105138707.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105251284.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105634508.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105838516.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105932452.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711110242622.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711110723275.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711110949281.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111137125.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111308203.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111627538.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111711002.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111739581.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711132001916.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711133058188.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210712085620802.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210712091302987.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105013183.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105138707.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105251284.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105634508.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105838516.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105932452.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711110242622.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711110723275.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711110949281.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111137125.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111308203.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111627538.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111711002.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111739581.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711132001916.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711133058188.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210712085620802.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210712091302987.png">
 <meta property="article:published_time" content="2021-07-10T02:08:51.000Z">
 <meta property="article:modified_time" content="2022-04-21T10:23:01.679Z">
 <meta property="article:author" content="Nayst">
 <meta property="article:tag" content="笔记">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105013183.png"><script>(function() {
+<meta name="twitter:image" content="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105013183.png"><script>(function() {
   const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
   const setting = localStorage.getItem('darken-mode') || 'auto'
   if (setting === 'dark' || (prefersDark && setting !== 'light'))
@@ -221,7 +221,7 @@ ORDER BY
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">SELECT LENGTH(&#39;nayst&#39;);
 SELECT LENGTH(&#39;nayst的小站&#39;) AS out_put;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105013183.png" alt="image-20210711105013183" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105013183.png" alt="image-20210711105013183" loading="lazy"></p>
 <h3 id="concat"><a href="#concat" class="headerlink" title="concat"></a>concat</h3><p>拼接字符串</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">SELECT
 	CONCAT(last_name,&#39;_&#39;,firstname) AS 姓名 
@@ -235,56 +235,56 @@ FROM
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">SELECT SUBSTR(&#39;nayst is a handsome man&#39;, 12) AS out_put;
 SELECT SUBSTR(&#39;nayst is a handsome man&#39;, 12, 8) AS out_put;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105138707.png" alt="image-20210711105138707" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105138707.png" alt="image-20210711105138707" loading="lazy"></p>
 <h3 id="instr"><a href="#instr" class="headerlink" title="instr"></a>instr</h3><p>返回子串第一次出现的索引，找不到返回0</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">SELECT INSTR(&#39;nayst is a handsome man&#39;,&#39;an&#39;) AS out_put;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105251284.png" alt="image-20210711105251284" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105251284.png" alt="image-20210711105251284" loading="lazy"></p>
 <h3 id="trim"><a href="#trim" class="headerlink" title="trim"></a>trim</h3><p>删除字符串前后的指定内容，未规定时默认删除空格</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">SELECT TRIM(&#39;aa&#39; FROM &#39;aaaaaaanaystaaa&#39;) AS out_put;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105634508.png" alt="image-20210711105634508" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105634508.png" alt="image-20210711105634508" loading="lazy"></p>
 <h3 id="lpad、rpad"><a href="#lpad、rpad" class="headerlink" title="lpad、rpad"></a>lpad、rpad</h3><p>用指定字符从左边（右边）开始填充至指定长度</p>
 <p>注意，当指定长度小于字符长度时会产生截断</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">SELECT LPAD(&#39;nayst&#39;,10,&#39;-&#39;) AS out_put;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105838516.png" alt="image-20210711105838516" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105838516.png" alt="image-20210711105838516" loading="lazy"></p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">SELECT LPAD(&#39;nayst&#39;,3,&#39;-&#39;) AS out_put;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105932452.png" alt="image-20210711105932452" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105932452.png" alt="image-20210711105932452" loading="lazy"></p>
 <h3 id="replace"><a href="#replace" class="headerlink" title="replace"></a>replace</h3><p>替换指定字符</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">SELECT REPLACE(&#39;nayst is a handsome man&#39;,&#39;handsome&#39;,&#39;nice&#39;) AS out_put;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711110242622.png" alt="image-20210711110242622" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711110242622.png" alt="image-20210711110242622" loading="lazy"></p>
 <h2 id="数学函数"><a href="#数学函数" class="headerlink" title="数学函数"></a>数学函数</h2><h3 id="round"><a href="#round" class="headerlink" title="round"></a>round</h3><p>对指定数值的绝对值四舍五入，可以规定四舍五入到第几位，未规定时默认整数位</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">SELECT ROUND(-1.567,2);<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711110723275.png" alt="image-20210711110723275" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711110723275.png" alt="image-20210711110723275" loading="lazy"></p>
 <h3 id="ceil、floor"><a href="#ceil、floor" class="headerlink" title="ceil、floor"></a>ceil、floor</h3><p>向上（下）取整，返回该&gt;&#x3D;（&lt;&#x3D;）该参数的最小整数</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">SELECT CEIL(-1.02) out_put;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711110949281.png" alt="image-20210711110949281" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711110949281.png" alt="image-20210711110949281" loading="lazy"></p>
 <h3 id="truncate"><a href="#truncate" class="headerlink" title="truncate"></a>truncate</h3><p>从小数点后指定位数截断，即保留指定位数的小数</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">SELECT TRUNCATE(1.12345,3);<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111137125.png" alt="image-20210711111137125" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111137125.png" alt="image-20210711111137125" loading="lazy"></p>
 <h3 id="mod"><a href="#mod" class="headerlink" title="mod"></a>mod</h3><p>取余，等价于%</p>
 <p>遇到负数时可以参考这个公式：MOD(a,b)&#x3D;a-a&#x2F;b*b</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">SELECT MOD(10,3);<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111308203.png" alt="image-20210711111308203" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111308203.png" alt="image-20210711111308203" loading="lazy"></p>
 <h2 id="日期函数"><a href="#日期函数" class="headerlink" title="日期函数"></a>日期函数</h2><h3 id="now"><a href="#now" class="headerlink" title="now"></a>now</h3><p>返回当前日期+时间</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">SELECT NOW();<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111627538.png" alt="image-20210711111627538" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111627538.png" alt="image-20210711111627538" loading="lazy"></p>
 <h3 id="curdate"><a href="#curdate" class="headerlink" title="curdate"></a>curdate</h3><p>只返回当前的日期</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">SELECT CURDATE();<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111711002.png" alt="image-20210711111711002" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111711002.png" alt="image-20210711111711002" loading="lazy"></p>
 <h3 id="curtime"><a href="#curtime" class="headerlink" title="curtime"></a>curtime</h3><p>只返回当前的时间</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">SELECT CURTIME();<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111739581.png" alt="image-20210711111739581" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111739581.png" alt="image-20210711111739581" loading="lazy"></p>
 <h3 id="获取指定的部分"><a href="#获取指定的部分" class="headerlink" title="获取指定的部分"></a>获取指定的部分</h3><p> 获取日期中的年、月、日、小时、分钟、秒</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">SELECT YEAR(NOW()) 年;
 SELECT YEAR(&#39;2021-7-11&#39;) 年;
@@ -292,10 +292,10 @@ SELECT YEAR(hiredate) 年 FROM employees;
 SELECT MONTH(NOW()) 月;
 SELECT MONTHNAME(NOW()) &#39;month&#39;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711132001916.png" alt="image-20210711132001916" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711132001916.png" alt="image-20210711132001916" loading="lazy"></p>
 <h2 id="流程控制函数"><a href="#流程控制函数" class="headerlink" title="流程控制函数"></a>流程控制函数</h2><h3 id="if"><a href="#if" class="headerlink" title="if"></a>if</h3><pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">SELECT IF(10&lt;5,&#39;true&#39;,&#39;false&#39;) out_put;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711133058188.png" alt="image-20210711133058188" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711133058188.png" alt="image-20210711133058188" loading="lazy"></p>
 <h3 id="case"><a href="#case" class="headerlink" title="case"></a>case</h3><pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">&#x2F;*查询员工的工资
 部门号&#x3D;30，显示的工资为原工资1.1倍
 部门号&#x3D;40，显示的工资为原工资1.2倍
@@ -500,7 +500,7 @@ ORDER BY
 </ul>
 </li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210712085620802.png" alt="image-20210712085620802" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210712085620802.png" alt="image-20210712085620802" loading="lazy"></p>
 <h2 id="sql92语法"><a href="#sql92语法" class="headerlink" title="sql92语法"></a>sql92语法</h2><h3 id="等值连接"><a href="#等值连接" class="headerlink" title="等值连接"></a>等值连接</h3><ul>
 <li>特点：需要查询的内容需要访问其他表<ul>
 <li>可以添加筛选</li>
@@ -528,7 +528,7 @@ FROM
 WHERE
 	e.&#96;job_id&#96; &#x3D; j.&#96;job_id&#96;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h3 id="非等值连接"><a href="#非等值连接" class="headerlink" title="非等值连接"></a>非等值连接</h3><p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210712091302987.png" alt="image-20210712091302987" loading="lazy"></p>
+<h3 id="非等值连接"><a href="#非等值连接" class="headerlink" title="非等值连接"></a>非等值连接</h3><p><img src="http://n4yst.github.io/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210712091302987.png" alt="image-20210712091302987" loading="lazy"></p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">#查询员工的工资和工资筛选级别为A
 SELECT
 	salary,

@@ -15,19 +15,19 @@ document.addEventListener("pjax:success", initScrollReveal);
 <meta property="og:site_name" content="Nayst-blog">
 <meta property="og:description" content="前言当字母和数字都被过滤时怎样构造webshell呢？具体代码如下 &lt;?php 	if(!preg_match(&#39;&#x2F;[a-z0-9]&#x2F;is&#39;,$_GET[&#39;shell&#39;])) &amp;#123;   	eval($_GET[&#39;shell&#39;]); 	&amp;#125;  首先，思路就是通过非字母数字的字符经过各种变换构造出任意字母，然后拼接出函数执行 异或 原理  在PHP中，两个变量的值进行异或时，会先">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210716153048773.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210716184246526.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210716152111561.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210717094255431.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210717095950862.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210717103828236.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210716153048773.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210716184246526.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210716152111561.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210717094255431.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210717095950862.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210717103828236.png">
 <meta property="article:published_time" content="2021-08-16T04:11:38.000Z">
 <meta property="article:modified_time" content="2022-04-07T15:58:07.033Z">
 <meta property="article:author" content="Nayst">
 <meta property="article:tag" content="笔记">
 <meta property="article:tag" content="ctf">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210716153048773.png"><script>(function() {
+<meta name="twitter:image" content="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210716153048773.png"><script>(function() {
   const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
   const setting = localStorage.getItem('darken-mode') || 'auto'
   if (setting === 'dark' || (prefersDark && setting !== 'light'))
@@ -69,7 +69,7 @@ IconifyProviders = {
 	<span class="token keyword">echo</span> <span class="token punctuation">(</span><span class="token string single-quoted-string">']'</span><span class="token operator">^</span><span class="token string single-quoted-string">'a'</span><span class="token punctuation">)</span><span class="token operator">.</span><span class="token string double-quoted-string">"&lt;br/>"</span><span class="token punctuation">;</span>
 	<span class="token keyword">echo</span> <span class="token punctuation">(</span><span class="token string single-quoted-string">']'</span><span class="token operator">^</span><span class="token string single-quoted-string">'&lt;'</span><span class="token punctuation">)</span><span class="token operator">.</span><span class="token string double-quoted-string">"&lt;br/>"</span><span class="token punctuation">;</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210716153048773.png" alt="image-20210716153048773" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210716153048773.png" alt="image-20210716153048773" loading="lazy"></p>
 <p>利用这个原理就能很快的构造webshell</p>
 <blockquote>
 <p><code>你需要得到的字符</code>^<code>任意字符</code> &#x3D; <code>结果</code> 			&#x3D;&#x3D;&#x3D;&gt;			<code>结果</code>^<code>与之前相同的任意字符</code> &#x3D; <code>你需要的字符</code></p>
@@ -113,7 +113,7 @@ IconifyProviders = {
 </blockquote>
 <p>payload：url&#x2F;?shell&#x3D;$_&#x3D;(‘+’^’[‘).(‘(‘^‘@’).(‘+’^’[‘).(‘)’^‘@’).(‘.’^‘@’).(‘&amp;’^‘@’).(‘&#x2F;‘^‘@’);$_();</p>
 <p>要编码后传值，因为+会被转成空格</p>
-<p><img src="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210716184246526.png" alt="image-20210716184246526" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210716184246526.png" alt="image-20210716184246526" loading="lazy"></p>
 <h1 id="取反"><a href="#取反" class="headerlink" title="取反"></a>取反</h1><ul>
 <li><p>原理</p>
 <p>字符串	–&gt;	ASCII码	–&gt;	二进制	&#x3D;&#x3D;&#x3D;取反&#x3D;&#x3D;&#x3D;&gt;	ASCII码	–&gt;	字符串</p>
@@ -130,7 +130,7 @@ IconifyProviders = {
 
 <p>payload：(~%8F%97%8F%96%91%99%90)();</p>
 <p>成功执行</p>
-<p><img src="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210716152111561.png" alt="image-20210716152111561" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210716152111561.png" alt="image-20210716152111561" loading="lazy"></p>
 <h1 id="自增"><a href="#自增" class="headerlink" title="自增"></a>自增</h1><p>如果连<code>^</code>和<code>~</code>都被ban了怎么办？</p>
 <ul>
 <li>原理</li>
@@ -143,7 +143,7 @@ IconifyProviders = {
 <ol>
 <li>强制输出数组</li>
 </ol>
-<p>​	<img src="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210717094255431.png" alt="image-20210717094255431" loading="lazy"></p>
+<p>​	<img src="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210717094255431.png" alt="image-20210717094255431" loading="lazy"></p>
 <p>转换为字符串后拿到A</p>
 <pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
 <span class="token variable">$_</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
@@ -153,7 +153,7 @@ IconifyProviders = {
 <span class="token variable">$_</span> <span class="token operator">=</span> <span class="token variable">$_</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'!'</span><span class="token operator">==</span><span class="token string single-quoted-string">'@'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 <span class="token keyword">echo</span> <span class="token variable">$_</span><span class="token punctuation">;</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210717095950862.png" alt="image-20210717095950862" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210717095950862.png" alt="image-20210717095950862" loading="lazy"></p>
 <ol start="2">
 <li>输出无穷大</li>
 </ol>
@@ -198,7 +198,7 @@ IconifyProviders = {
 <span class="token variable">$__</span> <span class="token operator">=</span> <span class="token variable">$_</span><span class="token punctuation">;</span><span class="token variable">$__</span><span class="token operator">++</span><span class="token punctuation">;</span><span class="token variable">$__</span><span class="token operator">++</span><span class="token punctuation">;</span><span class="token variable">$__</span><span class="token operator">++</span><span class="token punctuation">;</span><span class="token variable">$__</span><span class="token operator">++</span><span class="token punctuation">;</span><span class="token variable">$__</span><span class="token operator">++</span><span class="token punctuation">;</span><span class="token variable">$__</span><span class="token operator">++</span><span class="token punctuation">;</span><span class="token variable">$__</span><span class="token operator">++</span><span class="token punctuation">;</span><span class="token variable">$__</span><span class="token operator">++</span><span class="token punctuation">;</span><span class="token variable">$__</span><span class="token operator">++</span><span class="token punctuation">;</span><span class="token variable">$__</span><span class="token operator">++</span><span class="token punctuation">;</span><span class="token variable">$__</span><span class="token operator">++</span><span class="token punctuation">;</span><span class="token variable">$__</span><span class="token operator">++</span><span class="token punctuation">;</span><span class="token variable">$__</span><span class="token operator">++</span><span class="token punctuation">;</span><span class="token variable">$__</span><span class="token operator">++</span><span class="token punctuation">;</span><span class="token variable">$___</span><span class="token operator">.=</span><span class="token variable">$__</span><span class="token punctuation">;</span><span class="token comment">//O</span>
 <span class="token variable">$___</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//PHPINFO();</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210717103828236.png" alt="image-20210717103828236" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/16/%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97RCE/image-20210717103828236.png" alt="image-20210717103828236" loading="lazy"></p>
 <h1 id="参考博客"><a href="#参考博客" class="headerlink" title="参考博客"></a>参考博客</h1><ul>
 <li><p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/PENETRATION/webshell-without-alphanum.html">一些不包含数字和字母的webshell</a></p>
 </li>

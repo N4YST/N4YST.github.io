@@ -15,48 +15,48 @@ document.addEventListener("pjax:success", initScrollReveal);
 <meta property="og:site_name" content="Nayst-blog">
 <meta property="og:description" content="什么是命令执行漏洞命令执行漏洞，就是指用户通过浏览器或其他辅助程序提交执行命令，由于服务器端没有针对执行函数做过滤，导致在没有指定绝对路径的情况下就执行命令。 用户可以在命令执行函数内直接调用操作系统命令。 以下内容默认为在PHP中。 常见的命令执行函数system 简介  执行一个外部函数，并显示输出  语法  system(string $command, int &amp;$return_v">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721164650468.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721165631626.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721192520452.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721194104204.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721195307551.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721195824158.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721202420938.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195045788.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195238225.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195517185.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195549577.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195652502.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195738526.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720200122936.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720200213799.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720200618616.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210028843.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210516034.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210548637.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210746005.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720213939890.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721133735233.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721133844454.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721133936141.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721134628783.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721141612371.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721143412855.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721143630639.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721144323820.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150028201.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150203488.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150434859.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150711929.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150759650.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721152434665.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721164650468.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721165631626.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721192520452.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721194104204.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721195307551.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721195824158.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721202420938.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195045788.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195238225.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195517185.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195549577.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195652502.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195738526.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720200122936.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720200213799.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720200618616.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210028843.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210516034.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210548637.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210746005.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720213939890.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721133735233.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721133844454.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721133936141.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721134628783.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721141612371.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721143412855.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721143630639.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721144323820.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150028201.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150203488.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150434859.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150711929.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150759650.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721152434665.png">
 <meta property="article:published_time" content="2021-07-17T01:35:09.000Z">
 <meta property="article:modified_time" content="2022-04-07T16:02:40.335Z">
 <meta property="article:author" content="Nayst">
 <meta property="article:tag" content="web漏洞">
 <meta property="article:tag" content="ctf">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721164650468.png"><script>(function() {
+<meta name="twitter:image" content="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721164650468.png"><script>(function() {
   const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
   const setting = localStorage.getItem('darken-mode') || 'auto'
   if (setting === 'dark' || (prefersDark && setting !== 'light'))
@@ -202,7 +202,7 @@ IconifyProviders = {
 <ul>
 <li>示例</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721164650468.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721164650468.png" loading="lazy"></p>
 <h2 id="assert"><a href="#assert" class="headerlink" title="assert"></a>assert</h2><ul>
 <li>简介</li>
 </ul>
@@ -225,7 +225,7 @@ IconifyProviders = {
 <ul>
 <li>示例</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721165631626.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721165631626.png" loading="lazy"></p>
 <h2 id="call-user-func"><a href="#call-user-func" class="headerlink" title="call_user_func"></a>call_user_func</h2><ul>
 <li>简介</li>
 </ul>
@@ -244,7 +244,7 @@ IconifyProviders = {
 <ul>
 <li>示例</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721192520452.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721192520452.png" loading="lazy"></p>
 <h2 id="call-user-func-array"><a href="#call-user-func-array" class="headerlink" title="call_user_func_array"></a>call_user_func_array</h2><ul>
 <li>简介</li>
 </ul>
@@ -262,7 +262,7 @@ IconifyProviders = {
 <ul>
 <li>示例</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721194104204.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721194104204.png" loading="lazy"></p>
 <h2 id="create-function"><a href="#create-function" class="headerlink" title="create_function"></a>create_function</h2><ul>
 <li>简介</li>
 </ul>
@@ -281,7 +281,7 @@ IconifyProviders = {
 <li>示例</li>
 </ul>
 <p>在<strong>code</strong>处存在漏洞，闭合前面语句注释后面语句，中间可以执行任意指令。</p>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721195307551.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721195307551.png" loading="lazy"></p>
 <h2 id="array-map"><a href="#array-map" class="headerlink" title="array_map"></a>array_map</h2><ul>
 <li>简介</li>
 </ul>
@@ -300,7 +300,7 @@ IconifyProviders = {
 <ul>
 <li>示例</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721195824158.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721195824158.png" loading="lazy"></p>
 <h2 id="preg-replace"><a href="#preg-replace" class="headerlink" title="preg_replace"></a>preg_replace</h2><ul>
 <li>简介</li>
 </ul>
@@ -330,128 +330,128 @@ IconifyProviders = {
 <li>示例</li>
 </ul>
 <p>此函数存在模式修饰符，其中，修饰符e会让函数对替换字符串进行后向引用替换之后，将替换后的字符串作为PHP代码评估执行（以eval函数方式），并使用执行结果作为实际参与替换的字符串</p>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721202420938.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721202420938.png" loading="lazy"></p>
 <h1 id="Windows下的命令连接符"><a href="#Windows下的命令连接符" class="headerlink" title="Windows下的命令连接符"></a>Windows下的命令连接符</h1><p>Windows下的命令连接符包括<code>&amp;</code>、<code>&amp;&amp;</code>、<code>|</code>、<code>||</code>。</p>
 <h2 id="amp"><a href="#amp" class="headerlink" title="&amp;"></a>&amp;</h2><ul>
 <li><code>&amp;</code>前面的语句为假，则直接执行&amp;后面的语句</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195045788.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195045788.png" loading="lazy"></p>
 <ul>
 <li><code>&amp;</code>前面的语句为真，则前后语句都执行</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195238225.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195238225.png" loading="lazy"></p>
 <h2 id="amp-amp"><a href="#amp-amp" class="headerlink" title="&amp;&amp;"></a>&amp;&amp;</h2><ul>
 <li><code>&amp;&amp;</code>前面的语句为假，则直接报错，后面的语句不执行</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195517185.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195517185.png" loading="lazy"></p>
 <ul>
 <li><code>&amp;&amp;</code>前面的语句为真，前后语句都执行</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195549577.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195549577.png" loading="lazy"></p>
 <h2 id><a href="#" class="headerlink" title="|"></a>|</h2><ul>
 <li><code>|</code>前面的语句为假，则直接报错，后面的语句也不执行</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195652502.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195652502.png" loading="lazy"></p>
 <ul>
 <li><code>|</code>前面的语句为真，则直接执行后面的语句</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195738526.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195738526.png" loading="lazy"></p>
 <h2 id="-1"><a href="#-1" class="headerlink" title="||"></a>||</h2><ul>
 <li><code>||</code>前面的语句为假，就执行后面的语句</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720200122936.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720200122936.png" loading="lazy"></p>
 <ul>
 <li><code>||</code>前面的语句为真，则只执行前面的语句，后面的语句不执行</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720200213799.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720200213799.png" loading="lazy"></p>
 <h1 id="Linux下的命令连接符"><a href="#Linux下的命令连接符" class="headerlink" title="Linux下的命令连接符"></a>Linux下的命令连接符</h1><p>Linux下的命令连接符包括<code>;</code>、<code>&amp;</code>、<code>&amp;&amp;</code>、<code>|</code>、<code>||</code>。</p>
 <h2 id="；"><a href="#；" class="headerlink" title="；"></a>；</h2><ul>
 <li><code>;</code>可以连接多条命令，前后的命令都会执行</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720200618616.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720200618616.png" loading="lazy"></p>
 <h2 id="amp-1"><a href="#amp-1" class="headerlink" title="&amp;"></a>&amp;</h2><ul>
 <li><code>&amp;</code>使命令在后台运行，这样就可以同时执行多条命令</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210028843.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210028843.png" loading="lazy"></p>
 <h2 id="amp-amp-1"><a href="#amp-amp-1" class="headerlink" title="&amp;&amp;"></a>&amp;&amp;</h2><ul>
 <li>如果前面的命令不能成功执行，后面的命令也不执行</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210516034.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210516034.png" loading="lazy"></p>
 <ul>
 <li>如果前面的命令执行成功，那么前后的命令都执行</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210548637.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210548637.png" loading="lazy"></p>
 <h2 id="-2"><a href="#-2" class="headerlink" title="|"></a>|</h2><ul>
 <li>将前面的命令输出作为后面的命令输出，前面的命令和后面的命令都执行，但是只会显示后面的命令</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210746005.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210746005.png" loading="lazy"></p>
 <h2 id="-3"><a href="#-3" class="headerlink" title="||"></a>||</h2><ul>
 <li>类似于程序中的if-else语句，若前面的命令执行成功，则后面的命令就不会执行；若前面的命令执行不成功，则执行后面的命令</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720213939890.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720213939890.png" loading="lazy"></p>
 <h1 id="命令执行绕过"><a href="#命令执行绕过" class="headerlink" title="命令执行绕过"></a>命令执行绕过</h1><h2 id="绕过空格"><a href="#绕过空格" class="headerlink" title="绕过空格"></a>绕过空格</h2><ul>
 <li>${IFS}</li>
 </ul>
 <p><code>$IFS</code>是shell的特殊环境变量，是Linux下的内部域分隔符。</p>
 <p><code>$IFS</code>的值可以是空格、制表符、换行符或者其他自定义符号。</p>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721133735233.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721133735233.png" loading="lazy"></p>
 <ul>
 <li>$IFS$9</li>
 </ul>
 <p>空格过滤可以用<code>$IFS$9</code>绕过</p>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721133844454.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721133844454.png" loading="lazy"></p>
 <ul>
 <li>制表符</li>
 </ul>
 <p><code>%09</code>是制表符的URL编码，可以用来代替空格，绕过空格过滤</p>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721133936141.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721133936141.png" loading="lazy"></p>
 <ul>
 <li>{}</li>
 </ul>
 <p>空格过滤可以用<code>&#123;&#125;</code>绕过</p>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721134628783.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721134628783.png" loading="lazy"></p>
 <ul>
 <li>&lt;</li>
 </ul>
 <p>空格过滤可以用<code>&lt;</code>绕过</p>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721141612371.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721141612371.png" loading="lazy"></p>
 <h2 id="绕过关键字"><a href="#绕过关键字" class="headerlink" title="绕过关键字"></a>绕过关键字</h2><ul>
 <li>变量拼接</li>
 </ul>
 <p>Linux支持变量赋值，在Linux环境下可以通过变量拼接来绕过过滤规则</p>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721143412855.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721143412855.png" loading="lazy"></p>
 <ul>
 <li>空变量</li>
 </ul>
 <p>可以在变量中插入<code>空变量</code>来绕过命令过滤</p>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721143630639.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721143630639.png" loading="lazy"></p>
 <ul>
 <li>系统变量</li>
 </ul>
 <p><code>$&#123;SHELLOPTS&#125;</code>是系统变量，通常是内置变量，用法也很简单，${SHELLOPTS:<code>start</code>:<code>length</code>}</p>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721144323820.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721144323820.png" loading="lazy"></p>
 <p>可以利用系统变量的字符拼接绕过过滤</p>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150028201.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150028201.png" loading="lazy"></p>
 <ul>
 <li>\</li>
 </ul>
 <p><code>c\a\t</code>=<code>cat</code></p>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150203488.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150203488.png" loading="lazy"></p>
 <ul>
 <li>通配符</li>
 </ul>
 <p>Linux支持利用通配符进行字符匹配，利用通配符可以匹配文件中某些不确定的字符</p>
 <p><code>*</code>：代表任意个字符</p>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150434859.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150434859.png" loading="lazy"></p>
 <p><code>?</code>：代表一个字符</p>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150711929.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150711929.png" loading="lazy"></p>
 <p><code>[]</code>：匹配<code>[]</code>中任意一个字符</p>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150759650.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150759650.png" loading="lazy"></p>
 <ul>
 <li>Base64</li>
 </ul>
 <p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ce273012073e">在Linux下可以使用base64命令进行加密和解密</a>，输出解码后的字符再执行就可以绕过关键字了</p>
-<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721152434665.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721152434665.png" loading="lazy"></p>
 <ul>
 <li>expr和awk</li>
 </ul>

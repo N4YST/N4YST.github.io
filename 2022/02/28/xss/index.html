@@ -15,28 +15,28 @@ document.addEventListener("pjax:success", initScrollReveal);
 <meta property="og:site_name" content="Nayst-blog">
 <meta property="og:description" content="关于简介XSS(Cross Site Scripting)，跨站脚本攻击。攻击者通过网站注入点注入客户端可执行解析的payload，当用户访问网页时，恶意payload自动加载并执行，以达到攻击者目的（窃取Cookie、恶意传播、钓鱼欺骗等）。 危害  获取用户信息：浏览器信息、IP地址、Cookie等； 钓鱼：构造与原网站相似的网站，骗取账号密码； 注入密码或广告链接：在主站注入非法网站的链接；">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/02/28/xss/1.png">
-<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/02/28/xss/2.png">
-<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220328210803491.png">
-<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220328211206629.png">
-<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220328211518050.png">
-<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220328211555947.png">
-<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/02/28/xss/3.png">
-<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220329110557564.png">
-<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220329112254116.png">
-<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220329112427410.png">
-<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220329112601197.png">
-<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220329112806677.png">
-<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220329114158482.png">
-<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220329114245391.png">
-<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220328213158751.png">
+<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/1.png">
+<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/2.png">
+<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/image-20220328210803491.png">
+<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/image-20220328211206629.png">
+<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/image-20220328211518050.png">
+<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/image-20220328211555947.png">
+<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/3.png">
+<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/image-20220329110557564.png">
+<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/image-20220329112254116.png">
+<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/image-20220329112427410.png">
+<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/image-20220329112601197.png">
+<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/image-20220329112806677.png">
+<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/image-20220329114158482.png">
+<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/image-20220329114245391.png">
+<meta property="og:image" content="http://n4yst.github.io/2022/02/28/xss/image-20220328213158751.png">
 <meta property="article:published_time" content="2022-02-28T12:07:03.000Z">
 <meta property="article:modified_time" content="2022-04-28T04:10:42.575Z">
 <meta property="article:author" content="Nayst">
 <meta property="article:tag" content="web漏洞">
 <meta property="article:tag" content="ctf">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://n4yst.github.io/2022/02/28/xss/02/28/xss/1.png"><script>(function() {
+<meta name="twitter:image" content="http://n4yst.github.io/2022/02/28/xss/1.png"><script>(function() {
   const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
   const setting = localStorage.getItem('darken-mode') || 'auto'
   if (setting === 'dark' || (prefersDark && setting !== 'light'))
@@ -53,7 +53,7 @@ IconifyProviders = {
     rotate: 1000,
   },
 };</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/about/" title="Nayst"><img width="96" loading="lazy" src="/images/kakashi.png" alt="Nayst"><span class="site-author-status" title="永远相信美好的事情即将发生">😊</span></a><div class="site-author-name"><a href="/about/">Nayst</a></div><span class="site-name">Nayst-blog</span><sub class="site-subtitle">努力追赶师傅们的一只菜鸡</sub><div class="site-description"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">25</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">4</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">8</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:settings-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" title="RSS" target="_blank" style="color:orange"><span class="icon iconify" data-icon="ri:rss-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/N4YST" title="GitHub" target="_blank" style="color:#181717"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="QQ 2495582918" target="_blank" style="color:#12B7F5"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="wechat y1049843745" target="_blank" style="color:#1AAD19"><span class="icon iconify" data-icon="ri:wechat-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:2495582918@qq.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><span class="icon iconify" data-icon="ri:men-line"></span></a><a class="links-item hty-icon-button" href="/girls/" title="我的老婆们" style="color:pink"><span class="icon iconify" data-icon="ri:women-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E"><span class="toc-number">1.</span> <span class="toc-text">关于</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%B1%E5%AE%B3"><span class="toc-number">1.2.</span> <span class="toc-text">危害</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.3.</span> <span class="toc-text">基本类型</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">反射型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-number">2.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B"><span class="toc-number">2.2.</span> <span class="toc-text">攻击流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E4%BB%A3%E7%A0%81"><span class="toc-number">2.3.</span> <span class="toc-text">源代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%94%E7%A4%BA"><span class="toc-number">2.4.</span> <span class="toc-text">演示</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%82%A8%E5%AD%98%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">储存型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E7%82%B9-1"><span class="toc-number">3.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B-1"><span class="toc-number">3.2.</span> <span class="toc-text">攻击流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E4%BB%A3%E7%A0%81-1"><span class="toc-number">3.3.</span> <span class="toc-text">源代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%94%E7%A4%BA-1"><span class="toc-number">3.4.</span> <span class="toc-text">演示</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DOM%E5%9E%8B"><span class="toc-number">4.</span> <span class="toc-text">DOM型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E7%82%B9-2"><span class="toc-number">4.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E6%B5%81%E7%A8%8B-2"><span class="toc-number">4.2.</span> <span class="toc-text">攻击流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BA%90%E4%BB%A3%E7%A0%81-2"><span class="toc-number">4.3.</span> <span class="toc-text">源代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%94%E7%A4%BA-2"><span class="toc-number">4.4.</span> <span class="toc-text">演示</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%98%B2%E6%8A%A4"><span class="toc-number">5.</span> <span class="toc-text">防护</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%BB%91%EF%BC%88%E7%99%BD%EF%BC%89%E5%90%8D%E5%8D%95"><span class="toc-number">5.1.</span> <span class="toc-text">黑（白）名单</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#httponly"><span class="toc-number">5.2.</span> <span class="toc-text">httponly</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#str-replace"><span class="toc-number">5.3.</span> <span class="toc-text">str_replace()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#preg-replace"><span class="toc-number">5.4.</span> <span class="toc-text">preg_replace()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#htmlspecialchars"><span class="toc-number">5.5.</span> <span class="toc-text">htmlspecialchars()</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%95%E8%BF%87"><span class="toc-number">6.</span> <span class="toc-text">绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#lt-gt"><span class="toc-number">6.1.</span> <span class="toc-text">&lt;&gt;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#script"><span class="toc-number">6.2.</span> <span class="toc-text">script</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%8B%E9%93%BE"><span class="toc-number">7.</span> <span class="toc-text">友链</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="http://N4YST.github.io/2022/02/28/xss/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Nayst"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Nayst-blog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">xss-跨站脚本攻击</h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <span class="post-meta-icon-text">发表于</span> <time title="创建时间：2022-02-28 20:07:03" itemprop="dateCreated datePublished" datetime="2022-02-28T20:07:03+08:00">2022-02-28</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <span class="post-meta-icon-text">更新于</span> <time title="修改时间：2022-04-28 12:10:42" itemprop="dateModified" datetime="2022-04-28T12:10:42+08:00">2022-04-28</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><span class="icon iconify" data-icon="ri:file-word-line"></span></span> <span title="本文字数">1.4k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><span class="icon iconify" data-icon="ri:timer-line"></span></span> <span title="阅读时长">6m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/web%E5%AE%89%E5%85%A8/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">web安全</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/web%E6%BC%8F%E6%B4%9E/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">web漏洞</span></a><a class="tag-item" href="/tags/ctf/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">ctf</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h1 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>XSS(Cross Site Scripting)，跨站脚本攻击。攻击者通过网站注入点注入客户端可执行解析的payload，当用户访问网页时，恶意payload自动加载并执行，以达到攻击者目的（窃取Cookie、恶意传播、钓鱼欺骗等）。</p>
-<h2 id="危害"><a href="#危害" class="headerlink" title="危害"></a>危害</h2><p><img src="http://n4yst.github.io/2022/02/28/xss/02/28/xss/1.png" loading="lazy"></p>
+<h2 id="危害"><a href="#危害" class="headerlink" title="危害"></a>危害</h2><p><img src="http://n4yst.github.io/2022/02/28/xss/1.png" loading="lazy"></p>
 <ol>
 <li>获取用户信息：浏览器信息、IP地址、Cookie等；</li>
 <li>钓鱼：构造与原网站相似的网站，骗取账号密码；</li>
@@ -74,7 +74,7 @@ IconifyProviders = {
 <li>仅执行一次，非持久型；</li>
 <li>参数型跨站脚本。</li>
 </ul>
-<h2 id="攻击流程"><a href="#攻击流程" class="headerlink" title="攻击流程"></a>攻击流程</h2><p><img src="http://n4yst.github.io/2022/02/28/xss/02/28/xss/2.png" loading="lazy"></p>
+<h2 id="攻击流程"><a href="#攻击流程" class="headerlink" title="攻击流程"></a>攻击流程</h2><p><img src="http://n4yst.github.io/2022/02/28/xss/2.png" loading="lazy"></p>
 <h2 id="源代码"><a href="#源代码" class="headerlink" title="源代码"></a>源代码</h2><ul>
 <li>前端页面：</li>
 </ul>
@@ -105,19 +105,19 @@ IconifyProviders = {
 ?&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h2 id="演示"><a href="#演示" class="headerlink" title="演示"></a>演示</h2><p>前端是一个提交框，提交数据到后端</p>
-<p><img src="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220328210803491.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2022/02/28/xss/image-20220328210803491.png" loading="lazy"></p>
 <p>后端会把输入的数据展示出来</p>
-<p><img src="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220328211206629.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2022/02/28/xss/image-20220328211206629.png" loading="lazy"></p>
 <p>注入JS：<code>&lt;script&gt;alert(1)&lt;/script&gt;</code>，进入页面会执行</p>
-<p><img src="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220328211518050.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2022/02/28/xss/image-20220328211518050.png" loading="lazy"></p>
 <p>在源码中可以看到已经成功注入</p>
-<p><img src="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220328211555947.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2022/02/28/xss/image-20220328211555947.png" loading="lazy"></p>
 <p>这就是最基本的反射型的XSS漏洞，这种漏洞数据流向是： 前端–&gt;后端–&gt;前端。</p>
 <h1 id="储存型"><a href="#储存型" class="headerlink" title="储存型"></a>储存型</h1><h2 id="特点-1"><a href="#特点-1" class="headerlink" title="特点"></a>特点</h2><ul>
 <li>持久型；</li>
 <li>恶意脚本直接储存到数据库中。</li>
 </ul>
-<h2 id="攻击流程-1"><a href="#攻击流程-1" class="headerlink" title="攻击流程"></a>攻击流程</h2><p><img src="http://n4yst.github.io/2022/02/28/xss/02/28/xss/3.png" alt="img" loading="lazy"></p>
+<h2 id="攻击流程-1"><a href="#攻击流程-1" class="headerlink" title="攻击流程"></a>攻击流程</h2><p><img src="http://n4yst.github.io/2022/02/28/xss/3.png" alt="img" loading="lazy"></p>
 <h2 id="源代码-1"><a href="#源代码-1" class="headerlink" title="源代码"></a>源代码</h2><ul>
 <li>前端页面</li>
 </ul>
@@ -214,15 +214,15 @@ IconifyProviders = {
 <span class="token delimiter important">?></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h2 id="演示-1"><a href="#演示-1" class="headerlink" title="演示"></a>演示</h2><p>前端是一个表单，用于将数据提交到后端</p>
-<p><img src="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220329110557564.png" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2022/02/28/xss/image-20220329110557564.png" loading="lazy"></p>
 <p>后端用于接收数据，并将数据展示给用户</p>
-<p><img src="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220329112254116.png" alt="image-20220329112254116" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2022/02/28/xss/image-20220329112254116.png" alt="image-20220329112254116" loading="lazy"></p>
 <p>注入JS代码：<code>&lt;script&gt;alert(1)&lt;/script&gt;</code>，成功弹窗</p>
-<p><img src="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220329112427410.png" alt="image-20220329112427410" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2022/02/28/xss/image-20220329112427410.png" alt="image-20220329112427410" loading="lazy"></p>
 <p>查看数据库，成功插入数据</p>
-<p><img src="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220329112601197.png" alt="image-20220329112601197" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2022/02/28/xss/image-20220329112601197.png" alt="image-20220329112601197" loading="lazy"></p>
 <p>每次进入页面都会执行代码</p>
-<p><img src="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220329112806677.png" alt="image-20220329112806677" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2022/02/28/xss/image-20220329112806677.png" alt="image-20220329112806677" loading="lazy"></p>
 <h1 id="DOM型"><a href="#DOM型" class="headerlink" title="DOM型"></a>DOM型</h1><h2 id="特点-2"><a href="#特点-2" class="headerlink" title="特点"></a>特点</h2><ul>
 <li>全程在前端执行，不经过后端；</li>
 <li>主要存在于能修改页面的dom。</li>
@@ -246,9 +246,9 @@ IconifyProviders = {
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h2 id="演示-2"><a href="#演示-2" class="headerlink" title="演示"></a>演示</h2><p>一个简单的页面</p>
-<p><img src="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220329114158482.png" alt="image-20220329114158482" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2022/02/28/xss/image-20220329114158482.png" alt="image-20220329114158482" loading="lazy"></p>
 <p>传入参数后会被执行</p>
-<p><img src="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220329114245391.png" alt="image-20220329114245391" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2022/02/28/xss/image-20220329114245391.png" alt="image-20220329114245391" loading="lazy"></p>
 <h1 id="防护"><a href="#防护" class="headerlink" title="防护"></a>防护</h1><p>总体思路是对用户的输入进行<strong>过滤</strong>，对输出进行<strong>编码</strong>，<strong>阻止恶意操作的执行</strong>。</p>
 <p>不管是哪种类型的XSS，都可以在服务端进行过滤。</p>
 <h2 id="黑（白）名单"><a href="#黑（白）名单" class="headerlink" title="黑（白）名单"></a>黑（白）名单</h2><ul>
@@ -282,7 +282,7 @@ IconifyProviders = {
 <h2 id="script"><a href="#script" class="headerlink" title="script"></a>script</h2><p>利用img标签的onerror属性执行JS</p>
 <pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>img</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">onerror</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value javascript language-javascript"><span class="token function">alert</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">/></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p><img src="http://n4yst.github.io/2022/02/28/xss/02/28/xss/image-20220328213158751.png" alt="image-20220328213158751" loading="lazy"></p>
+<p><img src="http://n4yst.github.io/2022/02/28/xss/image-20220328213158751.png" alt="image-20220328213158751" loading="lazy"></p>
 <h1 id="友链"><a href="#友链" class="headerlink" title="友链"></a>友链</h1><p><a target="_blank" rel="noopener" href="https://github.com/pgaijin66/XSS-Payloads">XSS载荷大全</a></p>
 <p><a target="_blank" rel="noopener" href="https://xss.pt/">XSS平台</a></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/do0dl3/xss-labs">xss-labs</a></p>
