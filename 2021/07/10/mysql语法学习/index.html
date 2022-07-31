@@ -1,0 +1,994 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Nayst"><meta name="copyright" content="Nayst"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>mysql | Nayst-Blog</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.3.3/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/svg+xml" href="/images/Doge.svg"><link rel="mask-icon" href="/images/Doge.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"www.nayst.top","root":"/","title":["Nayst","的","小","站"],"version":"1.10.6","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"fireworks":{"colors":null},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><meta name="description" content="前言本篇博客是学习mysql时的一些笔记，主要是SQL语言的学习，例表来源于尚硅谷，在B站上有视频资料可以学习。 进阶1-基础查询 语法： SELECT 	查询列表 FROM 	表名;  类似于System.out.println(“”);  特点： 查询列表可以是：字段、常量、表达式、函数   查单个字段SELECT 	last_name  FROM 	employees;  查多个字段SELE">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql">
+<meta property="og:url" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Nayst-Blog">
+<meta property="og:description" content="前言本篇博客是学习mysql时的一些笔记，主要是SQL语言的学习，例表来源于尚硅谷，在B站上有视频资料可以学习。 进阶1-基础查询 语法： SELECT 	查询列表 FROM 	表名;  类似于System.out.println(“”);  特点： 查询列表可以是：字段、常量、表达式、函数   查单个字段SELECT 	last_name  FROM 	employees;  查多个字段SELE">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105013183.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105138707.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105251284.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105634508.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105838516.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105932452.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711110242622.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711110723275.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711110949281.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111137125.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111308203.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111627538.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111711002.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111739581.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711132001916.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711133058188.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210712085620802.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210712091302987.png">
+<meta property="article:published_time" content="2021-07-10T03:06:22.000Z">
+<meta property="article:modified_time" content="2022-07-31T08:45:52.675Z">
+<meta property="article:author" content="Nayst">
+<meta property="article:tag" content="笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105013183.png"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Nayst"><img width="96" loading="lazy" src="/images/kakashi.png" alt="Nayst"><span class="site-author-status" title="努力做一个对社会有贡献的人">🤣</span></a><div class="site-author-name"><a href="/about/">Nayst</a></div><span class="site-name">Nayst-Blog</span><sub class="site-subtitle">远离舒适圈</sub><div class="site-description">已入江湖，未配良剑</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">17</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">4</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">6</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:settings-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" title="2495582918" target="_blank" style="color:#007722"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="y1049843745" target="_blank" style="color:#1AAD19"><span class="icon iconify" data-icon="ri:wechat-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/N4YST" title="GitHub" target="_blank" style="color:#6e5494"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/1579790" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/jizhideyunyoujun" title="微博" target="_blank" style="color:#E6162D"><span class="icon iconify" data-icon="ri:weibo-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=277777144" title="网易云音乐" target="_blank" style="color:#C20C0C"><span class="icon iconify" data-icon="ri:netease-cloud-music-line"></span></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><span class="icon iconify" data-icon="ri:genderless-line"></span></a><a class="links-item hty-icon-button" href="/girls/" title="我的老婆们" style="color:pink"><span class="icon iconify" data-icon="ri:women-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E9%98%B61-%E5%9F%BA%E7%A1%80%E6%9F%A5%E8%AF%A2"><span class="toc-number">2.</span> <span class="toc-text">进阶1-基础查询</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E5%8D%95%E4%B8%AA%E5%AD%97%E6%AE%B5"><span class="toc-number">2.1.</span> <span class="toc-text">查单个字段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E5%A4%9A%E4%B8%AA%E5%AD%97%E6%AE%B5"><span class="toc-number">2.2.</span> <span class="toc-text">查多个字段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E6%89%80%E6%9C%89%E5%AD%97%E6%AE%B5"><span class="toc-number">2.3.</span> <span class="toc-text">查询所有字段</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E5%B8%B8%E9%87%8F"><span class="toc-number">2.4.</span> <span class="toc-text">查询常量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">2.5.</span> <span class="toc-text">查询表达式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E5%87%BD%E6%95%B0"><span class="toc-number">2.6.</span> <span class="toc-text">查询函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%B7%E5%88%AB%E5%90%8D"><span class="toc-number">2.7.</span> <span class="toc-text">起别名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%BB%E9%87%8D"><span class="toc-number">2.8.</span> <span class="toc-text">去重</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">2.9.</span> <span class="toc-text">+的作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%BC%E6%8E%A5"><span class="toc-number">2.10.</span> <span class="toc-text">拼接</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E9%98%B62-%E6%9D%A1%E4%BB%B6%E6%9F%A5%E8%AF%A2-where"><span class="toc-number">3.</span> <span class="toc-text">进阶2-条件查询-where</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E6%9D%A1%E4%BB%B6%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%AD%9B%E9%80%89"><span class="toc-number">3.1.</span> <span class="toc-text">按条件表达式筛选</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E9%80%BB%E8%BE%91%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%AD%9B%E9%80%89"><span class="toc-number">3.2.</span> <span class="toc-text">按逻辑表达式筛选</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E7%B3%8A%E7%AD%9B%E9%80%89"><span class="toc-number">3.3.</span> <span class="toc-text">模糊筛选</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#like"><span class="toc-number">3.3.1.</span> <span class="toc-text">like</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#between-and"><span class="toc-number">3.3.2.</span> <span class="toc-text">between and</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#in"><span class="toc-number">3.3.3.</span> <span class="toc-text">in</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#is-null"><span class="toc-number">3.3.4.</span> <span class="toc-text">is null</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E9%98%B63-%E6%8E%92%E5%BA%8F%E6%9F%A5%E8%AF%A2-order-by"><span class="toc-number">4.</span> <span class="toc-text">进阶3-排序查询-order by</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E9%98%B64-%E5%B8%B8%E8%A7%81%E5%87%BD%E6%95%B0"><span class="toc-number">5.</span> <span class="toc-text">进阶4-常见函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E5%87%BD%E6%95%B0"><span class="toc-number">5.1.</span> <span class="toc-text">字符函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#length"><span class="toc-number">5.1.1.</span> <span class="toc-text">length</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#concat"><span class="toc-number">5.1.2.</span> <span class="toc-text">concat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#upper%E3%80%81lower"><span class="toc-number">5.1.3.</span> <span class="toc-text">upper、lower</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#substr"><span class="toc-number">5.1.4.</span> <span class="toc-text">substr</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#instr"><span class="toc-number">5.1.5.</span> <span class="toc-text">instr</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#trim"><span class="toc-number">5.1.6.</span> <span class="toc-text">trim</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lpad%E3%80%81rpad"><span class="toc-number">5.1.7.</span> <span class="toc-text">lpad、rpad</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#replace"><span class="toc-number">5.1.8.</span> <span class="toc-text">replace</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E5%AD%A6%E5%87%BD%E6%95%B0"><span class="toc-number">5.2.</span> <span class="toc-text">数学函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#round"><span class="toc-number">5.2.1.</span> <span class="toc-text">round</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ceil%E3%80%81floor"><span class="toc-number">5.2.2.</span> <span class="toc-text">ceil、floor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#truncate"><span class="toc-number">5.2.3.</span> <span class="toc-text">truncate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mod"><span class="toc-number">5.2.4.</span> <span class="toc-text">mod</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A5%E6%9C%9F%E5%87%BD%E6%95%B0"><span class="toc-number">5.3.</span> <span class="toc-text">日期函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#now"><span class="toc-number">5.3.1.</span> <span class="toc-text">now</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#curdate"><span class="toc-number">5.3.2.</span> <span class="toc-text">curdate</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#curtime"><span class="toc-number">5.3.3.</span> <span class="toc-text">curtime</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%8C%87%E5%AE%9A%E7%9A%84%E9%83%A8%E5%88%86"><span class="toc-number">5.3.4.</span> <span class="toc-text">获取指定的部分</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6%E5%87%BD%E6%95%B0"><span class="toc-number">5.4.</span> <span class="toc-text">流程控制函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#if"><span class="toc-number">5.4.1.</span> <span class="toc-text">if</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#case"><span class="toc-number">5.4.2.</span> <span class="toc-text">case</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E7%BB%84%E5%87%BD%E6%95%B0"><span class="toc-number">5.5.</span> <span class="toc-text">分组函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%87%BD%E6%95%B0"><span class="toc-number">5.6.</span> <span class="toc-text">其他函数</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E9%98%B65-%E5%88%86%E7%BB%84%E6%9F%A5%E8%AF%A2-group-by"><span class="toc-number">6.</span> <span class="toc-text">进阶5-分组查询-group by</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E5%88%86%E7%BB%84%E6%9F%A5%E8%AF%A2"><span class="toc-number">6.1.</span> <span class="toc-text">简单的分组查询</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E5%89%8D%E7%AD%9B%E9%80%89"><span class="toc-number">6.1.1.</span> <span class="toc-text">查询前筛选</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E5%90%8E%E7%AD%9B%E9%80%89"><span class="toc-number">6.1.2.</span> <span class="toc-text">查询后筛选</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E5%87%BD%E6%95%B0%E5%88%86%E7%BB%84%E6%9F%A5%E8%AF%A2"><span class="toc-number">6.2.</span> <span class="toc-text">按函数分组查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%89%E5%A4%9A%E4%B8%AA%E5%AD%97%E6%AE%B5%E5%88%86%E7%BB%84"><span class="toc-number">6.3.</span> <span class="toc-text">按多个字段分组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E6%8E%92%E5%BA%8F"><span class="toc-number">6.4.</span> <span class="toc-text">添加排序</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E9%98%B66-%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2-join"><span class="toc-number">7.</span> <span class="toc-text">进阶6-连接查询-join</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#sql92%E8%AF%AD%E6%B3%95"><span class="toc-number">7.1.</span> <span class="toc-text">sql92语法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AD%89%E5%80%BC%E8%BF%9E%E6%8E%A5"><span class="toc-number">7.1.1.</span> <span class="toc-text">等值连接</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E8%A1%A8%E8%B5%B7%E5%88%AB%E5%90%8D"><span class="toc-number">7.1.1.1.</span> <span class="toc-text">为表起别名</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E7%AD%89%E5%80%BC%E8%BF%9E%E6%8E%A5"><span class="toc-number">7.1.2.</span> <span class="toc-text">非等值连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E8%BF%9E%E6%8E%A5"><span class="toc-number">7.1.3.</span> <span class="toc-text">自连接</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sql99%E8%AF%AD%E6%B3%95%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">7.2.</span> <span class="toc-text">sql99语法（推荐）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E8%BF%9E%E6%8E%A5-inner"><span class="toc-number">7.2.1.</span> <span class="toc-text">内连接-inner</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AD%89%E5%80%BC%E8%BF%9E%E6%8E%A5-1"><span class="toc-number">7.2.1.1.</span> <span class="toc-text">等值连接</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9D%9E%E7%AD%89%E5%80%BC%E8%BF%9E%E6%8E%A5-1"><span class="toc-number">7.2.1.2.</span> <span class="toc-text">非等值连接</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E8%BF%9E%E6%8E%A5-1"><span class="toc-number">7.2.1.3.</span> <span class="toc-text">自连接</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%96%E8%BF%9E%E6%8E%A5-outer"><span class="toc-number">7.2.2.</span> <span class="toc-text">外连接-outer</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B7%A6%E5%A4%96%E8%BF%9E%E6%8E%A5"><span class="toc-number">7.2.2.1.</span> <span class="toc-text">左外连接</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%B3%E5%A4%96%E8%BF%9E%E6%8E%A5"><span class="toc-number">7.2.2.2.</span> <span class="toc-text">右外连接</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%A8%E5%A4%96%E8%BF%9E%E6%8E%A5"><span class="toc-number">7.2.2.3.</span> <span class="toc-text">全外连接</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E5%8F%89%E8%BF%9E%E6%8E%A5-cross"><span class="toc-number">7.2.3.</span> <span class="toc-text">交叉连接-cross</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E9%98%B67-%E5%AD%90%E6%9F%A5%E8%AF%A2"><span class="toc-number">8.</span> <span class="toc-text">进阶7-子查询</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#where%E5%90%8E%E9%9D%A2"><span class="toc-number">8.1.</span> <span class="toc-text">where后面</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E9%87%8F%E5%AD%90%E6%9F%A5%E8%AF%A2"><span class="toc-number">8.1.1.</span> <span class="toc-text">标量子查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%97%E5%AD%90%E6%9F%A5%E8%AF%A2"><span class="toc-number">8.1.2.</span> <span class="toc-text">列子查询</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#in-1"><span class="toc-number">8.1.2.1.</span> <span class="toc-text">in</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#any-x2F-all"><span class="toc-number">8.1.2.2.</span> <span class="toc-text">any&#x2F;all</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%8C%E5%AD%90%E6%9F%A5%E8%AF%A2"><span class="toc-number">8.1.3.</span> <span class="toc-text">行子查询</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#select%E5%90%8E%E9%9D%A2"><span class="toc-number">8.2.</span> <span class="toc-text">select后面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#from%E5%90%8E%E9%9D%A2"><span class="toc-number">8.3.</span> <span class="toc-text">from后面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#exists%E5%90%8E%E9%9D%A2%EF%BC%88%E7%9B%B8%E5%85%B3%E5%AD%90%E6%9F%A5%E8%AF%A2%EF%BC%89"><span class="toc-number">8.4.</span> <span class="toc-text">exists后面（相关子查询）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E9%98%B68-%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2-limit"><span class="toc-number">9.</span> <span class="toc-text">进阶8-分页查询-limit</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E9%98%B69-%E8%81%94%E5%90%88%E6%9F%A5%E8%AF%A2-union"><span class="toc-number">10.</span> <span class="toc-text">进阶9-联合查询-union</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">11.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Nayst"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Nayst-Blog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">mysql</h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2021-07-10 11:06:22" itemprop="dateCreated datePublished" datetime="2021-07-10T11:06:22+08:00">2021-07-10</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-07-31 16:45:52" itemprop="dateModified" datetime="2022-07-31T16:45:52+08:00">2022-07-31</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><span class="icon iconify" data-icon="ri:file-word-line"></span></span> <span title="本文字数">3.8k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><span class="icon iconify" data-icon="ri:timer-line"></span></span> <span title="阅读时长">16m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E8%AF%AD%E6%B3%95/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">语法</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/%E7%AC%94%E8%AE%B0/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">笔记</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本篇博客是学习mysql时的一些笔记，主要是SQL语言的学习，例表来源于尚硅谷，在B站上有视频资料可以学习。</p>
+<h1 id="进阶1-基础查询"><a href="#进阶1-基础查询" class="headerlink" title="进阶1-基础查询"></a>进阶1-基础查询</h1><ul>
+<li><p>语法：</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	查询列表
+FROM
+	表名;</code></pre>
+
+<p>类似于System.out.println(“”);</p>
+</li>
+<li><p>特点：</p>
+<p>查询列表可以是：字段、常量、表达式、函数</p>
+</li>
+</ul>
+<h2 id="查单个字段"><a href="#查单个字段" class="headerlink" title="查单个字段"></a>查单个字段</h2><pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	last_name 
+FROM
+	employees;</code></pre>
+
+<h2 id="查多个字段"><a href="#查多个字段" class="headerlink" title="查多个字段"></a>查多个字段</h2><pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT 
+	last_name,
+	first_name 
+FROM 
+	employees;</code></pre>
+
+<h2 id="查询所有字段"><a href="#查询所有字段" class="headerlink" title="查询所有字段"></a>查询所有字段</h2><pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT 
+	* 
+FROM 
+	employees;</code></pre>
+
+<h2 id="查询常量"><a href="#查询常量" class="headerlink" title="查询常量"></a>查询常量</h2><pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT 1;
+SELECT &#39;flag&#39;;</code></pre>
+
+<h2 id="查询表达式"><a href="#查询表达式" class="headerlink" title="查询表达式"></a>查询表达式</h2><pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT 100%98;</code></pre>
+
+<h2 id="查询函数"><a href="#查询函数" class="headerlink" title="查询函数"></a>查询函数</h2><pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT VERSION();</code></pre>
+
+<h2 id="起别名"><a href="#起别名" class="headerlink" title="起别名"></a>起别名</h2><pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT 100%98 AS solution;
+SELECT last_name AS &quot;姓&quot;,first_name AS 名 FROM employees;
+SELECT last_name 姓,first_name 名 FROM employees;
+SELECT employees_id AS &quot;out put&quot; FROM employees;</code></pre>
+
+<h2 id="去重"><a href="#去重" class="headerlink" title="去重"></a>去重</h2><pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT DISTINCT employees_id FROM employees;</code></pre>
+
+<h2 id="的作用"><a href="#的作用" class="headerlink" title="+的作用"></a>+的作用</h2><ul>
+<li><p>java中的+</p>
+<p>1、运算符：两个数据都为数值时<br>2、链接符：只要有一个为字符串</p>
+</li>
+<li><p>mysql中的+</p>
+<p>仅为运算符</p>
+<p>1、当两个操作数都为数值时，做常规的加法。<br>SELECT 1+2;<br>2、只要其中一个为字符型，试图转换字符为数值，失败时将字符型转为0。<br>SELECT ‘a’+1;<br>3、只要存在一个null，结果为null。<br>SELECT null+1+2+3;</p>
+</li>
+</ul>
+<h2 id="拼接"><a href="#拼接" class="headerlink" title="拼接"></a>拼接</h2><pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+CONCAT(&#39;a&#39;,&#39;b&#39;) AS &quot;name&quot;;</code></pre>
+
+<h1 id="进阶2-条件查询-where"><a href="#进阶2-条件查询-where" class="headerlink" title="进阶2-条件查询-where"></a>进阶2-条件查询-where</h1><ul>
+<li><p>语法：</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">select
+	查询列表
+from
+	表名
+where
+	筛选条件;</code></pre>
+</li>
+<li><p>分类：</p>
+<p>1、条件运算符：&gt; 、&lt; 、 &#x3D; 、 !&#x3D; 、 &lt;&gt; 、 &gt;&#x3D; 、 &lt;&#x3D;</p>
+<p>2、逻辑运算符：&amp;&amp; 、 || 、 ！ 、 and 、 or 、 not</p>
+<p>3、模糊查询：like 、 between and 、 in 、 is null</p>
+</li>
+</ul>
+<h2 id="按条件表达式筛选"><a href="#按条件表达式筛选" class="headerlink" title="按条件表达式筛选"></a>按条件表达式筛选</h2><pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	last_name
+FROM
+	employees
+WHERE
+	id&gt;1;</code></pre>
+
+<h2 id="按逻辑表达式筛选"><a href="#按逻辑表达式筛选" class="headerlink" title="按逻辑表达式筛选"></a>按逻辑表达式筛选</h2><pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	last_name
+FROM
+	employees
+WHERE
+	employees_id&gt;1 
+AND
+	employees_id&lt;5;</code></pre>
+
+<h2 id="模糊筛选"><a href="#模糊筛选" class="headerlink" title="模糊筛选"></a>模糊筛选</h2><h3 id="like"><a href="#like" class="headerlink" title="like"></a>like</h3><p>特点：一般和通配符搭配使用</p>
+<p>通配符：</p>
+<p> %：任意匹配多个字符，包含0个字符</p>
+<p> _：任意单个字符</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询员工名字中第二个字符为a且第3个字符为_的员工信息
+SELECT
+	*
+FROM
+	employees
+WHERE
+	last_name LIKE &#39;_a\_%&#39;;</code></pre>
+
+<p>escape：将字符定义为转义前缀，未规定时默认为\</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询员工名字中第二个字符为a且第3个字符为_的员工信息
+SELECT
+	*
+FROM
+	employees
+WHERE
+	last_name LIKE &#39;_a$_%&#39; ESCAPE &#39;$&#39;;</code></pre>
+
+<h3 id="between-and"><a href="#between-and" class="headerlink" title="between and"></a>between and</h3><p>特点：包含临界值，左小右大</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询员工编号在100到120之间的员工信息
+SELECT
+	*
+FROM
+	employees
+WHERE
+	employees_id BETWEEN 100 AND 120;</code></pre>
+
+<h3 id="in"><a href="#in" class="headerlink" title="in"></a>in</h3><p>特点：in列表的值的类型必须一致，不支持通配符</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询员工的工种编号是IT_PROG、AD_VIP、AD_PRES中的一个的员工信息
+SELECT
+	*
+FROM
+	employees
+WHERE
+	job_id IN (&#39;IT_PROG&#39;,&#39;AD_VIP&#39;,&#39;AD_PRES&#39;);	#job_id &#x3D; &#39;IT_PROG&#39; OR job_id &#x3D; &#39;AD_VIP&#39; OR job_id &#x3D; &#39;AD_PRES&#39;;</code></pre>
+
+<h3 id="is-null"><a href="#is-null" class="headerlink" title="is null"></a>is null</h3><p>特点：&#x3D;或!&#x3D;不能匹配null，null可以搭配is或者安全等于&lt;&#x3D;&gt;</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询没有奖金的员工名和奖金率
+SELECT
+	last_name,
+	commission_pct
+FROM
+	employees
+WHERE
+	comission_pct IS NOT NULL;</code></pre>
+
+<h1 id="进阶3-排序查询-order-by"><a href="#进阶3-排序查询-order-by" class="headerlink" title="进阶3-排序查询-order by"></a>进阶3-排序查询-order by</h1><ul>
+<li>语法</li>
+</ul>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	查询列表
+FROM
+	表
+WHERE
+	筛选条件
+ORDER BY 
+	排序列表 ASC|DESC;</code></pre>
+
+<ul>
+<li>特点</li>
+</ul>
+<ol>
+<li>asc代表升序，desc代表降序，如果不写默认升序</li>
+<li>order by支持单个字段、多个字段、表达式、函数、别名</li>
+<li>order by子句一般放在最后面，只有limit放在他后面</li>
+</ol>
+<h1 id="进阶4-常见函数"><a href="#进阶4-常见函数" class="headerlink" title="进阶4-常见函数"></a>进阶4-常见函数</h1><h2 id="字符函数"><a href="#字符函数" class="headerlink" title="字符函数"></a>字符函数</h2><h3 id="length"><a href="#length" class="headerlink" title="length"></a>length</h3><p>获取参数值的<strong>字节</strong>个数</p>
+<p>注意，在不同编码中，中文所占字节长度不同</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT LENGTH(&#39;nayst&#39;);
+SELECT LENGTH(&#39;nayst的小站&#39;) AS out_put;</code></pre>
+
+<img src="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105013183.png" class="" title="image-20210711105013183" loading="lazy">
+
+<h3 id="concat"><a href="#concat" class="headerlink" title="concat"></a>concat</h3><p>拼接字符串</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	CONCAT(last_name,&#39;_&#39;,firstname) AS 姓名 
+FROM 
+	employees;</code></pre>
+
+<h3 id="upper、lower"><a href="#upper、lower" class="headerlink" title="upper、lower"></a>upper、lower</h3><p>将字符串转为小写（小写）</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT UPPER(&#39;nayst&#39;);</code></pre>
+
+<h3 id="substr"><a href="#substr" class="headerlink" title="substr"></a>substr</h3><p>截取从指定索引处后指定长度的字符，未规定时默认截取后面所有字符</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT SUBSTR(&#39;nayst is a handsome man&#39;, 12) AS out_put;
+SELECT SUBSTR(&#39;nayst is a handsome man&#39;, 12, 8) AS out_put;</code></pre>
+
+<img src="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105138707.png" class="" title="image-20210711105138707" loading="lazy">
+
+<h3 id="instr"><a href="#instr" class="headerlink" title="instr"></a>instr</h3><p>返回子串第一次出现的索引，找不到返回0</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT INSTR(&#39;nayst is a handsome man&#39;,&#39;an&#39;) AS out_put;</code></pre>
+
+<img src="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105251284.png" class="" title="image-20210711105251284" loading="lazy">
+
+<h3 id="trim"><a href="#trim" class="headerlink" title="trim"></a>trim</h3><p>删除字符串前后的指定内容，未规定时默认删除空格</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT TRIM(&#39;aa&#39; FROM &#39;aaaaaaanaystaaa&#39;) AS out_put;</code></pre>
+
+<img src="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105634508.png" class="" title="image-20210711105634508" loading="lazy">
+
+<h3 id="lpad、rpad"><a href="#lpad、rpad" class="headerlink" title="lpad、rpad"></a>lpad、rpad</h3><p>用指定字符从左边（右边）开始填充至指定长度</p>
+<p>注意，当指定长度小于字符长度时会产生截断</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT LPAD(&#39;nayst&#39;,10,&#39;-&#39;) AS out_put;</code></pre>
+
+<img src="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105838516.png" class="" title="image-20210711105838516" loading="lazy">
+
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT LPAD(&#39;nayst&#39;,3,&#39;-&#39;) AS out_put;</code></pre>
+
+<img src="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711105932452.png" class="" title="image-20210711105932452" loading="lazy">
+
+<h3 id="replace"><a href="#replace" class="headerlink" title="replace"></a>replace</h3><p>替换指定字符</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT REPLACE(&#39;nayst is a handsome man&#39;,&#39;handsome&#39;,&#39;nice&#39;) AS out_put;</code></pre>
+
+<img src="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711110242622.png" class="" title="image-20210711110242622" loading="lazy">
+
+<h2 id="数学函数"><a href="#数学函数" class="headerlink" title="数学函数"></a>数学函数</h2><h3 id="round"><a href="#round" class="headerlink" title="round"></a>round</h3><p>对指定数值的绝对值四舍五入，可以规定四舍五入到第几位，未规定时默认整数位</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT ROUND(-1.567,2);</code></pre>
+
+<img src="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711110723275.png" class="" title="image-20210711110723275" loading="lazy">
+
+<h3 id="ceil、floor"><a href="#ceil、floor" class="headerlink" title="ceil、floor"></a>ceil、floor</h3><p>向上（下）取整，返回该&gt;&#x3D;（&lt;&#x3D;）该参数的最小整数</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT CEIL(-1.02) out_put;</code></pre>
+
+<img src="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711110949281.png" class="" title="image-20210711110949281" loading="lazy">
+
+<h3 id="truncate"><a href="#truncate" class="headerlink" title="truncate"></a>truncate</h3><p>从小数点后指定位数截断，即保留指定位数的小数</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT TRUNCATE(1.12345,3);</code></pre>
+
+<img src="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111137125.png" class="" title="image-20210711111137125" loading="lazy">
+
+<h3 id="mod"><a href="#mod" class="headerlink" title="mod"></a>mod</h3><p>取余，等价于%</p>
+<p>遇到负数时可以参考这个公式：MOD(a,b)&#x3D;a-a&#x2F;b*b</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT MOD(10,3);</code></pre>
+
+<img src="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111308203.png" class="" title="image-20210711111308203" loading="lazy">
+
+<h2 id="日期函数"><a href="#日期函数" class="headerlink" title="日期函数"></a>日期函数</h2><h3 id="now"><a href="#now" class="headerlink" title="now"></a>now</h3><p>返回当前日期+时间</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT NOW();</code></pre>
+
+<img src="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111627538.png" class="" title="image-20210711111627538" loading="lazy">
+
+<h3 id="curdate"><a href="#curdate" class="headerlink" title="curdate"></a>curdate</h3><p>只返回当前的日期</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT CURDATE();</code></pre>
+
+<img src="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111711002.png" class="" title="image-20210711111711002" loading="lazy">
+
+<h3 id="curtime"><a href="#curtime" class="headerlink" title="curtime"></a>curtime</h3><p>只返回当前的时间</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT CURTIME();</code></pre>
+
+<img src="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711111739581.png" class="" title="image-20210711111739581" loading="lazy">
+
+<h3 id="获取指定的部分"><a href="#获取指定的部分" class="headerlink" title="获取指定的部分"></a>获取指定的部分</h3><p>获取日期中的年、月、日、小时、分钟、秒</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT YEAR(NOW()) 年;
+SELECT YEAR(&#39;2021-7-11&#39;) 年;
+SELECT YEAR(hiredate) 年 FROM employees;
+SELECT MONTH(NOW()) 月;
+SELECT MONTHNAME(NOW()) &#39;month&#39;;</code></pre>
+
+<img src="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711132001916.png" class="" title="image-20210711132001916" loading="lazy">
+
+<h2 id="流程控制函数"><a href="#流程控制函数" class="headerlink" title="流程控制函数"></a>流程控制函数</h2><h3 id="if"><a href="#if" class="headerlink" title="if"></a>if</h3><pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT IF(10&lt;5,&#39;true&#39;,&#39;false&#39;) out_put;</code></pre>
+
+<img src="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210711133058188.png" class="" title="image-20210711133058188" loading="lazy">
+
+<h3 id="case"><a href="#case" class="headerlink" title="case"></a>case</h3><pre class="language-mysql" data-language="mysql"><code class="language-mysql">&#x2F;*查询员工的工资
+部门号&#x3D;30，显示的工资为原工资1.1倍
+部门号&#x3D;40，显示的工资为原工资1.2倍
+部门号&#x3D;50，显示的工资为原工资1.3倍
+其他部门，显示的工资为原工资*&#x2F;
+SELECT
+	salary 原工资,
+	department_id,
+CASE
+		department_id 
+		WHEN 30 THEN
+		salary * 1.1 
+		WHEN 40 THEN
+		salary * 1.2 
+		WHEN 50 THEN
+		salary * 1.3 ELSE salary 
+	END AS 新工资
+FROM
+	employees;</code></pre>
+
+<h2 id="分组函数"><a href="#分组函数" class="headerlink" title="分组函数"></a>分组函数</h2><p>功能：用作统计使用，又称聚合函数或统计函数</p>
+<p>分类：sum 求和、avg 平均值、max 最大值、min 最小值、count 计算个数</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT SUM(salary) 总工资 FROM employees;
+SELECT AVG(salary) 平均工资 FROM employees;
+SELECT MIN(salary) 最少工资 FROM employees;
+SELECT MAX(salary) 最大工资 FROM employees;
+SELECT COUNT(salary) 总工资数 FROM employees;</code></pre>
+
+<p>特点：</p>
+<ol>
+<li><p>sum、avg一般用于处理数值型</p>
+<p>max、min、count可以处理任何类型</p>
+</li>
+<li><p>以上分组都可以忽略null值</p>
+</li>
+<li><p>可以和distinct搭配实现去重的运算</p>
+</li>
+<li><p>count(*)、count(1)可以统计行数</p>
+</li>
+<li><p>和分组函数一同查询的字段要求是group by后的字段</p>
+</li>
+</ol>
+<h2 id="其他函数"><a href="#其他函数" class="headerlink" title="其他函数"></a>其他函数</h2><pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT VERSION();
+SELECT DATABASE();
+SELECT USER();</code></pre>
+
+<h1 id="进阶5-分组查询-group-by"><a href="#进阶5-分组查询-group-by" class="headerlink" title="进阶5-分组查询-group by"></a>进阶5-分组查询-group by</h1><ul>
+<li><p>语法</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	分组函数,列（要求出现在group by的后面）
+FROM
+	表 
+[WHERE 
+ 	筛选条件]
+GROUP BY
+	分组的列表 [ORDER BY子句]</code></pre>
+</li>
+<li><p>注意：查询列表必须特殊，要求是分组函数和group by后出现的字段</p>
+</li>
+<li><p>特点：</p>
+<p>分组查询中的筛选条件分为两类</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">数据源</th>
+<th align="center">位置</th>
+<th align="center">关键字</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>查询前筛选</strong></td>
+<td align="center">原始表</td>
+<td align="center">group by子句的前面</td>
+<td align="center">where</td>
+</tr>
+<tr>
+<td align="center"><strong>查询后筛选</strong></td>
+<td align="center">分组后的结果集</td>
+<td align="center">group by子句的后面</td>
+<td align="center">having</td>
+</tr>
+</tbody></table>
+<ol>
+<li>分组函数做条件肯定是放在having子句中</li>
+<li>能用分组前筛选的就优先考虑使用分组前筛选</li>
+</ol>
+</li>
+</ul>
+<h2 id="简单的分组查询"><a href="#简单的分组查询" class="headerlink" title="简单的分组查询"></a>简单的分组查询</h2><pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询每个工种的最高工资
+SELECT
+	MAX(salary),
+	job_id
+FROM
+	employees
+GROUP BY
+	job_id;</code></pre>
+
+<h3 id="查询前筛选"><a href="#查询前筛选" class="headerlink" title="查询前筛选"></a>查询前筛选</h3><pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询邮箱中包含a字符的，每个部门的平均工资
+SELECT
+	AVG(salary),
+	department_id
+FROM
+	employees
+WHERE
+	email LIKE &#39;%a%&#39;
+GROUP BY
+	department_id;</code></pre>
+
+<h3 id="查询后筛选"><a href="#查询后筛选" class="headerlink" title="查询后筛选"></a>查询后筛选</h3><pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询哪个部门的员工个数&gt;2
+#1.查询每个部门的员工个数
+SELECT
+	COUNT(*),
+	department_id
+FROM
+	employees
+GROUP BY
+	department_id;
+#2.根据1的结果筛选哪个部门员工个数&gt;2
+SELECT
+	COUNT(*),
+	department_id
+FROM
+	employees
+G BY
+	department_id
+HAVING
+	COUNT(*)&gt;2;</code></pre>
+
+<h2 id="按函数分组查询"><a href="#按函数分组查询" class="headerlink" title="按函数分组查询"></a>按函数分组查询</h2><pre class="language-mysql" data-language="mysql"><code class="language-mysql">#按员工姓名长度分组，查询每一组的员工个数，筛选员工个数&gt;5的有哪些
+#1.查询每个长度的员工个数
+SELECT
+	COUNT(*),
+	LENGTH(last_name) len_name
+FROM
+	employees
+GROUP BY
+	LENGTH(last_name);
+#2.添加筛选条件
+SELECT
+	COUNT(*) c,
+	LENGTH(last_name) len_name
+FROM
+	employees
+GROUP BY
+	len_name
+HAVING
+	c&gt;5;</code></pre>
+
+<h2 id="按多个字段分组"><a href="#按多个字段分组" class="headerlink" title="按多个字段分组"></a>按多个字段分组</h2><pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询每个部门每个工种的员工的平均工资
+SELECT
+	AVG(salary),
+	department_id,
+	job_id
+FROM
+	employees
+GROUP BY
+	department_id,
+	job_id;</code></pre>
+
+<h2 id="添加排序"><a href="#添加排序" class="headerlink" title="添加排序"></a>添加排序</h2><pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询每个部门每个工种的员工的平均工资，并按平均工资降序排序
+SELECT
+	AVG(salary),
+	department_id,
+	job_id
+FROM
+	employees
+GROUP BY
+	department_id,
+	job_id;
+ORDER BY
+	AVG(salary) DESC;</code></pre>
+
+<h1 id="进阶6-连接查询-join"><a href="#进阶6-连接查询-join" class="headerlink" title="进阶6-连接查询-join"></a>进阶6-连接查询-join</h1><ul>
+<li><p>含义：又称多表查询，当查询的字段来自于多个表时，就会用到连接查询</p>
+</li>
+<li><p>分类：</p>
+<ul>
+<li><p>按年代分类</p>
+<blockquote>
+<p>sql92标准</p>
+<p>sql99标准（推荐）</p>
+</blockquote>
+</li>
+<li><p>按功能分类</p>
+<blockquote>
+<p>内连接：</p>
+<blockquote>
+<p>等值连接</p>
+<p>非等值连接</p>
+<p>自连接</p>
+</blockquote>
+<p>外连接：</p>
+<blockquote>
+<p>左外连接</p>
+<p>右外连接</p>
+<p>全外连接</p>
+</blockquote>
+<p>交叉连接</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<img src="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210712085620802.png" class="" title="image-20210712085620802" loading="lazy">
+
+<h2 id="sql92语法"><a href="#sql92语法" class="headerlink" title="sql92语法"></a>sql92语法</h2><h3 id="等值连接"><a href="#等值连接" class="headerlink" title="等值连接"></a>等值连接</h3><ul>
+<li>特点：需要查询的内容需要访问其他表<ul>
+<li>可以添加筛选</li>
+<li>可以添加分组</li>
+<li>可以添加排序</li>
+</ul>
+</li>
+</ul>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询女神名和对应的男神名
+SELECT 
+	NAME,boyName
+FROM
+	boys,beauty
+WHERE
+	beauty.boyfriend_id &#x3D; boys.id;</code></pre>
+
+<h4 id="为表起别名"><a href="#为表起别名" class="headerlink" title="为表起别名"></a>为表起别名</h4><pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询员工名、工种名、工种号
+SELECT
+	e.last_name,
+	e.job_id,
+	j.job_id,
+	j.job_title
+FROM
+	employees AS e,jobs AS j	#AS可以省略
+WHERE
+	e.&#96;job_id&#96; &#x3D; j.&#96;job_id&#96;;</code></pre>
+
+<h3 id="非等值连接"><a href="#非等值连接" class="headerlink" title="非等值连接"></a>非等值连接</h3><img src="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/image-20210712091302987.png" class="" title="image-20210712091302987" loading="lazy">
+
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询员工的工资和工资筛选级别为A
+SELECT
+	salary,
+	grade_level
+FROM
+	employees e,
+	job_grades g
+WHERE
+	salary BETWEEN g.&#96;lowest_sal&#96; AND g.&#96;highest_sal&#96;
+AND
+	g.&#96;grade_level&#96; &#x3D; &#39;A&#39;;</code></pre>
+
+<h3 id="自连接"><a href="#自连接" class="headerlink" title="自连接"></a>自连接</h3><ul>
+<li>特点：类似于等值连接，需要查询的内容需要再次访问当前表</li>
+</ul>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询员工名和对应上级的名称
+SELECT
+	e.last_name,
+	m.last_name
+FROM
+	employees e,
+	employees m
+WHERE
+	e.&#96;manager_id&#96; &#x3D; m.&#96;employee_id&#96;;
+	</code></pre>
+
+<h2 id="sql99语法（推荐）"><a href="#sql99语法（推荐）" class="headerlink" title="sql99语法（推荐）"></a>sql99语法（推荐）</h2><ul>
+<li>语法</li>
+</ul>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	查询列表
+FROM
+	表1 别名 [连接类型]
+JOIN
+	表2 别名
+ON
+	连接条件
+[WHERE]
+[GROUP BY]
+[HAVING]
+[ORDER BY]</code></pre>
+
+<h3 id="内连接-inner"><a href="#内连接-inner" class="headerlink" title="内连接-inner"></a>内连接-inner</h3><ul>
+<li>特点：查询的内容在各自表中都有</li>
+</ul>
+<h4 id="等值连接-1"><a href="#等值连接-1" class="headerlink" title="等值连接"></a>等值连接</h4><pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询员工名、部门名
+SELECT
+	last_name,
+	department_name
+FROM
+	employees e
+[INNER] JOIN
+	departments d
+ON
+	e.&#96;department_id&#96; &#x3D; d.&#96;department_id&#96;;</code></pre>
+
+<h4 id="非等值连接-1"><a href="#非等值连接-1" class="headerlink" title="非等值连接"></a>非等值连接</h4><pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询员工每个工资级别的&gt;20的个数，并按工资级别降序
+SELECT
+	COUNT(*),
+	grade_level
+FROM
+	employees e
+JOIN
+	job_grade g
+GROUP BY
+	grade_level
+HAVING
+	COUNT(*)&gt;20
+ORDER BY
+	grade_level DESC;</code></pre>
+
+<h4 id="自连接-1"><a href="#自连接-1" class="headerlink" title="自连接"></a>自连接</h4><pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询员工名字和上级的名字
+SELECT
+	e.last_name,
+	m.last_name
+FROM
+	employees e
+JOIN
+	employees m
+ON
+	e.&#96;manager_id&#96; &#x3D; m.&#96;employees_id&#96;;</code></pre>
+
+<h3 id="外连接-outer"><a href="#外连接-outer" class="headerlink" title="外连接-outer"></a>外连接-outer</h3><ul>
+<li><p>特点：查询一个表中有，另一个表中没有的记录</p>
+<ul>
+<li><p>外连接的查询结果为主表中的所有记录</p>
+<p>如果从表中没有和它匹配的则显示null</p>
+<p>外连接查询结果 &#x3D; 内连接结果 + 主表有儿从表中没有的记录</p>
+<p>全外查询结果&#x3D;内连接结果+表1中有但表2中没有+表2中有但表1中没有的</p>
+</li>
+<li><p>左外连接：left join左边的是主表</p>
+<p>右外连接：right join右边的是主表</p>
+<p>全外连接：full</p>
+</li>
+<li><p>左外和右外交换两个表的顺序，可以实现同样的效果</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="左外连接"><a href="#左外连接" class="headerlink" title="左外连接"></a>左外连接</h4><pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询男朋友不在男神表的女神名
+SELECT
+	b.name,
+	bo.*
+FROM
+	beatuy b
+LEFT OUTER JOIN
+	boys bo
+ON
+	b.&#96;boyfriend_id&#96; &#x3D; bo.&#96;id&#96;
+WHERE
+	bo.&#96;id&#96; IS NULL;</code></pre>
+
+<h4 id="右外连接"><a href="#右外连接" class="headerlink" title="右外连接"></a>右外连接</h4><pre class="language-mysql" data-language="mysql"><code class="language-mysql">#查询哪个部门没有员工
+SELECT
+	d.*;
+	e.employee_id
+FROM
+	employees e
+RIGHT OUTER JOIN
+	departments d
+ON
+	d.&#96;department_id&#96; &#x3D; e.&#96;department_id&#96;
+WHERE
+	e.&#96;employee_id&#96; IS NULL;</code></pre>
+
+<h4 id="全外连接"><a href="#全外连接" class="headerlink" title="全外连接"></a>全外连接</h4><pre class="language-mysql" data-language="mysql"><code class="language-mysql">#全外连接
+SELECT
+	b.*,
+	bo.*
+FROM
+	beauty b
+FULL OUTER JOIN
+	boys bo
+ON
+	b.&#96;boyfriend_id&#96; &#x3D; bo.id;</code></pre>
+
+<h3 id="交叉连接-cross"><a href="#交叉连接-cross" class="headerlink" title="交叉连接-cross"></a>交叉连接-cross</h3><pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	b.*,
+	bo.*
+FROM
+	beauty b
+CROSS JOIN
+	boys bo;</code></pre>
+
+<h1 id="进阶7-子查询"><a href="#进阶7-子查询" class="headerlink" title="进阶7-子查询"></a>进阶7-子查询</h1><ul>
+<li><p>含义：出现在其他语句中的select语句，称为子查询或内查询</p>
+<p> 外部的查询语句，称为主查询或外查询</p>
+</li>
+<li><p>分类：</p>
+<ul>
+<li><p>按子查询出现的位置</p>
+<blockquote>
+<p>where或having后面</p>
+<p>select后面：只支持标量子查询</p>
+<p>from后面：支持表子查询</p>
+<p>exists后面（相关子查询）</p>
+</blockquote>
+</li>
+<li><p>按结果集的行列数不同</p>
+<blockquote>
+<p>标量子查询（结果集只有一行一列）</p>
+<p>列子查询（结果集只有一行多列）</p>
+<p>行子查询（结果集有一行多列）</p>
+<p>表子查询（结果集一般为多行多列）</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="where后面"><a href="#where后面" class="headerlink" title="where后面"></a>where后面</h2><h3 id="标量子查询"><a href="#标量子查询" class="headerlink" title="标量子查询"></a>标量子查询</h3><ul>
+<li>查询谁的工资比Abel高</li>
+</ul>
+<p>1.查询Abel的工资</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	salary
+FROM
+	employees
+WHERE
+	last_name &#x3D; &#39;Abel&#39;;</code></pre>
+
+<p>2.查询满足salary&gt;1结果的员工信息</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	*
+FROM
+	employees
+WHERE
+	salary &gt; ( 
+        SELECT 
+        	salary 
+        FROM 
+        	employees 
+        WHERE 
+        	last_name &#x3D; &#39;Abel&#39; );</code></pre>
+
+<h3 id="列子查询"><a href="#列子查询" class="headerlink" title="列子查询"></a>列子查询</h3><h4 id="in-1"><a href="#in-1" class="headerlink" title="in"></a>in</h4><ul>
+<li>返回location_id是1400或1700的部门中的所有员工姓名</li>
+</ul>
+<p>1.查询location_id是1400或1700的部门编号</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">
+SELECT DISTINCT
+	departmen_id
+FROM
+	departments
+WHERE
+	location_id IN (1400,1700)</code></pre>
+
+<p>2.查询部门编号是1中某一个的员工姓名</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	last_name
+FROM
+	employees
+WHERE
+	department_id IN (
+        SELECT DISTINCT
+			departmen_id
+		FROM
+			departments
+		WHERE
+			location_id IN (1400,1700));</code></pre>
+
+<h4 id="any-x2F-all"><a href="#any-x2F-all" class="headerlink" title="any&#x2F;all"></a>any&#x2F;all</h4><ul>
+<li>查询其他部门中比job_id为’IT_PROG’部门任意一个员工的工资低的员工的员工号、姓名、job_id 以及salary</li>
+</ul>
+<p>1.查询job_id为’IT_PROG’部门的工资</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT DISTINCT
+	salary
+FROM
+	employees
+WHERE
+	job_id &#x3D; &#39;IT_PROG&#39;;</code></pre>
+
+<p>2.查询salary&lt;1的员工的员工号、姓名、job_id 以及salary</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	last_name,
+	employees_id,
+	job_id,
+	salary
+FROM
+	employees
+WHERE
+	salary &lt; ANY(
+    	SELECT DISTINCT
+			salary
+		FROM
+			employees
+		WHERE
+			job_id &#x3D; &#39;IT_PROG&#39;
+)AND
+	job_id &lt;&gt; &#39;IT_PROG&#39;;</code></pre>
+
+<h3 id="行子查询"><a href="#行子查询" class="headerlink" title="行子查询"></a>行子查询</h3><ul>
+<li>查询员工编号最小并且工资最高的员工信息</li>
+</ul>
+<p>1.查询最小的员工编号</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	MIN(employee_id)
+FROM
+	employees;</code></pre>
+
+<p>2.查询最高工资</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	MAX(salary)
+FROM
+	employees;</code></pre>
+
+<p>3.查询员工信息</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	*
+FROM
+	employees
+WHERE
+	(employees_id,salary) &#x3D; (
+    	SELECT
+			MIN(employee_id),
+        	MAX(salary)
+		FROM
+			employees
+);</code></pre>
+
+<h2 id="select后面"><a href="#select后面" class="headerlink" title="select后面"></a>select后面</h2><ul>
+<li>查询每个部门的员工个数</li>
+</ul>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	d.*,(
+    SELECT
+    	COUNT(*)
+    FROM 
+        employees e
+    WHERE
+        e.department_id &#x3D; d.&#96;department_id&#96;
+	)
+FROM
+	department d;</code></pre>
+
+<ul>
+<li>查询员工号&#x3D;102的部门名</li>
+</ul>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	(
+    SELECT
+    	department_name
+    FROM
+    	departments d
+    INNER JOIN
+    	employees e
+    ON
+    	d.department_id &#x3D; e.department_id
+    WHERE
+    	e.employees_id &#x3D; 102)</code></pre>
+
+<h2 id="from后面"><a href="#from后面" class="headerlink" title="from后面"></a>from后面</h2><ul>
+<li>查询每个部门平均工资的工资等级</li>
+</ul>
+<p>1.查询每个部门的平均工资</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	AVG(salary),department_id
+FROM
+	employees
+GROUP BY
+	department_id</code></pre>
+
+<p>2.连接1的结果集和job_grades表，筛选条件平均工资 between lowest_sal and highest_sal</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	ag_dep.*,g.&#96;grade_level&#96;
+FROM (
+	SELECT
+		AVG(salary) ag,department_id
+    FROM
+    	employees
+    GROUP BY
+    	department_id
+    )ag_dep
+INNER JOIN 
+	job_grades g
+ON
+	ag_dep.ag
+BETWEEN	lowest_sal AND highest_sal;</code></pre>
+
+<h2 id="exists后面（相关子查询）"><a href="#exists后面（相关子查询）" class="headerlink" title="exists后面（相关子查询）"></a>exists后面（相关子查询）</h2><ul>
+<li>查询有员工的部门名</li>
+</ul>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	department_name
+FROM
+	departments
+WHERE EXISTS (
+	SELECT
+		*
+	FROM
+		employees e
+	WHERE
+    	d.&#96;department_id&#96; &#x3D; e.&#96;department_id&#96;
+);</code></pre>
+
+<h1 id="进阶8-分页查询-limit"><a href="#进阶8-分页查询-limit" class="headerlink" title="进阶8-分页查询-limit"></a>进阶8-分页查询-limit</h1><ul>
+<li>语法</li>
+</ul>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT
+	查询列表
+FROM
+	表
+【...
+】
+limit
+	offset,size;
+#offset：要显示的条目的起始索引（从0开始）(从0开始时可以省略)
+#size：要显示的条目个数</code></pre>
+
+<ul>
+<li>查询前五条员工信息</li>
+</ul>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT * FROM employees limit 0,5;
+#SELECT * FROM employees limit 5;</code></pre>
+
+<ul>
+<li>查询11-25条信息</li>
+</ul>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT * FROM employees limit 11,15;</code></pre>
+
+<h1 id="进阶9-联合查询-union"><a href="#进阶9-联合查询-union" class="headerlink" title="进阶9-联合查询-union"></a>进阶9-联合查询-union</h1><ul>
+<li><p>含义：将多条查询语句的查询结果合并</p>
+</li>
+<li><p>语法：</p>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">查询语句1
+UNION
+查询语句2
+UNION
+...</code></pre>
+</li>
+<li><p>应用场景：要查询的结果来自多个表，且表之间没有连接关系，但查询信息一致时</p>
+</li>
+<li><p>特点</p>
+</li>
+</ul>
+<ol>
+<li>要求多条查询语句的查询列数是一致的</li>
+<li>要求多条查询语句的查询的每一列的类型和顺序最好一致</li>
+<li>union关键字默认去重，如果不需要去重使用union all</li>
+</ol>
+<ul>
+<li>查询中国用户中年男性的信息以及外国用户中年男性的用户信息</li>
+</ul>
+<pre class="language-mysql" data-language="mysql"><code class="language-mysql">SELECT id,cname FROM t_ca WHERE csex&#x3D;&#39;男&#39;
+UNION
+SELECT t_id,tname FROM t_ua WHERE tGender&#x3D;&#39;male&#39;;</code></pre>
+
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1bsz3vGItmBfecI8fuxnLIA">本博客使用的数据库（提取码k6kq）</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV12b411K7Zu">课程学习</a></p>
+</div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><span class="icon iconify" data-icon="ri:hand-coin-line"></span></span><div id="reward-comment">竟然有用？！赏！</div><div id="qr" style="display:none;"><div style="display:inline-block"><a href="/images/Alipay.png"><img loading="lazy" src="/images/Alipay.png" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><span class="icon iconify" data-icon="ri:alipay-line"></span></span></div></div><div style="display:inline-block"><a href="/images/WechatPay.png"><img loading="lazy" src="/images/WechatPay.png" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><span class="icon iconify" data-icon="ri:wechat-pay-line"></span></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>Nayst</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/" title="mysql">https://www.nayst.top/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" rel="prev" title="命令执行"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">命令执行</span></a></div><div class="post-nav-item"></div></div></div><div class="hty-card" id="comment"></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2021 – 2022 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> Nayst</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.6</span></div><div class="live-time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2021-07-01T18:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="https://fastly.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js"></script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div class="search-result-container"></div></div><script src="https://fastly.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script><script>const images = [...document.querySelectorAll('.markdown-body img')]
+mediumZoom(images)</script><style>.medium-zoom-image {
+  z-index: 99;
+}</style></body></html>

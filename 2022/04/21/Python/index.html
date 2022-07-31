@@ -1,0 +1,516 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Nayst"><meta name="copyright" content="Nayst"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>Python | Nayst-Blog</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.3.3/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/svg+xml" href="/images/Doge.svg"><link rel="mask-icon" href="/images/Doge.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"www.nayst.top","root":"/","title":["Nayst","的","小","站"],"version":"1.10.6","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"fireworks":{"colors":null},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><meta name="description" content="Python - 特点 简单易学 交互式编程 解释性 面对对象  Python - 基础 编码 默认情况下，py3源码以UTF-8编码，所有字符都是Unicode字符串 指定不同的编码： # -*- coding: cp-1252 -*-  标识符  第一个字符必须是字母表中字母或下划线 _。 标识符的其他的部分由_字母_、_数字_和_下划线_组成。 标识符对大小写敏感。  注：在py3中，可以用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python">
+<meta property="og:url" content="https://www.nayst.top/2022/04/21/Python/index.html">
+<meta property="og:site_name" content="Nayst-Blog">
+<meta property="og:description" content="Python - 特点 简单易学 交互式编程 解释性 面对对象  Python - 基础 编码 默认情况下，py3源码以UTF-8编码，所有字符都是Unicode字符串 指定不同的编码： # -*- coding: cp-1252 -*-  标识符  第一个字符必须是字母表中字母或下划线 _。 标识符的其他的部分由_字母_、_数字_和_下划线_组成。 标识符对大小写敏感。  注：在py3中，可以用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.nayst.top/2022/04/21/Python/image-20211121123414376.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/21/Python/image-20211121164015263.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/21/Python/image-20211121164057555.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/21/Python/image-20211121141040410.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/21/Python/py-tup-10-26-1.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/21/Python/try_except.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/21/Python/try_except_else.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/21/Python/try_except_else_finally.png">
+<meta property="article:published_time" content="2022-04-21T03:06:22.000Z">
+<meta property="article:modified_time" content="2022-07-31T08:45:57.442Z">
+<meta property="article:author" content="Nayst">
+<meta property="article:tag" content="笔记">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.nayst.top/2022/04/21/Python/image-20211121123414376.png"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Nayst"><img width="96" loading="lazy" src="/images/kakashi.png" alt="Nayst"><span class="site-author-status" title="努力做一个对社会有贡献的人">🤣</span></a><div class="site-author-name"><a href="/about/">Nayst</a></div><span class="site-name">Nayst-Blog</span><sub class="site-subtitle">远离舒适圈</sub><div class="site-description">已入江湖，未配良剑</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">17</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">4</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">6</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:settings-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" title="2495582918" target="_blank" style="color:#007722"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="y1049843745" target="_blank" style="color:#1AAD19"><span class="icon iconify" data-icon="ri:wechat-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/N4YST" title="GitHub" target="_blank" style="color:#6e5494"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/1579790" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/jizhideyunyoujun" title="微博" target="_blank" style="color:#E6162D"><span class="icon iconify" data-icon="ri:weibo-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=277777144" title="网易云音乐" target="_blank" style="color:#C20C0C"><span class="icon iconify" data-icon="ri:netease-cloud-music-line"></span></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><span class="icon iconify" data-icon="ri:genderless-line"></span></a><a class="links-item hty-icon-button" href="/girls/" title="我的老婆们" style="color:pink"><span class="icon iconify" data-icon="ri:women-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E7%89%B9%E7%82%B9"><span class="toc-number">1.</span> <span class="toc-text">Python - 特点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E5%9F%BA%E7%A1%80"><span class="toc-number">2.</span> <span class="toc-text">Python - 基础</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.</span> <span class="toc-text">Python - 运算符</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.1.</span> <span class="toc-text">算术运算符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.2.</span> <span class="toc-text">赋值运算符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.3.</span> <span class="toc-text">关系运算符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.4.</span> <span class="toc-text">逻辑运算符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%90%E5%91%98%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.5.</span> <span class="toc-text">成员运算符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BA%AB%E4%BB%BD%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.6.</span> <span class="toc-text">身份运算符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%8D%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.7.</span> <span class="toc-text">位运算符</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E4%BA%A4%E4%BA%92%E8%AF%AD%E5%8F%A5"><span class="toc-number">4.</span> <span class="toc-text">Python - 交互语句</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#input"><span class="toc-number">4.1.</span> <span class="toc-text">input</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#print"><span class="toc-number">4.2.</span> <span class="toc-text">print</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E6%9D%A1%E4%BB%B6%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5"><span class="toc-number">5.</span> <span class="toc-text">Python - 条件控制语句</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#if"><span class="toc-number">5.1.</span> <span class="toc-text">if</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#switch"><span class="toc-number">5.2.</span> <span class="toc-text">switch</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E5%BE%AA%E7%8E%AF%E6%8E%A7%E5%88%B6%E8%AF%AD%E5%8F%A5"><span class="toc-number">6.</span> <span class="toc-text">Python - 循环控制语句</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#while"><span class="toc-number">6.1.</span> <span class="toc-text">while</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#for"><span class="toc-number">6.2.</span> <span class="toc-text">for</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#break"><span class="toc-number">6.3.</span> <span class="toc-text">break</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#continue"><span class="toc-number">6.4.</span> <span class="toc-text">continue</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E8%BF%AD%E4%BB%A3%E5%99%A8"><span class="toc-number">7.</span> <span class="toc-text">Python - 迭代器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E5%88%97%E8%A1%A8"><span class="toc-number">8.</span> <span class="toc-text">Python - 列表</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%BD%E6%95%B0"><span class="toc-number">8.1.</span> <span class="toc-text">函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">8.2.</span> <span class="toc-text">方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E5%85%83%E7%BB%84"><span class="toc-number">9.</span> <span class="toc-text">Python - 元组</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E5%AD%97%E5%85%B8"><span class="toc-number">10.</span> <span class="toc-text">Python - 字典</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%BD%E6%95%B0-1"><span class="toc-number">10.1.</span> <span class="toc-text">函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95-1"><span class="toc-number">10.2.</span> <span class="toc-text">方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E5%87%BD%E6%95%B0"><span class="toc-number">11.</span> <span class="toc-text">Python - 函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E6%96%87%E4%BB%B6"><span class="toc-number">12.</span> <span class="toc-text">Python - 文件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E5%BC%82%E5%B8%B8"><span class="toc-number">13.</span> <span class="toc-text">Python - 异常</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E9%9D%A2%E5%AF%B9%E5%AF%B9%E8%B1%A1"><span class="toc-number">14.</span> <span class="toc-text">Python - 面对对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E5%AF%B9%E8%B1%A1"><span class="toc-number">14.1.</span> <span class="toc-text">类对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#self"><span class="toc-number">14.2.</span> <span class="toc-text">self</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E4%B8%93%E6%9C%89%E6%96%B9%E6%B3%95"><span class="toc-number">14.3.</span> <span class="toc-text">类的专有方法</span></a></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.nayst.top/2022/04/21/Python/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Nayst"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Nayst-Blog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Python</h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2022-04-21 11:06:22" itemprop="dateCreated datePublished" datetime="2022-04-21T11:06:22+08:00">2022-04-21</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-07-31 16:45:57" itemprop="dateModified" datetime="2022-07-31T16:45:57+08:00">2022-07-31</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><span class="icon iconify" data-icon="ri:file-word-line"></span></span> <span title="本文字数">3.4k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><span class="icon iconify" data-icon="ri:timer-line"></span></span> <span title="阅读时长">12m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E8%AF%AD%E6%B3%95/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">语法</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/%E7%AC%94%E8%AE%B0/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">笔记</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h1 id="Python-特点"><a href="#Python-特点" class="headerlink" title="Python - 特点"></a>Python - 特点</h1><ol>
+<li>简单易学</li>
+<li>交互式编程</li>
+<li>解释性</li>
+<li>面对对象</li>
+</ol>
+<h1 id="Python-基础"><a href="#Python-基础" class="headerlink" title="Python - 基础"></a>Python - 基础</h1><ol>
+<li><p>编码</p>
+<p>默认情况下，py3源码以UTF-8编码，所有字符都是Unicode字符串</p>
+<p>指定不同的编码：</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token comment"># -*- coding: cp-1252 -*-</span></code></pre>
+</li>
+<li><p>标识符</p>
+<ul>
+<li>第一个字符必须是字母表中<code>字母</code>或下划线 <code>_</code>。</li>
+<li>标识符的其他的部分由_字母_、_数字_和_下划线_组成。</li>
+<li>标识符对<strong>大小写敏感</strong>。</li>
+</ul>
+<p>注：在py3中，可以用中文等非ASCII标识符</p>
+</li>
+<li><p>保留字（关键字）</p>
+<img src="/2022/04/21/Python/image-20211121123414376.png" class="" loading="lazy">
+</li>
+<li><p>注释</p>
+<ul>
+<li><p>单行注释以<code>#</code>开头</p>
+</li>
+<li><p>多行注释用多个<code>#</code></p>
+</li>
+</ul>
+</li>
+<li><p>行与缩进</p>
+<p>python以缩进区分行，缩进有问题时会报错</p>
+<ul>
+<li>python 通常一行写一条语句，如果语句很长可以在尾部加反斜杠<code>\</code>来实现多行语句</li>
+<li>在<code>[]</code>、<code>&#123;&#125;</code>、<code>()</code>中的多行语句不需要反斜杠</li>
+</ul>
+</li>
+<li><p>数据类型</p>
+<ol>
+<li><p>Number（数字）</p>
+<ul>
+<li><p>int（整型）</p>
+</li>
+<li><p>bool（布尔型）</p>
+</li>
+<li><p>float（浮点型）</p>
+</li>
+<li><p>complex（复数）</p>
+</li>
+</ul>
+</li>
+<li><p>String（字符串）</p>
+<ul>
+<li><p>字符串用单引号<code>&#39;</code>或者双引号<code>&quot;</code>括起来，同时使用反斜杠<code>\</code>转义特殊字符，在字符串添加一个<code>r</code>取消转义</p>
+</li>
+<li><p>在python中，单引号和双引号的使用基本相同</p>
+</li>
+<li><p>字符串可以用<code>+</code>连接</p>
+</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><p>字符串的截取语法格式（包含头不包含尾）：</p>
+<blockquote>
+<p>变量名[头下标:尾下标]</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ol>
+<h1 id="Python-运算符"><a href="#Python-运算符" class="headerlink" title="Python - 运算符"></a>Python - 运算符</h1><h2 id="算术运算符"><a href="#算术运算符" class="headerlink" title="算术运算符"></a>算术运算符</h2><p>Python 中提供了 7 个基本的算术运算符，与数学方法中基本类似，见下表。（其中 a &#x3D; 3, b &#x3D; 4）</p>
+<table>
+<thead>
+<tr>
+<th align="center">运算符</th>
+<th align="center">名称</th>
+<th align="center">示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">+</td>
+<td align="center">加法</td>
+<td align="center">a + b &#x3D; 7</td>
+</tr>
+<tr>
+<td align="center">-</td>
+<td align="center">减法</td>
+<td align="center">a - b &#x3D; -1</td>
+</tr>
+<tr>
+<td align="center">*</td>
+<td align="center">乘法</td>
+<td align="center">a * b &#x3D; 12</td>
+</tr>
+<tr>
+<td align="center">&#x2F;</td>
+<td align="center">除法</td>
+<td align="center">a &#x2F; b &#x3D; 0.75</td>
+</tr>
+<tr>
+<td align="center">%</td>
+<td align="center">取模</td>
+<td align="center">a % b &#x3D; 3</td>
+</tr>
+<tr>
+<td align="center">**</td>
+<td align="center">乘方</td>
+<td align="center">a ** b &#x3D; 81</td>
+</tr>
+<tr>
+<td align="center">&#x2F;&#x2F;</td>
+<td align="center">整除</td>
+<td align="center">a &#x2F;&#x2F; b &#x3D; 0</td>
+</tr>
+<tr>
+<td align="center">b &#x2F;&#x2F; a &#x3D; 1</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+<h2 id="赋值运算符"><a href="#赋值运算符" class="headerlink" title="赋值运算符"></a>赋值运算符</h2><p>在 Python 中，允许使用<strong>复合赋值运算符</strong>，包括 <code>+=, -=, *=, /=, %=, **=, //=</code>七种。</p>
+<h2 id="关系运算符"><a href="#关系运算符" class="headerlink" title="关系运算符"></a>关系运算符</h2><p>又叫 比较运算符 ，结果是一个布尔值，有 <code>==, !=, &gt;, &lt;, &gt;=, &lt;=</code> 六种。</p>
+<h2 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h2><p>在 Python 中，逻辑运算符包括 <code>and（与），or（或），not（非）</code> 三种。</p>
+<p>但<strong>其返回值不一定是布尔值</strong>！</p>
+<table>
+<thead>
+<tr>
+<th align="center">运算符</th>
+<th align="center">举例</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">and</td>
+<td align="center">x and y</td>
+<td align="center">如果 x 为 False，无需计算 y 的值，返回 x 的值；否则返回 y 的值</td>
+</tr>
+<tr>
+<td align="center">or</td>
+<td align="center">x or y</td>
+<td align="center">如果 x 为 True，无需计算 y 的值，返回值为 x；否则返回 y 的值</td>
+</tr>
+<tr>
+<td align="center">not</td>
+<td align="center">not x</td>
+<td align="center">如果 x 为 True，返回值为 False；否则返回值为 True</td>
+</tr>
+</tbody></table>
+<h2 id="成员运算符"><a href="#成员运算符" class="headerlink" title="成员运算符"></a>成员运算符</h2><p>在 Python 中，成员运算符 用于判断一个元素是否在某个序列中，包括<code>in（存在），not in（不存在）</code> 两种。</p>
+<p>返回值是布尔值。</p>
+<h2 id="身份运算符"><a href="#身份运算符" class="headerlink" title="身份运算符"></a>身份运算符</h2><p>在 Python 中，身份运算符 用于判断两个变量的引用对象是否指向同一个内存对象5，包括<code>is，is not</code> 两种。</p>
+<p>返回值是布尔值。</p>
+<h2 id="位运算符"><a href="#位运算符" class="headerlink" title="位运算符"></a>位运算符</h2><p>指二进制位的运算，包括<code>&amp;（与），|（或），^（取反），~（取反），&lt;&lt;（左移），&lt;&lt;（右移）</code> 六种。</p>
+<h1 id="Python-交互语句"><a href="#Python-交互语句" class="headerlink" title="Python - 交互语句"></a>Python - 交互语句</h1><h2 id="input"><a href="#input" class="headerlink" title="input"></a>input</h2><p>**input()**方法用于从标准输入读入一行文本</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token operator">>></span><span class="token operator">></span><span class="token builtin">str</span> <span class="token operator">=</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token string">"please input something: "</span><span class="token punctuation">)</span>
+<span class="token operator">>></span><span class="token operator">></span><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"your input: "</span><span class="token punctuation">,</span><span class="token builtin">str</span><span class="token punctuation">)</span></code></pre>
+
+<h2 id="print"><a href="#print" class="headerlink" title="print"></a>print</h2><p>**print()**方法用于打印输出，基本语法：</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token operator">*</span>objects<span class="token punctuation">,</span> sep<span class="token operator">=</span><span class="token string">' '</span><span class="token punctuation">,</span> end<span class="token operator">=</span><span class="token string">'\n'</span><span class="token punctuation">,</span> <span class="token builtin">file</span><span class="token operator">=</span>sys<span class="token punctuation">.</span>stdout<span class="token punctuation">)</span></code></pre>
+
+<p>objects –表示输出的对象。输出多个对象时，需要用 , （逗号）分隔</p>
+<p>sep – 用来间隔多个对象</p>
+<p>end – 用来设定以什么结尾。默认值是换行符 \n，我们可以换成其他字符</p>
+<p>file – 要写入的文件对象</p>
+<ul>
+<li><p>无论什么类型的数据都可以直接输出</p>
+</li>
+<li><p>数据的格式化输出类似于C中的<strong>printf</strong></p>
+</li>
+<li><p>使用_end_分割字符，默认为换行</p>
+</li>
+</ul>
+<p>**str()<strong>和</strong>repr()**用于将输出的值转成字符串</p>
+<h1 id="Python-条件控制语句"><a href="#Python-条件控制语句" class="headerlink" title="Python - 条件控制语句"></a>Python - 条件控制语句</h1><h2 id="if"><a href="#if" class="headerlink" title="if"></a>if</h2><p>一般格式：</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token keyword">if</span> condition_1<span class="token punctuation">:</span>
+    statement_block_1
+<span class="token keyword">elif</span> condition_2<span class="token punctuation">:</span>
+    statement_block_2
+<span class="token keyword">else</span><span class="token punctuation">:</span>
+    statement_block_3</code></pre>
+
+<ul>
+<li>每个条件后用冒号<code>:</code>结束</li>
+<li>用缩进划分语句块</li>
+<li>如果循环体中就一条语句，你可以写在同一行</li>
+</ul>
+<h2 id="switch"><a href="#switch" class="headerlink" title="switch"></a>switch</h2><p><strong>python中没有Switch语句</strong></p>
+<h1 id="Python-循环控制语句"><a href="#Python-循环控制语句" class="headerlink" title="Python - 循环控制语句"></a>Python - 循环控制语句</h1><h2 id="while"><a href="#while" class="headerlink" title="while"></a>while</h2><p>一般格式：</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token keyword">while</span> condition<span class="token punctuation">:</span>
+    statements_block_1
+<span class="token keyword">else</span><span class="token punctuation">:</span>
+    statements_block_2</code></pre>
+
+<ul>
+<li>如果循环体中就一条语句，可以写在同一行</li>
+</ul>
+<h2 id="for"><a href="#for" class="headerlink" title="for"></a>for</h2><p>一般格式：</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token keyword">for</span> variable <span class="token keyword">in</span> sequence<span class="token punctuation">:</span>
+    statements_block_1
+<span class="token keyword">else</span><span class="token punctuation">:</span>
+    statements_block_2</code></pre>
+
+<ul>
+<li>python 中的for循环可以遍历任何可迭代对象，如一个列表或一个字符串</li>
+</ul>
+<p>**range()**：在循环中使用，用于生成数列</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span> <span class="token comment"># 0 1 2 3 4</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">6</span><span class="token punctuation">)</span> <span class="token comment"># 0 1 2 3 4 5</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">10</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span> <span class="token comment"># 0 3 6 9</span></code></pre>
+
+<h2 id="break"><a href="#break" class="headerlink" title="break"></a>break</h2><p><strong>break</strong> 语句可以跳出 for 和 while 的循环体。如果你从 for 或 while 循环中终止，任何对应的循环 else 块将不执行。</p>
+<img src="/2022/04/21/Python/image-20211121164015263.png" class="" loading="lazy">
+
+<h2 id="continue"><a href="#continue" class="headerlink" title="continue"></a>continue</h2><p><strong>continue</strong> 语句被用来告诉 Python 跳过当前循环块中的剩余语句，然后继续进行下一轮循环。</p>
+<img src="/2022/04/21/Python/image-20211121164057555.png" class="" loading="lazy">
+
+<h1 id="Python-迭代器"><a href="#Python-迭代器" class="headerlink" title="Python - 迭代器"></a>Python - 迭代器</h1><ul>
+<li><p>迭代器是访问集合元素的一种方式</p>
+</li>
+<li><p>迭代器是一个可以记住遍历的位置的对象</p>
+</li>
+<li><p>迭代器从集合的第一个元素开始访问，直到所有元素被访问完，且只能往前不能后退</p>
+</li>
+<li><p>两个基本方法：<strong>iter()</strong> 和 <strong>next()</strong></p>
+</li>
+</ul>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token operator">>></span><span class="token operator">></span><span class="token builtin">list</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">4</span><span class="token punctuation">]</span>
+<span class="token operator">>></span><span class="token operator">></span>it <span class="token operator">=</span> <span class="token builtin">iter</span><span class="token punctuation">(</span><span class="token builtin">list</span><span class="token punctuation">)</span>    <span class="token comment"># 创建迭代器对象</span>
+<span class="token operator">>></span><span class="token operator">></span><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">next</span><span class="token punctuation">(</span>it<span class="token punctuation">)</span><span class="token punctuation">)</span>    <span class="token comment"># 使用next输出迭代器的下一个元素</span>
+<span class="token number">1</span>
+<span class="token operator">>></span><span class="token operator">></span><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">next</span><span class="token punctuation">(</span>it<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token number">2</span>
+<span class="token operator">>></span><span class="token operator">></span><span class="token keyword">for</span> x <span class="token keyword">in</span> it <span class="token punctuation">:</span> <span class="token keyword">print</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span>end<span class="token operator">=</span><span class="token string">" "</span><span class="token punctuation">)</span>    <span class="token comment"># 直接用常规for语句进行遍历</span>
+<span class="token number">1</span> <span class="token number">2</span> <span class="token number">3</span> <span class="token number">4</span> </code></pre>
+
+<h1 id="Python-列表"><a href="#Python-列表" class="headerlink" title="Python - 列表"></a>Python - 列表</h1><p>类似于C中的数组，用<code>[]</code>定义。</p>
+<p>列表可以进行的操作包括_索引_，_切片_，_加_，_乘_，_检查成员_。</p>
+<img src="/2022/04/21/Python/image-20211121141040410.png" class="" loading="lazy">
+
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>关于列表的一些函数</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token builtin">len</span><span class="token punctuation">(</span><span class="token builtin">list</span><span class="token punctuation">)</span>		<span class="token comment"># 列表元素个数</span>
+<span class="token builtin">max</span><span class="token punctuation">(</span><span class="token builtin">list</span><span class="token punctuation">)</span>		<span class="token comment"># 返回列表元素最大值</span>
+<span class="token builtin">min</span><span class="token punctuation">(</span><span class="token builtin">list</span><span class="token punctuation">)</span>		<span class="token comment"># 返回列表元素最小值</span></code></pre>
+
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><p>通过<code>append()</code>方法来添加或者更新项</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token builtin">list</span><span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token string">'nayst'</span><span class="token punctuation">)</span></code></pre>
+
+<p>通过<code>del()</code>方法来删除项</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token builtin">list</span><span class="token punctuation">.</span><span class="token keyword">del</span><span class="token punctuation">(</span><span class="token string">'nayst'</span><span class="token punctuation">)</span></code></pre>
+
+<p>其他方法</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token builtin">list</span><span class="token punctuation">.</span>count<span class="token punctuation">(</span><span class="token punctuation">)</span>		<span class="token comment"># 统计某个元素在列表中出现的次数</span>
+<span class="token builtin">list</span><span class="token punctuation">.</span>index<span class="token punctuation">(</span><span class="token punctuation">)</span>		<span class="token comment"># 从列表中找出某个值第一个匹配项的索引位置</span>
+<span class="token builtin">list</span><span class="token punctuation">.</span>pop<span class="token punctuation">(</span><span class="token punctuation">)</span>			<span class="token comment"># 移除列表中的一个元素（默认最后一个元素），并且返回该元素的值</span>
+<span class="token builtin">list</span><span class="token punctuation">.</span>remove<span class="token punctuation">(</span><span class="token punctuation">)</span>		<span class="token comment"># 移除列表中某个值的第一个匹配项</span>
+<span class="token builtin">list</span><span class="token punctuation">.</span>reverse<span class="token punctuation">(</span><span class="token punctuation">)</span>		<span class="token comment"># 反向列表中元素</span>
+<span class="token builtin">list</span><span class="token punctuation">.</span>sort<span class="token punctuation">(</span><span class="token punctuation">)</span>			<span class="token comment"># 对列表进行排序</span></code></pre>
+
+<h1 id="Python-元组"><a href="#Python-元组" class="headerlink" title="Python - 元组"></a>Python - 元组</h1><p>Python 的元组与列表类似，不同之处在于元组的元素不能修改。</p>
+<p>元组使用<code>()</code>定义。</p>
+<p>虽然不能修改元组中的元组，但是可以<code>连接元组</code>。</p>
+<pre class="language-python" data-language="python"><code class="language-python">tup1 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span>
+tup2 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">)</span>
+
+tup3 <span class="token operator">=</span> tup1 <span class="token operator">+</span> tup2</code></pre>
+
+<p>与字符串一样，元组之间可以使用 + 号和 * 号进行运算。这就意味着他们可以组合和复制，运算后会生成一个新的元组。</p>
+<h1 id="Python-字典"><a href="#Python-字典" class="headerlink" title="Python - 字典"></a>Python - 字典</h1><p>字典用<code>&#123;&#125;</code>定义，由键值对构成。</p>
+<p>字典的每个 <code>key=&gt;value</code> （键值对）用冒号 <code>:</code> 分割，每个键值对之间用逗号 <code>,</code> 分割。</p>
+<p>字典内的键名不能重复且不可变。</p>
+<h2 id="函数-1"><a href="#函数-1" class="headerlink" title="函数"></a>函数</h2><pre class="language-python" data-language="python"><code class="language-python"><span class="token builtin">len</span><span class="token punctuation">(</span><span class="token builtin">dict</span><span class="token punctuation">)</span>		<span class="token comment"># 计算字典中元素个数，即键总数</span>
+<span class="token builtin">str</span><span class="token punctuation">(</span><span class="token builtin">dict</span><span class="token punctuation">)</span>		<span class="token comment"># 将值转化为适于人阅读的形式，以可打印的字符串表示</span></code></pre>
+
+<h2 id="方法-1"><a href="#方法-1" class="headerlink" title="方法"></a>方法</h2><pre class="language-python" data-language="python"><code class="language-python"><span class="token builtin">dict</span><span class="token punctuation">.</span>clear<span class="token punctuation">(</span><span class="token punctuation">)</span>					<span class="token comment"># 删除字典内所有元素</span>
+<span class="token builtin">dict</span><span class="token punctuation">.</span>copy<span class="token punctuation">(</span><span class="token punctuation">)</span>						<span class="token comment"># 返回一个字典的浅复制</span>
+<span class="token builtin">dict</span><span class="token punctuation">.</span>fromkeys<span class="token punctuation">(</span>list1<span class="token punctuation">,</span>list2<span class="token punctuation">)</span>		<span class="token comment"># 创建一个新字典，以序列 list1 中元素做字典的键，list2 为字典所有键对应的初始值</span>
+<span class="token builtin">dict</span><span class="token punctuation">.</span>get<span class="token punctuation">(</span>key<span class="token punctuation">,</span>default<span class="token operator">=</span>?<span class="token punctuation">)</span>			<span class="token comment"># 返回指定键的值，如果值不在字典中返回default值</span>
+<span class="token builtin">dict</span><span class="token punctuation">.</span>has_key<span class="token punctuation">(</span>key<span class="token punctuation">)</span>				<span class="token comment"># 如果键在字典dict里返回 True，否则返回 False</span>
+<span class="token builtin">dict</span><span class="token punctuation">.</span>items<span class="token punctuation">(</span><span class="token punctuation">)</span>					<span class="token comment"># 以列表返回可遍历的(键, 值) 元组数组</span>
+<span class="token builtin">dict</span><span class="token punctuation">.</span>keys<span class="token punctuation">(</span><span class="token punctuation">)</span>						<span class="token comment"># 以列表返回一个字典所有的键</span>
+<span class="token builtin">dict</span><span class="token punctuation">.</span>values<span class="token punctuation">(</span><span class="token punctuation">)</span>					<span class="token comment"># 以列表返回字典中的所有值</span></code></pre>
+
+<h1 id="Python-函数"><a href="#Python-函数" class="headerlink" title="Python - 函数"></a>Python - 函数</h1><p>定义函数的规则：</p>
+<ol>
+<li>函数代码以<code>def</code>关键词开头，后接函数标识符名称和圆括号</li>
+<li>任何传入参数和自变量必须放在圆括号中间，圆括号之间可以用于定义参数</li>
+<li>内容以冒号<code>:</code>开始，并且缩进</li>
+<li><code>return [表达式]</code>结束函数，不设置默认返回<code>None</code></li>
+</ol>
+<img src="/2022/04/21/Python/py-tup-10-26-1.png" class="" loading="lazy">
+
+<h1 id="Python-文件"><a href="#Python-文件" class="headerlink" title="Python - 文件"></a>Python - 文件</h1><ol>
+<li><p>open</p>
+<p>**open()**方法将会返回一个file对象，基本语法：</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token builtin">open</span><span class="token punctuation">(</span>filename<span class="token punctuation">,</span>mode<span class="token punctuation">)</span>
+
+<span class="token comment"># filename -- 包含了你要访问的文件名称的字符串值。</span>
+<span class="token comment"># mode -- 决定了打开文件的模式：只读，写入，追加等。所有可取值见如下的完全列表。这个参数是非强制的，默认文件访问模式为只读(r)。</span></code></pre>
+
+<table>
+<thead>
+<tr>
+<th align="center">mode</th>
+<th align="center">describt</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">b</td>
+<td align="center">二进制模式。</td>
+</tr>
+<tr>
+<td align="center">w</td>
+<td align="center">打开一个文件<strong>只用于写入</strong>。如果该文件已存在则打开文件，并从开头开始编辑，即原有内容会被<strong>覆盖</strong>。如果该文件不存在，创建新文件。</td>
+</tr>
+<tr>
+<td align="center">r</td>
+<td align="center">以只读方式打开文件。文件的指针将会放在文件的开头。这是默认模式。</td>
+</tr>
+<tr>
+<td align="center">a</td>
+<td align="center">打开一个文件用于<strong>追加</strong>。文件的指针将会放在文件的开头。如果该文件不存在，创建新文件。</td>
+</tr>
+<tr>
+<td align="center">+</td>
+<td align="center">以多模式打开。</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>read</p>
+<p>读取一个文件的内容并作为返回值返回，基本语法：</p>
+<pre class="language-python" data-language="python"><code class="language-python">fileObject<span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">[</span>count<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token comment"># count -- 要从已打开文件中读取的字节计数。该方法从文件的开头开始读入，如果未给定或为负则读取所有。</span></code></pre>
+</li>
+<li><p>readline</p>
+<p>从文件中读取单独的一行，包括 <code>\n</code> 字符，最后一行默认为空，基本语法：</p>
+<pre class="language-python" data-language="python"><code class="language-python">fileObject<span class="token punctuation">.</span>readline<span class="token punctuation">(</span>size<span class="token punctuation">)</span>
+
+<span class="token comment"># size -- 从文件中读取的字节数</span></code></pre>
+</li>
+<li><p>write</p>
+<p>将参数写入到文件中，然后返回写入的字符数</p>
+</li>
+<li><p>close</p>
+<p>关闭文件，刷新缓冲区里任何还没写入的信息，释放系统的资源，不再进行读写操作，基本语法：</p>
+<pre class="language-python" data-language="python"><code class="language-python">fileObject<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
+</li>
+<li><p>tell</p>
+<p>返回文件对象当前所处的位置, 它是从文件开头开始算起的字节数。</p>
+</li>
+</ol>
+<h1 id="Python-异常"><a href="#Python-异常" class="headerlink" title="Python - 异常"></a>Python - 异常</h1><ol>
+<li><p>try…except</p>
+<p>用于捕捉异常</p>
+<img src="/2022/04/21/Python/try_except.png" class="" loading="lazy">
+
+<ul>
+<li>首先，执行 try 子句（在关键字 try 和关键字 except 之间的语句)。</li>
+<li>如果没有异常发生，忽略 except 子句，try 子句执行后结束。</li>
+<li>如果在执行 try 子句的过程中发生了异常，那么 try 子句余下的部分将被忽略。如果异常的类型和 except 之后的名称相符，那么对应的 except 子句将被执行。</li>
+<li>如果一个异常没有与任何的 except 匹配，那么这个异常将会传递给上层的 try 中。</li>
+</ul>
+</li>
+<li><p>try…else</p>
+<p>在 try 没有发生任何异常的时候执行。</p>
+<img src="/2022/04/21/Python/try_except_else.png" class="" loading="lazy">
+</li>
+<li><p>try…finally</p>
+<p>无论是否发生异常都将执行最后的代码</p>
+<img src="/2022/04/21/Python/try_except_else_finally.png" class="" loading="lazy"></li>
+</ol>
+<h1 id="Python-面对对象"><a href="#Python-面对对象" class="headerlink" title="Python - 面对对象"></a>Python - 面对对象</h1><ul>
+<li><strong>类(Class):</strong> 用来描述具有相同的属性和方法的对象的集合。它定义了该集合中每个对象所共有的属性和方法。对象是类的实例。</li>
+<li><strong>类变量：</strong>类变量在整个实例化的对象中是公用的。类变量定义在类中且在函数体之外。类变量通常不作为实例变量使用。</li>
+<li><strong>数据成员：</strong>类变量或者实例变量用于处理类及其实例对象的相关的数据。</li>
+<li><strong>方法重载：</strong>如果从父类继承的方法不能满足子类的需求，可以对其进行改写，这个过程叫方法的覆盖（override），也称为方法的重载。</li>
+<li><strong>实例变量：</strong>定义在方法中的变量，只作用于当前实例的类。</li>
+<li><strong>继承：</strong>即一个派生类（derived class）继承基类（base class）的字段和方法。继承也允许把一个派生类的对象作为一个基类对象对待。例如，有这样一个设计：一个 Dog 类型的对象派生自 Animal 类，这是模拟”是一个（is-a）”关系（例：Dog 是一个 Animal）。</li>
+<li><strong>实例化：</strong>创建一个类的实例，类的具体对象。</li>
+<li><strong>方法：</strong>类中定义的函数。</li>
+<li><strong>对象：</strong>通过类定义的数据结构实例。对象包括两个数据成员（类变量和实例变量）和方法。</li>
+</ul>
+<h2 id="类对象"><a href="#类对象" class="headerlink" title="类对象"></a>类对象</h2><p>使用 class 语句来创建一个新类，class 之后为类的名称并以冒号结尾，如：</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token keyword">class</span> <span class="token class-name">people</span><span class="token punctuation">:</span>
+    name <span class="token operator">=</span> <span class="token string">""</span>
+    age <span class="token operator">=</span> <span class="token number">0</span>
+    \_\_weight <span class="token operator">=</span> <span class="token number">0</span>		<span class="token comment"># 两个下划线开头，声明该属性为私有，不能在类的外部被使用或直接访问。</span>
+    
+    <span class="token keyword">def</span> \_\_init\_\_<span class="token punctuation">(</span>self<span class="token punctuation">,</span> n<span class="token punctuation">,</span> a<span class="token punctuation">,</span> w<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>name <span class="token operator">=</span> n
+        self<span class="token punctuation">.</span>age <span class="token operator">=</span> a
+        self<span class="token punctuation">.</span>\_\_weight <span class="token operator">=</span> w
+   
+	<span class="token keyword">def</span> \_\_secretFunction<span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>		<span class="token comment"># 两个下划线开头，声明该方法为私有方法，只能在类的内部调用 ，不能在类的外部调用。</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"you can't read me"</span><span class="token punctuation">)</span>
+    
+    <span class="token keyword">def</span> <span class="token function">speak</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"%s say: I'm %d years old."</span><span class="token operator">%</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>name<span class="token punctuation">,</span> self<span class="token punctuation">.</span>age<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+p <span class="token operator">=</span> people<span class="token punctuation">(</span><span class="token string">"nayst"</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">)</span>
+p<span class="token punctuation">.</span>speak<span class="token punctuation">(</span><span class="token punctuation">)</span>		<span class="token comment"># nayst say: I'm 10 years old.</span></code></pre>
+
+<p>除 self 参数外，还包含 3 个参数，且这 3 个参数没有设置默认参数，因此在实例化类对象时，需要传入相应的 n ，a ，w 值（self 参数是特殊参数，不需要手动传值，Python 会自动传给它值）。</p>
+<p>无论是类属性还是类方法，对于类来说，它们都不是必需的，可以有也可以没有。</p>
+<h2 id="self"><a href="#self" class="headerlink" title="self"></a>self</h2><p>类的方法中必须有首个参数<code>self</code>，这里的 <code>self</code> 指向类的实例，而非类（self.class 指向类）。</p>
+<p>类似于 PHP 中的 <code>this</code>。</p>
+<h2 id="类的专有方法"><a href="#类的专有方法" class="headerlink" title="类的专有方法"></a>类的专有方法</h2><p>专有方法开头和结尾各有 2 个下划线，且中间不能有空格。</p>
+<ul>
+<li><strong>__init__ :</strong> 构造函数，在生成对象时调用</li>
+<li><strong>__del__ :</strong> 析构函数，释放对象时使用</li>
+<li><strong>__repr__ :</strong> 打印，转换</li>
+<li><strong>__setitem__ :</strong> 按照索引赋值</li>
+<li><strong>__getitem__:</strong> 按照索引获取值</li>
+<li><strong>__len__:</strong> 获得长度</li>
+<li><strong>__cmp__:</strong> 比较运算</li>
+<li><strong>__call__:</strong> 函数调用</li>
+<li><strong>__add__:</strong> 加运算</li>
+<li><strong>__sub__:</strong> 减运算</li>
+<li><strong>__mul__:</strong> 乘运算</li>
+<li><strong>__truediv__:</strong> 除运算</li>
+<li><strong>__mod__:</strong> 求余运算</li>
+<li><strong>__pow__:</strong> 乘方</li>
+</ul>
+</div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><span class="icon iconify" data-icon="ri:hand-coin-line"></span></span><div id="reward-comment">竟然有用？！赏！</div><div id="qr" style="display:none;"><div style="display:inline-block"><a href="/images/Alipay.png"><img loading="lazy" src="/images/Alipay.png" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><span class="icon iconify" data-icon="ri:alipay-line"></span></span></div></div><div style="display:inline-block"><a href="/images/WechatPay.png"><img loading="lazy" src="/images/WechatPay.png" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><span class="icon iconify" data-icon="ri:wechat-pay-line"></span></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>Nayst</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.nayst.top/2022/04/21/Python/" title="Python">https://www.nayst.top/2022/04/21/Python/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2022/04/30/PHP%E5%8E%9F%E7%94%9F%E7%B1%BB/" rel="prev" title="PHP原生类"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">PHP原生类</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/04/20/VulnHub-DC-5/" rel="next" title="VulnHub-DC-5"><span class="post-nav-text">VulnHub-DC-5</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2021 – 2022 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> Nayst</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.6</span></div><div class="live-time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2021-07-01T18:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="https://fastly.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js"></script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div class="search-result-container"></div></div><script src="https://fastly.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script><script>const images = [...document.querySelectorAll('.markdown-body img')]
+mediumZoom(images)</script><style>.medium-zoom-image {
+  z-index: 99;
+}</style></body></html>

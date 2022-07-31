@@ -1,0 +1,549 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Nayst"><meta name="copyright" content="Nayst"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>命令执行 | Nayst-Blog</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.3.3/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/svg+xml" href="/images/Doge.svg"><link rel="mask-icon" href="/images/Doge.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"www.nayst.top","root":"/","title":["Nayst","的","小","站"],"version":"1.10.6","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"fireworks":{"colors":null},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><meta name="description" content="什么是命令执行漏洞命令执行漏洞，就是指用户通过浏览器或其他辅助程序提交执行命令，由于服务器端没有针对执行函数做过滤，导致在没有指定绝对路径的情况下就执行命令。 用户可以在命令执行函数内直接调用操作系统命令。 以下内容默认为在PHP中。 常见的命令执行函数system 简介  执行一个外部函数，并显示输出  语法  system(string $command, int &amp;$return_v">
+<meta property="og:type" content="article">
+<meta property="og:title" content="命令执行">
+<meta property="og:url" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/index.html">
+<meta property="og:site_name" content="Nayst-Blog">
+<meta property="og:description" content="什么是命令执行漏洞命令执行漏洞，就是指用户通过浏览器或其他辅助程序提交执行命令，由于服务器端没有针对执行函数做过滤，导致在没有指定绝对路径的情况下就执行命令。 用户可以在命令执行函数内直接调用操作系统命令。 以下内容默认为在PHP中。 常见的命令执行函数system 简介  执行一个外部函数，并显示输出  语法  system(string $command, int &amp;$return_v">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721164650468.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721165631626.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721192520452.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721194104204.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721195307551.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721195824158.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721202420938.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195045788.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195238225.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195517185.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195549577.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195652502.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195738526.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720200122936.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720200213799.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720200618616.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210028843.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210516034.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210548637.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210746005.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720213939890.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721133735233.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721133844454.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721133936141.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721134628783.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721141612371.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721143412855.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721143630639.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721144323820.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150028201.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150203488.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150434859.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150711929.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150759650.png">
+<meta property="og:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721152434665.png">
+<meta property="article:published_time" content="2021-07-17T03:06:22.000Z">
+<meta property="article:modified_time" content="2022-07-31T08:45:44.216Z">
+<meta property="article:author" content="Nayst">
+<meta property="article:tag" content="ctf">
+<meta property="article:tag" content="web漏洞">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721164650468.png"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Nayst"><img width="96" loading="lazy" src="/images/kakashi.png" alt="Nayst"><span class="site-author-status" title="努力做一个对社会有贡献的人">🤣</span></a><div class="site-author-name"><a href="/about/">Nayst</a></div><span class="site-name">Nayst-Blog</span><sub class="site-subtitle">远离舒适圈</sub><div class="site-description">已入江湖，未配良剑</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">17</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">4</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">6</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:settings-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" title="2495582918" target="_blank" style="color:#007722"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="y1049843745" target="_blank" style="color:#1AAD19"><span class="icon iconify" data-icon="ri:wechat-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/N4YST" title="GitHub" target="_blank" style="color:#6e5494"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/1579790" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/jizhideyunyoujun" title="微博" target="_blank" style="color:#E6162D"><span class="icon iconify" data-icon="ri:weibo-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=277777144" title="网易云音乐" target="_blank" style="color:#C20C0C"><span class="icon iconify" data-icon="ri:netease-cloud-music-line"></span></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><span class="icon iconify" data-icon="ri:genderless-line"></span></a><a class="links-item hty-icon-button" href="/girls/" title="我的老婆们" style="color:pink"><span class="icon iconify" data-icon="ri:women-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.</span> <span class="toc-text">什么是命令执行漏洞</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">常见的命令执行函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#system"><span class="toc-number">2.1.</span> <span class="toc-text">system</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#exec"><span class="toc-number">2.2.</span> <span class="toc-text">exec</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#popen"><span class="toc-number">2.3.</span> <span class="toc-text">popen</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#passthru"><span class="toc-number">2.4.</span> <span class="toc-text">passthru</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#shell-exec"><span class="toc-number">2.5.</span> <span class="toc-text">shell_exec</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E8%BF%90%E7%AE%97%E7%AC%A6%EF%BC%88-96-%EF%BC%89"><span class="toc-number">2.6.</span> <span class="toc-text">执行运算符（&#96;）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E5%87%BD%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">常见的代码执行函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#eval"><span class="toc-number">3.1.</span> <span class="toc-text">eval</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#assert"><span class="toc-number">3.2.</span> <span class="toc-text">assert</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#call-user-func"><span class="toc-number">3.3.</span> <span class="toc-text">call_user_func</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#call-user-func-array"><span class="toc-number">3.4.</span> <span class="toc-text">call_user_func_array</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#create-function"><span class="toc-number">3.5.</span> <span class="toc-text">create_function</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#array-map"><span class="toc-number">3.6.</span> <span class="toc-text">array_map</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#preg-replace"><span class="toc-number">3.7.</span> <span class="toc-text">preg_replace</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Windows%E4%B8%8B%E7%9A%84%E5%91%BD%E4%BB%A4%E8%BF%9E%E6%8E%A5%E7%AC%A6"><span class="toc-number">4.</span> <span class="toc-text">Windows下的命令连接符</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#amp"><span class="toc-number">4.1.</span> <span class="toc-text">&amp;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#amp-amp"><span class="toc-number">4.2.</span> <span class="toc-text">&amp;&amp;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link"><span class="toc-number">4.3.</span> <span class="toc-text">|</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux%E4%B8%8B%E7%9A%84%E5%91%BD%E4%BB%A4%E8%BF%9E%E6%8E%A5%E7%AC%A6"><span class="toc-number">5.</span> <span class="toc-text">Linux下的命令连接符</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%EF%BC%9B"><span class="toc-number">5.1.</span> <span class="toc-text">；</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#amp-1"><span class="toc-number">5.2.</span> <span class="toc-text">&amp;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#amp-amp-1"><span class="toc-number">5.3.</span> <span class="toc-text">&amp;&amp;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#-1"><span class="toc-number">5.4.</span> <span class="toc-text">|</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E7%BB%95%E8%BF%87"><span class="toc-number">6.</span> <span class="toc-text">命令执行绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%95%E8%BF%87%E7%A9%BA%E6%A0%BC"><span class="toc-number">6.1.</span> <span class="toc-text">绕过空格</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%95%E8%BF%87%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">6.2.</span> <span class="toc-text">绕过关键字</span></a></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Nayst"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Nayst-Blog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">命令执行</h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2021-07-17 11:06:22" itemprop="dateCreated datePublished" datetime="2021-07-17T11:06:22+08:00">2021-07-17</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-07-31 16:45:44" itemprop="dateModified" datetime="2022-07-31T16:45:44+08:00">2022-07-31</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><span class="icon iconify" data-icon="ri:file-word-line"></span></span> <span title="本文字数">2.1k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><span class="icon iconify" data-icon="ri:timer-line"></span></span> <span title="阅读时长">7m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/web%E5%AE%89%E5%85%A8/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">web安全</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/ctf/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">ctf</span></a><a class="tag-item" href="/tags/web%E6%BC%8F%E6%B4%9E/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">web漏洞</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h1 id="什么是命令执行漏洞"><a href="#什么是命令执行漏洞" class="headerlink" title="什么是命令执行漏洞"></a>什么是命令执行漏洞</h1><p>命令执行漏洞，就是指用户通过浏览器或其他辅助程序提交执行命令，由于服务器端没有针对执行函数做过滤，导致在没有指定绝对路径的情况下就执行命令。</p>
+<p>用户可以在命令执行函数内直接调用<strong>操作系统命令</strong>。</p>
+<p>以下内容默认为在PHP中。</p>
+<h1 id="常见的命令执行函数"><a href="#常见的命令执行函数" class="headerlink" title="常见的命令执行函数"></a>常见的命令执行函数</h1><h2 id="system"><a href="#system" class="headerlink" title="system"></a>system</h2><ul>
+<li>简介</li>
+</ul>
+<p>执行一个外部函数，并显示输出</p>
+<ul>
+<li>语法</li>
+</ul>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token function">system</span><span class="token punctuation">(</span><span class="token keyword type-hint">string</span> <span class="token variable">$command</span><span class="token punctuation">,</span> <span class="token keyword type-declaration">int</span> <span class="token operator">&amp;</span><span class="token variable">$return_var</span> <span class="token operator">=</span> <span class="token operator">?</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword return-type">string</span></code></pre>
+
+<ul>
+<li>参数</li>
+</ul>
+<p><strong>conmand</strong>：要执行的命令</p>
+<p><strong>return_var</strong>：如果提供此参数，则外部命令执行后的返回状态会被设置到此变量中</p>
+<ul>
+<li>返回值</li>
+</ul>
+<p>成功则返回命令输出的最后一行，失败则返回false</p>
+<ul>
+<li>例子</li>
+</ul>
+<h2 id="exec"><a href="#exec" class="headerlink" title="exec"></a>exec</h2><ul>
+<li>简介</li>
+</ul>
+<p>执行一个外部程序</p>
+<ul>
+<li>语法</li>
+</ul>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token function">exec</span><span class="token punctuation">(</span><span class="token keyword type-hint">string</span> <span class="token variable">$command</span><span class="token punctuation">,</span> <span class="token keyword type-declaration">array</span> <span class="token operator">&amp;</span><span class="token variable">$output</span> <span class="token operator">=</span> <span class="token operator">?</span><span class="token punctuation">,</span> <span class="token keyword type-declaration">int</span> <span class="token operator">&amp;</span><span class="token variable">$return_var</span> <span class="token operator">=</span> <span class="token operator">?</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword return-type">string</span></code></pre>
+
+<ul>
+<li>参数</li>
+</ul>
+<p><strong>command</strong>：要执行的命令</p>
+<p><strong>output</strong>：如果执行此参数，那么会用命令执行的输出填充此数组，每行输出填充数组中的一个元素，数据中不包含行尾的空白字符，例如<code>\n</code>字符。如果数组中已经包含了部分元素，exec()函数会在此数组末尾进行追加。</p>
+<p><strong>return_var</strong>：如果同时提供<strong>output</strong>和次参数，命令执行后的状态会被写入到此变量</p>
+<ul>
+<li>返回值</li>
+</ul>
+<p>命令执行结果的最后一行内容</p>
+<ul>
+<li>例子</li>
+</ul>
+<h2 id="popen"><a href="#popen" class="headerlink" title="popen"></a>popen</h2><ul>
+<li>简介</li>
+</ul>
+<p>打开一个指向进程的管道，该进程由派生给定的command命令执行而产生</p>
+<ul>
+<li>语法</li>
+</ul>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token function">popen</span><span class="token punctuation">(</span><span class="token keyword type-hint">string</span> <span class="token variable">$command</span><span class="token punctuation">,</span> <span class="token keyword type-hint">string</span> <span class="token variable">$mode</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token class-name return-type">resource</span></code></pre>
+
+<ul>
+<li>参数</li>
+</ul>
+<p><strong>command</strong>：命令</p>
+<p><strong>mode</strong>：模式。</p>
+<p><code>r</code>：只读</p>
+<p><code>w</code>：只写（打开并清空已有文件或创建一个新文件）</p>
+<ul>
+<li>返回值</li>
+</ul>
+<p>返回一个和<code>popen()</code>所返回的相同的文件指针，只不过它是单向的（只能用于读和写）并且必须用<code>pclose()</code>来关闭，此指针可以用于<code>fgets()</code>、<code>fgetss()</code>和<code>fwrite()</code>。当模式为<code>r</code>时，返回的文件指针等于命令的 STDOUT，当模式为 <code>w</code>，返回的文件指针等于命令的 STDIN。</p>
+<ul>
+<li>例子</li>
+</ul>
+<h2 id="passthru"><a href="#passthru" class="headerlink" title="passthru"></a>passthru</h2><ul>
+<li>简介</li>
+</ul>
+<p>执行外部程序并显示原始输出</p>
+<ul>
+<li>语法</li>
+</ul>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token function">passthru</span><span class="token punctuation">(</span><span class="token keyword type-hint">string</span> <span class="token variable">$command</span><span class="token punctuation">,</span> <span class="token keyword type-declaration">int</span> <span class="token operator">&amp;</span><span class="token variable">$return_var</span> <span class="token operator">=</span> <span class="token operator">?</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword return-type">void</span></code></pre>
+
+<ul>
+<li>参数</li>
+</ul>
+<p><strong>command</strong>：要执行的命令</p>
+<p><strong>return_var</strong>：如果提供此参数，Unix命令的返回状态会被记录到此参数</p>
+<ul>
+<li>返回值</li>
+</ul>
+<p>无返回值</p>
+<ul>
+<li>例子</li>
+</ul>
+<h2 id="shell-exec"><a href="#shell-exec" class="headerlink" title="shell_exec"></a>shell_exec</h2><ul>
+<li>简介</li>
+</ul>
+<p>通过 shell 环境执行命令，并且将完整的输出以字符串的方式返回</p>
+<ul>
+<li>语法</li>
+</ul>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token function">shell_exec</span><span class="token punctuation">(</span><span class="token keyword type-hint">string</span> <span class="token variable">$cmd</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword return-type">string</span></code></pre>
+
+<ul>
+<li>参数</li>
+</ul>
+<p><strong>cmd</strong>：要执行的命令</p>
+<ul>
+<li>返回值</li>
+</ul>
+<p>命令执行的输出，错误或无输出时返回null</p>
+<ul>
+<li>例子</li>
+</ul>
+<h2 id="执行运算符（-96-）"><a href="#执行运算符（-96-）" class="headerlink" title="执行运算符（&#96;）"></a>执行运算符（&#96;）</h2><ul>
+<li>简介</li>
+</ul>
+<p>PHP 将尝试将反引号中的内容作为 shell 命令来执行，并将其输出信息返回（即，可以赋给一个变量而不是简单地丢弃到标准输出），效果与函数<strong>shell_exec</strong>相同</p>
+<h1 id="常见的代码执行函数"><a href="#常见的代码执行函数" class="headerlink" title="常见的代码执行函数"></a>常见的代码执行函数</h1><h2 id="eval"><a href="#eval" class="headerlink" title="eval"></a>eval</h2><ul>
+<li>简介</li>
+</ul>
+<p>把字符串作为PHP代码执行，该字符串必须是合法的，且以分号结尾</p>
+<ul>
+<li>语法</li>
+</ul>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token keyword">eval</span><span class="token punctuation">(</span><span class="token keyword type-hint">string</span> <span class="token variable">$code</span><span class="token punctuation">)</span></code></pre>
+
+<ul>
+<li>参数</li>
+</ul>
+<p><strong>code</strong>：需要被执行的字符串</p>
+<ul>
+<li>示例</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721164650468.png" class="" loading="lazy">
+
+<h2 id="assert"><a href="#assert" class="headerlink" title="assert"></a>assert</h2><ul>
+<li>简介</li>
+</ul>
+<p>检查一个<a target="_blank" rel="noopener" href="https://www.php.cn/php-ask-429607.html">断言</a>是否为FALSE</p>
+<ul>
+<li>语法</li>
+</ul>
+<p><strong>PHP5</strong></p>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token function">assert</span><span class="token punctuation">(</span><span class="token keyword type-hint">mixed</span> <span class="token variable">$assertion</span><span class="token punctuation">,</span> <span class="token keyword type-hint">string</span> <span class="token variable">$description</span> <span class="token operator">=</span> <span class="token operator">?</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword return-type">bool</span></code></pre>
+
+<p><strong>PHP7</strong></p>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token function">assert</span><span class="token punctuation">(</span><span class="token keyword type-hint">mixed</span> <span class="token variable">$assertion</span><span class="token punctuation">,</span> <span class="token class-name type-declaration">Throwable</span> <span class="token variable">$exception</span> <span class="token operator">=</span> <span class="token operator">?</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword return-type">bool</span></code></pre>
+
+<p><strong>assert()</strong> 会检查指定的 <code>assertion</code> 并在结果为 <code>false</code>时采取适当的行动。</p>
+<ul>
+<li>参数</li>
+</ul>
+<p><strong>assertion</strong>：断言</p>
+<p><strong>description</strong>：如果 <code>assertion</code> 失败了，选项 description 将会包括在失败信息里</p>
+<ul>
+<li>示例</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721165631626.png" class="" loading="lazy">
+
+<h2 id="call-user-func"><a href="#call-user-func" class="headerlink" title="call_user_func"></a>call_user_func</h2><ul>
+<li>简介</li>
+</ul>
+<p>把第一个参数作为回调函数调用</p>
+<ul>
+<li>语法</li>
+</ul>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token function">call_user_func</span><span class="token punctuation">(</span><span class="token keyword type-hint">callable</span> <span class="token variable">$callback</span><span class="token punctuation">,</span> <span class="token keyword type-hint">mixed</span> <span class="token variable">$parameter</span> <span class="token operator">=</span> <span class="token operator">?</span><span class="token punctuation">,</span> <span class="token keyword type-hint">mixed</span> $<span class="token operator">...</span> <span class="token operator">=</span> <span class="token operator">?</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword return-type">mixed</span></code></pre>
+
+<p>第一个参数 <code>callback</code> 是被调用的回调函数，其余参数是回调函数的参数。</p>
+<ul>
+<li>参数</li>
+</ul>
+<p><strong>callback</strong>：将被调用的回调函数</p>
+<p><strong>parameter</strong>：0个或以上的参数，被传入回调函数。</p>
+<ul>
+<li>示例</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721192520452.png" class="" loading="lazy">
+
+<h2 id="call-user-func-array"><a href="#call-user-func-array" class="headerlink" title="call_user_func_array"></a>call_user_func_array</h2><ul>
+<li>简介</li>
+</ul>
+<p>调用回调函数，并把一个数组参数作为回调函数的参数</p>
+<ul>
+<li>语法</li>
+</ul>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token function">call_user_func_array</span><span class="token punctuation">(</span><span class="token keyword type-hint">callable</span> <span class="token variable">$callback</span><span class="token punctuation">,</span> <span class="token keyword type-hint">array</span> <span class="token variable">$param_arr</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword return-type">mixed</span></code></pre>
+
+<ul>
+<li>参数</li>
+</ul>
+<p><strong>callback</strong>：被调用的回调函数。</p>
+<p><strong>param_arr</strong>：要被传入回调函数的数组，这个数组得是索引数组。</p>
+<ul>
+<li>示例</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721194104204.png" class="" loading="lazy">
+
+<h2 id="create-function"><a href="#create-function" class="headerlink" title="create_function"></a>create_function</h2><ul>
+<li>简介</li>
+</ul>
+<p>根据传递的参数创建匿名函数，并为该匿名函数返回唯一名称。</p>
+<ul>
+<li>语法</li>
+</ul>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token function">create_function</span><span class="token punctuation">(</span><span class="token keyword type-hint">string</span> <span class="token variable">$args</span><span class="token punctuation">,</span> <span class="token keyword type-hint">string</span> <span class="token variable">$code</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword return-type">string</span></code></pre>
+
+<ul>
+<li>参数</li>
+</ul>
+<p><strong>args</strong>：被调用函数的参数</p>
+<p><strong>code</strong>：被调用的函数的代码</p>
+<ul>
+<li>示例</li>
+</ul>
+<p>在<strong>code</strong>处存在漏洞，闭合前面语句注释后面语句，中间可以执行任意指令。</p>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721195307551.png" class="" loading="lazy">
+
+<h2 id="array-map"><a href="#array-map" class="headerlink" title="array_map"></a>array_map</h2><ul>
+<li>简介</li>
+</ul>
+<p>遍历数组，为每个数组的每个元素应用回调函数。</p>
+<ul>
+<li>语法</li>
+</ul>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token function">array_map</span><span class="token punctuation">(</span><span class="token keyword type-hint">callable</span> <span class="token variable">$callback</span><span class="token punctuation">,</span> <span class="token keyword type-hint">array</span> <span class="token variable">$array</span><span class="token punctuation">,</span> <span class="token keyword type-declaration">array</span> <span class="token operator">...</span><span class="token variable">$arrays</span><span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword return-type">array</span></code></pre>
+
+<ul>
+<li>参数</li>
+</ul>
+<p><strong>callback</strong>：回调函数</p>
+<p><strong>array</strong>：需要便利的数组</p>
+<p><strong>arrays</strong>：额外的数组</p>
+<ul>
+<li>示例</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721195824158.png" class="" loading="lazy">
+
+<h2 id="preg-replace"><a href="#preg-replace" class="headerlink" title="preg_replace"></a>preg_replace</h2><ul>
+<li>简介</li>
+</ul>
+<p>执行一个正则表达式的搜索和替换</p>
+<p>Warning：此函数被移除于<strong>PHP7.0.0</strong></p>
+<ul>
+<li>语法</li>
+</ul>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token function">preg_replace</span><span class="token punctuation">(</span>
+    <span class="token keyword type-declaration">string</span><span class="token operator">|</span><span class="token keyword type-declaration">array</span> <span class="token variable">$pattern</span><span class="token punctuation">,</span>
+    <span class="token keyword type-declaration">string</span><span class="token operator">|</span><span class="token keyword type-declaration">array</span> <span class="token variable">$replacement</span><span class="token punctuation">,</span>
+    <span class="token keyword type-declaration">string</span><span class="token operator">|</span><span class="token keyword type-declaration">array</span> <span class="token variable">$subject</span><span class="token punctuation">,</span>
+    <span class="token keyword type-hint">int</span> <span class="token variable">$limit</span> <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span>
+    <span class="token keyword type-declaration">int</span> <span class="token operator">&amp;</span><span class="token variable">$count</span> <span class="token operator">=</span> <span class="token constant">null</span>
+<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token keyword return-type">string</span><span class="token operator">|</span><span class="token keyword type-declaration">array</span><span class="token operator">|</span><span class="token keyword type-declaration">null</span></code></pre>
+
+<ul>
+<li>参数</li>
+</ul>
+<p><strong>pattern</strong>：要搜索的模式，可以是一个字符串或字符串数组</p>
+<p><strong>replacement</strong>：用于替换的字符串或字符串数组</p>
+<p><strong>subject</strong>：要搜索的和替换的字符串或字符串数组</p>
+<p><strong>limit</strong>：每个模式在每个 <code>subject</code> 上进行替换的最大次数。默认是 <code>-1</code>(无限)。</p>
+<p><strong>count</strong>：如果指定，将会被填充为完成的替换次数。</p>
+<p>搜索 <code>subject</code> 中匹配 <code>pattern</code> 的部分，以 <code>replacement</code> 进行替换。</p>
+<ul>
+<li>示例</li>
+</ul>
+<p>此函数存在模式修饰符，其中，修饰符e会让函数对替换字符串进行后向引用替换之后，将替换后的字符串作为PHP代码评估执行（以eval函数方式），并使用执行结果作为实际参与替换的字符串</p>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721202420938.png" class="" loading="lazy">
+
+<h1 id="Windows下的命令连接符"><a href="#Windows下的命令连接符" class="headerlink" title="Windows下的命令连接符"></a>Windows下的命令连接符</h1><p>Windows下的命令连接符包括<code>&amp;</code>、<code>&amp;&amp;</code>、<code>|</code>、<code>||</code>。</p>
+<h2 id="amp"><a href="#amp" class="headerlink" title="&amp;"></a>&amp;</h2><ul>
+<li><code>&amp;</code>前面的语句为假，则直接执行&amp;后面的语句</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195045788.png" class="" loading="lazy">
+
+<ul>
+<li><code>&amp;</code>前面的语句为真，则前后语句都执行</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195238225.png" class="" loading="lazy">
+
+<h2 id="amp-amp"><a href="#amp-amp" class="headerlink" title="&amp;&amp;"></a>&amp;&amp;</h2><ul>
+<li><code>&amp;&amp;</code>前面的语句为假，则直接报错，后面的语句不执行</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195517185.png" class="" loading="lazy">
+
+<ul>
+<li><code>&amp;&amp;</code>前面的语句为真，前后语句都执行</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195549577.png" class="" loading="lazy">
+
+<h2 id=""><a href="#" class="headerlink" title="|"></a>|</h2><ul>
+<li><code>|</code>前面的语句为假，则直接报错，后面的语句也不执行</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195652502.png" class="" loading="lazy">
+
+<ul>
+<li><code>|</code>前面的语句为真，则直接执行后面的语句</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720195738526.png" class="" loading="lazy">
+
+<table>
+<thead>
+<tr>
+<th></th>
+</tr>
+</thead>
+</table>
+<ul>
+<li><code>||</code>前面的语句为假，就执行后面的语句</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720200122936.png" class="" loading="lazy">
+
+<ul>
+<li><code>||</code>前面的语句为真，则只执行前面的语句，后面的语句不执行</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720200213799.png" class="" loading="lazy">
+
+<h1 id="Linux下的命令连接符"><a href="#Linux下的命令连接符" class="headerlink" title="Linux下的命令连接符"></a>Linux下的命令连接符</h1><p>Linux下的命令连接符包括<code>;</code>、<code>&amp;</code>、<code>&amp;&amp;</code>、<code>|</code>、<code>||</code>。</p>
+<h2 id="；"><a href="#；" class="headerlink" title="；"></a>；</h2><ul>
+<li><code>;</code>可以连接多条命令，前后的命令都会执行</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720200618616.png" class="" loading="lazy">
+
+<h2 id="amp-1"><a href="#amp-1" class="headerlink" title="&amp;"></a>&amp;</h2><ul>
+<li><code>&amp;</code>使命令在后台运行，这样就可以同时执行多条命令</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210028843.png" class="" loading="lazy">
+
+<h2 id="amp-amp-1"><a href="#amp-amp-1" class="headerlink" title="&amp;&amp;"></a>&amp;&amp;</h2><ul>
+<li>如果前面的命令不能成功执行，后面的命令也不执行</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210516034.png" class="" loading="lazy">
+
+<ul>
+<li>如果前面的命令执行成功，那么前后的命令都执行</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210548637.png" class="" loading="lazy">
+
+<h2 id="-1"><a href="#-1" class="headerlink" title="|"></a>|</h2><ul>
+<li>将前面的命令输出作为后面的命令输出，前面的命令和后面的命令都执行，但是只会显示后面的命令</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720210746005.png" class="" loading="lazy">
+
+<table>
+<thead>
+<tr>
+<th></th>
+</tr>
+</thead>
+</table>
+<ul>
+<li>类似于程序中的if-else语句，若前面的命令执行成功，则后面的命令就不会执行；若前面的命令执行不成功，则执行后面的命令</li>
+</ul>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210720213939890.png" class="" loading="lazy">
+
+<h1 id="命令执行绕过"><a href="#命令执行绕过" class="headerlink" title="命令执行绕过"></a>命令执行绕过</h1><h2 id="绕过空格"><a href="#绕过空格" class="headerlink" title="绕过空格"></a>绕过空格</h2><ul>
+<li>${IFS}</li>
+</ul>
+<p><code>$IFS</code>是shell的特殊环境变量，是Linux下的内部域分隔符。</p>
+<p><code>$IFS</code>的值可以是空格、制表符、换行符或者其他自定义符号。</p>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721133735233.png" class="" loading="lazy">
+
+<ul>
+<li>$IFS$9</li>
+</ul>
+<p>空格过滤可以用<code>$IFS$9</code>绕过</p>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721133844454.png" class="" loading="lazy">
+
+<ul>
+<li>制表符</li>
+</ul>
+<p><code>%09</code>是制表符的URL编码，可以用来代替空格，绕过空格过滤</p>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721133936141.png" class="" loading="lazy">
+
+<ul>
+<li>{}</li>
+</ul>
+<p>空格过滤可以用<code>&#123;&#125;</code>绕过</p>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721134628783.png" class="" loading="lazy">
+
+<ul>
+<li>&lt;</li>
+</ul>
+<p>空格过滤可以用<code>&lt;</code>绕过</p>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721141612371.png" class="" loading="lazy">
+
+<h2 id="绕过关键字"><a href="#绕过关键字" class="headerlink" title="绕过关键字"></a>绕过关键字</h2><ul>
+<li>变量拼接</li>
+</ul>
+<p>Linux支持变量赋值，在Linux环境下可以通过变量拼接来绕过过滤规则</p>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721143412855.png" class="" loading="lazy">
+
+<ul>
+<li>空变量</li>
+</ul>
+<p>可以在变量中插入<code>空变量</code>来绕过命令过滤</p>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721143630639.png" class="" loading="lazy">
+
+<ul>
+<li>系统变量</li>
+</ul>
+<p><code>$&#123;SHELLOPTS&#125;</code>是系统变量，通常是内置变量，用法也很简单，${SHELLOPTS:<code>start</code>:<code>length</code>}</p>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721144323820.png" class="" loading="lazy">
+
+<p>可以利用系统变量的字符拼接绕过过滤</p>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150028201.png" class="" loading="lazy">
+
+<ul>
+<li>\</li>
+</ul>
+<p><code>c\a\t</code>=<code>cat</code></p>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150203488.png" class="" loading="lazy">
+
+<ul>
+<li>通配符</li>
+</ul>
+<p>Linux支持利用通配符进行字符匹配，利用通配符可以匹配文件中某些不确定的字符</p>
+<p><code>*</code>：代表任意个字符</p>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150434859.png" class="" loading="lazy">
+
+<p><code>?</code>：代表一个字符</p>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150711929.png" class="" loading="lazy">
+
+<p><code>[]</code>：匹配<code>[]</code>中任意一个字符</p>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721150759650.png" class="" loading="lazy">
+
+<ul>
+<li>Base64</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ce273012073e">在Linux下可以使用base64命令进行加密和解密</a>，输出解码后的字符再执行就可以绕过关键字了</p>
+<img src="/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/image-20210721152434665.png" class="" loading="lazy">
+
+<ul>
+<li>expr和awk</li>
+</ul>
+</div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><span class="icon iconify" data-icon="ri:hand-coin-line"></span></span><div id="reward-comment">竟然有用？！赏！</div><div id="qr" style="display:none;"><div style="display:inline-block"><a href="/images/Alipay.png"><img loading="lazy" src="/images/Alipay.png" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><span class="icon iconify" data-icon="ri:alipay-line"></span></span></div></div><div style="display:inline-block"><a href="/images/WechatPay.png"><img loading="lazy" src="/images/WechatPay.png" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><span class="icon iconify" data-icon="ri:wechat-pay-line"></span></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>Nayst</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" title="命令执行">https://www.nayst.top/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2021/07/20/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/" rel="prev" title="文件包含"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">文件包含</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2021/07/10/mysql%E8%AF%AD%E6%B3%95%E5%AD%A6%E4%B9%A0/" rel="next" title="mysql"><span class="post-nav-text">mysql</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2021 – 2022 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> Nayst</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.6</span></div><div class="live-time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2021-07-01T18:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="https://fastly.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js"></script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div class="search-result-container"></div></div><script src="https://fastly.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script><script>const images = [...document.querySelectorAll('.markdown-body img')]
+mediumZoom(images)</script><style>.medium-zoom-image {
+  z-index: 99;
+}</style></body></html>

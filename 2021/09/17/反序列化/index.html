@@ -1,0 +1,406 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Nayst"><meta name="copyright" content="Nayst"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>反序列化 | Nayst-Blog</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.3.3/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/svg+xml" href="/images/Doge.svg"><link rel="mask-icon" href="/images/Doge.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"www.nayst.top","root":"/","title":["Nayst","的","小","站"],"version":"1.10.6","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"fireworks":{"colors":null},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><meta name="description" content="序列化与反序列化为了有效地存储或传递数据，同时不丢失其类型和结构，经常需要利用序列化和反序列化函数对数据进行处理 序列化函数返回字符串，此字符串包含了表示值的字节流，可以存储于任何地方 反序列化函数对单一的已序列化的变量进行操作，将其转换回原来的值 序列化PHP中的序列化函数是serialize() NULL和标量类型数据的序列化 NULL  在PHP中，NULL被序列化为N    bool型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="反序列化">
+<meta property="og:url" content="https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/index.html">
+<meta property="og:site_name" content="Nayst-Blog">
+<meta property="og:description" content="序列化与反序列化为了有效地存储或传递数据，同时不丢失其类型和结构，经常需要利用序列化和反序列化函数对数据进行处理 序列化函数返回字符串，此字符串包含了表示值的字节流，可以存储于任何地方 反序列化函数对单一的已序列化的变量进行操作，将其转换回原来的值 序列化PHP中的序列化函数是serialize() NULL和标量类型数据的序列化 NULL  在PHP中，NULL被序列化为N    bool型">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210731182838917.png">
+<meta property="og:image" content="https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210731182945866.png">
+<meta property="og:image" content="https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210731183505232.png">
+<meta property="og:image" content="https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210801104837528.png">
+<meta property="og:image" content="https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210801105352773.png">
+<meta property="og:image" content="https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210801110509392.png">
+<meta property="og:image" content="https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210801112347540.png">
+<meta property="og:image" content="https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210801123334504.png">
+<meta property="og:image" content="https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210801125655886.png">
+<meta property="og:image" content="https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210801140429171.png">
+<meta property="og:image" content="https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210803121403173.png">
+<meta property="og:image" content="https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210803112616148.png">
+<meta property="og:image" content="https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210803121210850.png">
+<meta property="og:image" content="https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210803163358423.png">
+<meta property="article:published_time" content="2021-09-17T03:06:22.000Z">
+<meta property="article:modified_time" content="2022-07-31T08:45:42.235Z">
+<meta property="article:author" content="Nayst">
+<meta property="article:tag" content="ctf">
+<meta property="article:tag" content="web漏洞">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210731182838917.png"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Nayst"><img width="96" loading="lazy" src="/images/kakashi.png" alt="Nayst"><span class="site-author-status" title="努力做一个对社会有贡献的人">🤣</span></a><div class="site-author-name"><a href="/about/">Nayst</a></div><span class="site-name">Nayst-Blog</span><sub class="site-subtitle">远离舒适圈</sub><div class="site-description">已入江湖，未配良剑</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">17</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">4</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">6</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:settings-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" title="2495582918" target="_blank" style="color:#007722"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="y1049843745" target="_blank" style="color:#1AAD19"><span class="icon iconify" data-icon="ri:wechat-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/N4YST" title="GitHub" target="_blank" style="color:#6e5494"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/1579790" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/jizhideyunyoujun" title="微博" target="_blank" style="color:#E6162D"><span class="icon iconify" data-icon="ri:weibo-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=277777144" title="网易云音乐" target="_blank" style="color:#C20C0C"><span class="icon iconify" data-icon="ri:netease-cloud-music-line"></span></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><span class="icon iconify" data-icon="ri:genderless-line"></span></a><a class="links-item hty-icon-button" href="/girls/" title="我的老婆们" style="color:pink"><span class="icon iconify" data-icon="ri:women-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">1.</span> <span class="toc-text">序列化与反序列化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">2.</span> <span class="toc-text">序列化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#NULL%E5%92%8C%E6%A0%87%E9%87%8F%E7%B1%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">2.1.</span> <span class="toc-text">NULL和标量类型数据的序列化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E5%A4%8D%E5%90%88%E5%9E%8B%E6%95%B0%E6%8D%AE%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">2.2.</span> <span class="toc-text">简单复合型数据的序列化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">3.</span> <span class="toc-text">反序列化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E"><span class="toc-number">4.</span> <span class="toc-text">反序列化漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AD%94%E6%B3%95%E5%87%BD%E6%95%B0"><span class="toc-number">4.1.</span> <span class="toc-text">魔法函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#construct%E5%92%8C-destruct"><span class="toc-number">4.1.1.</span> <span class="toc-text">__construct和__destruct</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sleep%E5%92%8C-wakeup"><span class="toc-number">4.1.2.</span> <span class="toc-text">__sleep和__wakeup</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E9%80%83%E9%80%B8"><span class="toc-number">4.2.</span> <span class="toc-text">字符逃逸</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E5%90%8E%E5%A2%9E%E5%8A%A0%E5%AD%97%E7%AC%A6"><span class="toc-number">4.2.1.</span> <span class="toc-text">过滤后增加字符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E5%90%8E%E5%87%8F%E5%B0%91%E5%AD%97%E7%AC%A6"><span class="toc-number">4.2.2.</span> <span class="toc-text">过滤后减少字符</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#session%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">4.3.</span> <span class="toc-text">session反序列化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SESSION%E5%8F%98%E9%87%8F%E7%9B%B4%E6%8E%A5%E5%8F%AF%E6%8E%A7"><span class="toc-number">4.3.1.</span> <span class="toc-text">$_SESSION变量直接可控</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#phar%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">4.4.</span> <span class="toc-text">phar反序列化</span></a></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Nayst"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Nayst-Blog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">反序列化</h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2021-09-17 11:06:22" itemprop="dateCreated datePublished" datetime="2021-09-17T11:06:22+08:00">2021-09-17</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-07-31 16:45:42" itemprop="dateModified" datetime="2022-07-31T16:45:42+08:00">2022-07-31</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><span class="icon iconify" data-icon="ri:file-word-line"></span></span> <span title="本文字数">2.8k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><span class="icon iconify" data-icon="ri:timer-line"></span></span> <span title="阅读时长">11m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/web%E5%AE%89%E5%85%A8/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">web安全</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/ctf/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">ctf</span></a><a class="tag-item" href="/tags/web%E6%BC%8F%E6%B4%9E/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">web漏洞</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h1 id="序列化与反序列化"><a href="#序列化与反序列化" class="headerlink" title="序列化与反序列化"></a>序列化与反序列化</h1><p>为了有效地存储或传递数据，同时不丢失其类型和结构，经常需要利用序列化和反序列化函数对数据进行处理</p>
+<p>序列化函数返回字符串，此字符串包含了表示值的字节流，可以存储于任何地方</p>
+<p>反序列化函数对单一的已序列化的变量进行操作，将其转换回原来的值</p>
+<h1 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h1><p>PHP中的序列化函数是<code>serialize()</code></p>
+<h2 id="NULL和标量类型数据的序列化"><a href="#NULL和标量类型数据的序列化" class="headerlink" title="NULL和标量类型数据的序列化"></a>NULL和标量类型数据的序列化</h2><ul>
+<li>NULL</li>
+</ul>
+<p>在PHP中，NULL被序列化为<code>N</code></p>
+<img src="/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210731182838917.png" class="" loading="lazy">
+
+<ul>
+<li>bool型</li>
+</ul>
+<p>bool型数据被序列化为<code>b:&lt;digit&gt;</code>。其中，<digit>表示0或1</p>
+<p>当bool型数据为false时，<digit>为0，反之为1</p>
+<img src="/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210731182945866.png" class="" loading="lazy">
+
+<ul>
+<li>int型</li>
+</ul>
+<p>int型数据被序列化为<code>i:&lt;number&gt;</code>。其中，<number>为一个整型数，范围为-2147483648~2147483647，数字前可以有正负号</p>
+<p>如果被序列化的数字溢出则被序列化为浮点型</p>
+<p>如果序列化后的数字超过这个范围，则反序列化时不会返回期望的数值</p>
+<img src="/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210731183505232.png" class="" loading="lazy">
+
+<ul>
+<li>double型</li>
+</ul>
+<p>double型数据被序列化为<code>d:&lt;number&gt;</code>，其中，<number>为一个浮点数，其范围与PHP的浮点数范围一样，可以表示为整数形式、浮点数形式和科学计数法形式</p>
+<p>如果序列化（负）无穷大，则<number>为(-)INF</p>
+<p>如果序列化后的数字小于PHP所能表示的最小精度，则反序列化时返回0</p>
+<p>如果被序列化的数据非数字，则被序列化为NAN，NAN反序列化时返回0</p>
+<img src="/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210801104837528.png" class="" loading="lazy">
+
+<ul>
+<li>string型</li>
+</ul>
+<p>string型数据被序列化为<code>s:&lt;length&gt;:&quot;&lt;value&gt;&quot;</code></p>
+<img src="/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210801105352773.png" class="" loading="lazy">
+
+<h2 id="简单复合型数据的序列化"><a href="#简单复合型数据的序列化" class="headerlink" title="简单复合型数据的序列化"></a>简单复合型数据的序列化</h2><ul>
+<li>数组</li>
+</ul>
+<p>数组通常被序列化为<code>a:&lt;n&gt;:&#123;&lt;key 1&gt;;&lt;value 1&gt;;&lt;key 2&gt;;&lt;value 2&gt;;···&lt;key n&gt;;&lt;value n&gt;&#125;</code></p>
+<p>其中<code>n</code>表示数组元素的个数，<code>&lt;key&gt;</code>代表元素下标，<code>&lt;value&gt;</code>代表相应的值</p>
+<blockquote>
+<p>数组下标的类型<strong>只能</strong>为整型和字符串型，数组序列化后的格式与整型和字符串型数据序列化后的格式相同</p>
+<p>数组元素值可以是<strong>任意类型</strong>，其序列化后的格式与其所对应的类型序列化后的格式相同</p>
+</blockquote>
+<img src="/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210801110509392.png" class="" loading="lazy">
+
+<ul>
+<li>对象</li>
+</ul>
+<p>对象通常被序列化为<code>O:&lt;length&gt;:&quot;&lt;class name&gt;&quot;:&lt;n&gt;:&#123;&lt;field name 1&gt;;&lt;field value 1&gt;;&lt;field name 2&gt;;···&lt;field name n&gt;&lt;field value n&gt;&#125;</code></p>
+<p>其中，<code>&lt;length&gt;</code>代表对象的类名的字符串长度；<code>&lt;class name&gt;</code>代表对象的类名；<code>&lt;n&gt;</code>表示对象中的字段个数</p>
+<p>这些字段包括在对象所在类及其祖先类中用<code>var</code>、<code>public</code>、<code>protected</code>、<code>private</code>声明的字段，但是不包括用<code>static</code>和<code>const</code>声明的静态字段，也就是说只有实例字段</p>
+<p><code>&lt;field name&gt;</code>表示字段名，<code>&lt;field value&gt;</code>表示字段值</p>
+<blockquote>
+<p>字段名是字符串型，序列化后的格式与字符串型数据序列化后的格式相同</p>
+<p>字段值可以是任意类型，其序列化后的格式与其所对应的类型序列化后的格式相同</p>
+</blockquote>
+<img src="/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210801112347540.png" class="" title="image-20210801112347540" loading="lazy">
+
+<p>其中，O表示object，3表示对象的类名的字符串长度为3，Foo表示对象的类名是Foo，2表示有两个数据字段</p>
+<p>第一个字段是<code>s:10:&quot;aMamberVar&quot;;s:26:&quot;aMamberVar Member Variable&quot;;</code></p>
+<p><code>s:10:&quot;aMamberVar&quot;;</code>表示字段的类型是string，字段长度是10，字段名称是aMamberVar</p>
+<p><code>s:26:&quot;aMamberVar Member Variable&quot;;</code>表示字段的类型是string，字段长度是26，字段值是aMamberVar Member Variable</p>
+<p>第二个字段是<code>s:9:&quot;aFuncName&quot;;s:11:&quot;aMemberFunc&quot;;</code></p>
+<p><code>s:9:&quot;aFuncName&quot;;</code>表示字段的类型是string，字段长度是9，字段名称是aFuncName</p>
+<p><code>s:11:&quot;aMemberFunc&quot;;</code>表示字段的类型是string，字段长度是11，字段值是aMemberFunc</p>
+<h1 id="反序列化"><a href="#反序列化" class="headerlink" title="反序列化"></a>反序列化</h1><p>PHP中的反序列化函数是<code>unserialize()</code></p>
+<p>若被序列化的变量是一个对象，在重新构造对象后，会自动调用__wakeup成员函数（如果存在）</p>
+<img src="/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210801123334504.png" class="" title="image-20210801123334504" loading="lazy">
+
+<h1 id="反序列化漏洞"><a href="#反序列化漏洞" class="headerlink" title="反序列化漏洞"></a>反序列化漏洞</h1><p>反序列化漏洞产生的主要原因是;</p>
+<ol>
+<li>unserialize函数的参数可控</li>
+<li>存在魔法函数</li>
+</ol>
+<h2 id="魔法函数"><a href="#魔法函数" class="headerlink" title="魔法函数"></a>魔法函数</h2><p><code>__construct</code>、<code>__destruct</code>、<code>__call</code>、<code>__callStatic</code>、<code>__get</code>、<code>__set</code>、<code>__isset</code>、<code>__unset</code>、<code>__sleep</code>、<code>__wakeup</code>、<code>__toString</code>、<code>__invoke</code>、<code>__set_state</code>、<code>__debugInfo</code>等成员函数在PHP中被称为魔法函数</p>
+<pre class="language-none"><code class="language-none">__wakeup() &#x2F;&#x2F;执行unserialize()时，先会调用这个函数
+__sleep() &#x2F;&#x2F;执行serialize()时，先会调用这个函数
+__destruct() &#x2F;&#x2F;对象被销毁时触发
+__call() &#x2F;&#x2F;在对象上下文中调用不可访问的方法时触发
+__callStatic() &#x2F;&#x2F;在静态上下文中调用不可访问的方法时触发
+__get() &#x2F;&#x2F;用于从不可访问的属性读取数据或者不存在这个键都会调用此方法
+__set() &#x2F;&#x2F;用于将数据写入不可访问的属性
+__isset() &#x2F;&#x2F;在不可访问的属性上调用isset()或empty()触发
+__unset() &#x2F;&#x2F;在不可访问的属性上使用unset()时触发
+__toString() &#x2F;&#x2F;把类当作字符串使用时触发
+__invoke() &#x2F;&#x2F;当尝试将对象调用为函数时触发</code></pre>
+
+<p>在命名自己的类方法时不能使用这些名称，除非是想使用其魔法函数功能</p>
+<h3 id="construct和-destruct"><a href="#construct和-destruct" class="headerlink" title="__construct和__destruct"></a>__construct和__destruct</h3><ol>
+<li>__construct</li>
+</ol>
+<p>用法：</p>
+<pre class="language-none"><code class="language-none">void __construct([mixed $args[, $...]])</code></pre>
+
+<p>PHP5允许开发者在一个类中定义一个方法作为构造函数</p>
+<p>具有构造函数的类会在每次创建新对象时先调用此方法，所以__construct函数非常适合在使用对象之前做一些初始化工作</p>
+<ol start="2">
+<li>__destruct</li>
+</ol>
+<p>用法：</p>
+<pre class="language-none"><code class="language-none">void __destruct(void)</code></pre>
+
+<p>PHP5引入了析构函数的概念，这类似于其他面对对象的语言，如C++</p>
+<p>__destruct函数是对象被销毁的时候进行调用，通常PHP在程序块执行结束时进行垃圾回收，这将进行对象销毁，然后自动触发__destruct魔术方法</p>
+<ol start="3">
+<li>代码示例</li>
+</ol>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token function">highlight_file</span><span class="token punctuation">(</span><span class="token constant">__FILE__</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">class</span> <span class="token class-name-definition class-name">MyTestClass</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">function</span> <span class="token function-definition function">__construct</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">print</span> <span class="token string double-quoted-string">"In constructor&lt;br>"</span><span class="token punctuation">;</span>
+        <span class="token variable">$this</span><span class="token operator">-></span><span class="token property">name</span><span class="token operator">=</span><span class="token string double-quoted-string">"MyTestClass"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">function</span> <span class="token function-definition function">__destruct</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">print</span> <span class="token string double-quoted-string">"Destructing "</span> <span class="token operator">.</span><span class="token variable">$this</span><span class="token operator">-></span><span class="token property">name</span><span class="token operator">.</span><span class="token string double-quoted-string">"\n"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token variable">$obj</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MyTestClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token delimiter important">?></span></span>
+</code></pre>
+
+<img src="/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210801125655886.png" class="" loading="lazy">
+
+<p>创建MyTestClass类的新对象时，会调用__construct函数，输出In constructor</p>
+<p>对象被销毁时，会调用__destruct()函数，输出Destructing MyTestClass</p>
+<h3 id="sleep和-wakeup"><a href="#sleep和-wakeup" class="headerlink" title="__sleep和__wakeup"></a>__sleep和__wakeup</h3><ol>
+<li>__sleep</li>
+</ol>
+<p>serialize函数会检查类中是否存在__sleep函数，如果存在，该函数会先被调用，然后才执行序列化操作</p>
+<p>此功能可以用于清理对象，并返回一个包含对象中所有应被序列化的变量名称的数组</p>
+<p>如果该函数未返回任何内容，则NULL被序列化，并产生一个E_NOTICE级别的错误</p>
+<blockquote>
+<p>__sleep函数不能返回父类的私有成员的名字，这样做会产生一个E_NOTICE级别的错误，该函数可以用serializable接口来代替</p>
+<p>__sleep函数常用于提交未提交的数据或进行类似的清理操作</p>
+</blockquote>
+<ol start="2">
+<li>__wakeup</li>
+</ol>
+<p>unserialize函数会检查是否存在__wakeup函数，如果存在，则会先调用__wakeup函数，预先准备对象需要的资源</p>
+<p>__wakeup函数常用在反序列化操作中，例如，重新建立数据库连接或执行其他初始化操作</p>
+<ol start="3">
+<li>代码示例</li>
+</ol>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token function">highlight_file</span><span class="token punctuation">(</span><span class="token constant">__FILE__</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">class</span> <span class="token class-name-definition class-name">Foo</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">function</span> <span class="token function-definition function">aMemberFunc</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token variable">$this</span><span class="token operator">-></span><span class="token property">name</span><span class="token operator">=</span><span class="token string double-quoted-string">"aFuncName"</span><span class="token punctuation">;</span>
+        <span class="token keyword">print</span> <span class="token variable">$this</span><span class="token operator">-></span><span class="token property">name</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">function</span> <span class="token function-definition function">__wakeup</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>wakeup&lt;br>"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">function</span> <span class="token function-definition function">__sleep</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>sleep&lt;br>"</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token keyword">array</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'name'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token variable">$tr</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'O:3:"Foo":1:&#123;s:9:"aFuncName";s:11:"aMemberFunc";&#125;'</span><span class="token punctuation">;</span>
+<span class="token variable">$ttr</span> <span class="token operator">=</span> <span class="token function">unserialize</span><span class="token punctuation">(</span><span class="token variable">$tr</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">var_dump</span><span class="token punctuation">(</span><span class="token variable">$ttr</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token variable">$foo</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Foo</span><span class="token punctuation">;</span>
+<span class="token variable">$foo</span><span class="token operator">-></span><span class="token property">name</span><span class="token operator">=</span><span class="token string double-quoted-string">"abc"</span><span class="token punctuation">;</span>
+<span class="token variable">$tr</span><span class="token operator">=</span><span class="token function">serialize</span><span class="token punctuation">(</span><span class="token variable">$foo</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">print</span> <span class="token variable">$tr</span><span class="token punctuation">;</span>
+<span class="token delimiter important">?></span></span>
+</code></pre>
+
+<img src="/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210801140429171.png" class="" loading="lazy">
+
+<p>反序列化后，会自动调用__wakeup函数，输出wakeup</p>
+<p>序列化对象后，会自动调用__sleep函数，输出sleep</p>
+<h2 id="字符逃逸"><a href="#字符逃逸" class="headerlink" title="字符逃逸"></a>字符逃逸</h2><h3 id="过滤后增加字符"><a href="#过滤后增加字符" class="headerlink" title="过滤后增加字符"></a>过滤后增加字符</h3><pre class="language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token keyword">function</span> <span class="token function-definition function">change</span><span class="token punctuation">(</span><span class="token variable">$str</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> <span class="token function">str_replace</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"x"</span><span class="token punctuation">,</span><span class="token string double-quoted-string">"xx"</span><span class="token punctuation">,</span><span class="token variable">$str</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token variable">$a</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'a'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token variable">$b</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'flag'</span><span class="token punctuation">;</span>
+<span class="token variable">$arr</span> <span class="token operator">=</span> <span class="token keyword">array</span><span class="token punctuation">(</span><span class="token variable">$a</span><span class="token punctuation">,</span><span class="token variable">$b</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token variable">$old</span> <span class="token operator">=</span> <span class="token function">change</span><span class="token punctuation">(</span><span class="token function">serialize</span><span class="token punctuation">(</span><span class="token variable">$arr</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token variable">$new</span> <span class="token operator">=</span> <span class="token function">unserialize</span><span class="token punctuation">(</span><span class="token variable">$old</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>字符串："</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token function">var_dump</span><span class="token punctuation">(</span><span class="token variable">$arr</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>序列化字符串："</span><span class="token punctuation">;</span>
+<span class="token function">var_dump</span><span class="token punctuation">(</span><span class="token function">serialize</span><span class="token punctuation">(</span><span class="token variable">$arr</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>过滤后："</span><span class="token punctuation">;</span>
+<span class="token function">var_dump</span><span class="token punctuation">(</span><span class="token variable">$old</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>反序列化字符串："</span><span class="token punctuation">;</span>
+<span class="token function">var_dump</span><span class="token punctuation">(</span><span class="token variable">$new</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>逃逸前："</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token string single-quoted-string">'&lt;br>$arr[1]='</span><span class="token operator">.</span><span class="token variable">$arr</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>"</span><span class="token punctuation">;</span>
+
+<span class="token variable">$arr</span> <span class="token operator">=</span> <span class="token variable">$new</span><span class="token punctuation">;</span>
+
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>逃逸后："</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token string single-quoted-string">'&lt;br>$arr[1]='</span><span class="token operator">.</span><span class="token variable">$arr</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>"</span><span class="token punctuation">;</span>
+<span class="token delimiter important">?></span></span></code></pre>
+
+<p>传入<code>a=xxxxxxxxxxxxxxxxx&quot;;i:1;s:4:&quot;flag&quot;;&#125;</code></p>
+<img src="/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210803121403173.png" class="" loading="lazy">成功将wtf替换成flag
+
+<p>下面讲讲原理</p>
+<p>在字符串反序列化时，unserialize函数是依据字符串长度来判断字符串范围的，例如：</p>
+<img src="/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210803112616148.png" class="" title="image-20210803112616148" loading="lazy">
+
+<p>此字符串反序列化时，会将双引号内的34个字符视为数组的第一个元素</p>
+<p>如果双引号内字符不是对应的个数，那么反序列化就会返回false</p>
+<p>传入的<code>&quot;;i:1;s:3:&quot;wtf&quot;;&#125;</code>是17个字符，由于str_replace函数会将<code>x</code>替换成<code>xx</code>，17个<code>x</code>会变成34个<code>x</code>，多出来的17个<code>x</code>造成了<code>&quot;;i:1;s:3:&quot;wtf&quot;;&#125;</code>的溢出，而<code>&quot;</code>闭合了字符串，成功逃逸，可以被反序列化</p>
+<p>最后的<code>;&#125;</code>闭合反序列化全过程，导致原来的<code>&quot;;i:1;s:4:&quot;flag&quot;;&#125;&quot;</code>被截断，但不影响反序列化过程</p>
+<h3 id="过滤后减少字符"><a href="#过滤后减少字符" class="headerlink" title="过滤后减少字符"></a>过滤后减少字符</h3><pre class="language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token keyword">function</span> <span class="token function-definition function">change</span><span class="token punctuation">(</span><span class="token variable">$str</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> <span class="token function">str_replace</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"xx"</span><span class="token punctuation">,</span><span class="token string double-quoted-string">"x"</span><span class="token punctuation">,</span><span class="token variable">$str</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token variable">$a</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'a'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token variable">$s</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'wtf'</span><span class="token punctuation">;</span>
+<span class="token variable">$b</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'b'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token variable">$arr</span> <span class="token operator">=</span> <span class="token keyword">array</span><span class="token punctuation">(</span><span class="token variable">$a</span><span class="token punctuation">,</span><span class="token variable">$s</span><span class="token punctuation">,</span><span class="token variable">$b</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token variable">$old</span> <span class="token operator">=</span> <span class="token function">change</span><span class="token punctuation">(</span><span class="token function">serialize</span><span class="token punctuation">(</span><span class="token variable">$arr</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token variable">$new</span> <span class="token operator">=</span> <span class="token function">unserialize</span><span class="token punctuation">(</span><span class="token variable">$old</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>字符串："</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token function">var_dump</span><span class="token punctuation">(</span><span class="token variable">$arr</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>序列化字符串："</span><span class="token punctuation">;</span>
+<span class="token function">var_dump</span><span class="token punctuation">(</span><span class="token function">serialize</span><span class="token punctuation">(</span><span class="token variable">$arr</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>过滤后："</span><span class="token punctuation">;</span>
+<span class="token function">var_dump</span><span class="token punctuation">(</span><span class="token variable">$old</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>反序列化字符串："</span><span class="token punctuation">;</span>
+<span class="token function">var_dump</span><span class="token punctuation">(</span><span class="token variable">$new</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>"</span><span class="token punctuation">;</span>
+
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>逃逸前："</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token string single-quoted-string">'&lt;br>$arr[1]='</span><span class="token operator">.</span><span class="token variable">$arr</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>"</span><span class="token punctuation">;</span>
+
+<span class="token variable">$arr</span> <span class="token operator">=</span> <span class="token variable">$new</span><span class="token punctuation">;</span>
+
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>逃逸后："</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token string single-quoted-string">'&lt;br>$arr[1]='</span><span class="token operator">.</span><span class="token variable">$arr</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token string double-quoted-string">"&lt;br>"</span><span class="token punctuation">;</span>
+
+<span class="token delimiter important">?></span></span></code></pre>
+
+<p>传入<code>a=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx&amp;b=&quot;;i:1;s:4:&quot;flag&quot;;i:2;s:4:&quot;flag</code></p>
+<img src="/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210803121210850.png" class="" loading="lazy">
+
+<p>成功将wtf替换成flag</p>
+<p>原理跟上面差不多，这里就不多赘述了</p>
+<p>把它原有的字符_吃掉_，再换上我们需要的字符，每一个x都会_吃掉_一个字符</p>
+<h2 id="session反序列化"><a href="#session反序列化" class="headerlink" title="session反序列化"></a>session反序列化</h2><h3 id="SESSION变量直接可控"><a href="#SESSION变量直接可控" class="headerlink" title="$_SESSION变量直接可控"></a>$_SESSION变量直接可控</h3><p>php引擎的存储格式是<code>键名|serialized_string</code></p>
+<p>php_serialize引擎的存储格式是<code>serialized_string</code></p>
+<p>如果程序使用两个引擎来分别处理的话就会出现问题</p>
+<p>代码示例</p>
+<pre class="language-php" data-language="php"><code class="language-php">#1.php
+<span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">isset</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'a'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token function">ini_set</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'session.serialize_handler'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'php_serialize'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">session_start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token variable">$_SESSION</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'nayst'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'a'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token function">var_dump</span><span class="token punctuation">(</span><span class="token variable">$_SESSION</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token keyword">else</span><span class="token punctuation">&#123;</span>
+    <span class="token function">highlight_file</span><span class="token punctuation">(</span><span class="token constant">__FILE__</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token delimiter important">?></span></span>
+    
+#2.php
+<span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token function">ini_set</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'session.serialize_handler'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'php'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">session_start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">class</span> <span class="token class-name-definition class-name">test</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">public</span> <span class="token variable">$name</span><span class="token punctuation">;</span>
+    <span class="token keyword">function</span> <span class="token function-definition function">__wakeup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+        <span class="token keyword">echo</span> <span class="token variable">$this</span><span class="token operator">-></span><span class="token property">name</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token delimiter important">?></span></span></code></pre>
+
+<p>首先访问1.php，传入参数<code>a=|O:4:&quot;test&quot;:1:&#123;s:4:&quot;name&quot;;s:8:&quot;y4tacker&quot;;&#125;</code>再访问2.php</p>
+<img src="/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20210803163358423.png" class="" loading="lazy">
+
+<p>由于<code>1.php</code>是使用<code>php_serialize</code>引擎处理，因此只会把<code>&#39;|&#39;</code>当做一个正常的字符</p>
+<p>然后访问<code>2.php</code>，由于用的是<code>php</code>引擎，因此遇到<code>&#39;|&#39;</code>时会将之看做键名与值的分割符，从而造成了歧义，导致其在解析session文件时直接对<code>&#39;|&#39;</code>后的值进行反序列化处理</p>
+<h2 id="phar反序列化"><a href="#phar反序列化" class="headerlink" title="phar反序列化"></a>phar反序列化</h2><p>phar文件本质上是一种压缩文件，会以序列化的形式存储用户自定义的meta-data。当受影响的文件操作函数调用phar文件时，会自动反序列化meta-data内的内容。</p>
+</div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><span class="icon iconify" data-icon="ri:hand-coin-line"></span></span><div id="reward-comment">竟然有用？！赏！</div><div id="qr" style="display:none;"><div style="display:inline-block"><a href="/images/Alipay.png"><img loading="lazy" src="/images/Alipay.png" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><span class="icon iconify" data-icon="ri:alipay-line"></span></span></div></div><div style="display:inline-block"><a href="/images/WechatPay.png"><img loading="lazy" src="/images/WechatPay.png" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><span class="icon iconify" data-icon="ri:wechat-pay-line"></span></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>Nayst</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" title="反序列化">https://www.nayst.top/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2021/10/30/Vue/" rel="prev" title="Vue"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">Vue</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2021/08/30/SQL%E6%B3%A8%E5%85%A5/" rel="next" title="SQL注入"><span class="post-nav-text">SQL注入</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2021 – 2022 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> Nayst</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.6</span></div><div class="live-time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2021-07-01T18:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="https://fastly.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js"></script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div class="search-result-container"></div></div><script src="https://fastly.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script><script>const images = [...document.querySelectorAll('.markdown-body img')]
+mediumZoom(images)</script><style>.medium-zoom-image {
+  z-index: 99;
+}</style></body></html>

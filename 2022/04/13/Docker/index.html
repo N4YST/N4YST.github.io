@@ -1,0 +1,337 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Nayst"><meta name="copyright" content="Nayst"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>Docker从0到1 | Nayst-Blog</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.3.3/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/svg+xml" href="/images/Doge.svg"><link rel="mask-icon" href="/images/Doge.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"www.nayst.top","root":"/","title":["Nayst","的","小","站"],"version":"1.10.6","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"fireworks":{"colors":null},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><meta name="description" content="Docker - 介绍 Docker 是一个用_Go语言_实现的开源项目，可以让我们方便的创建和使用容器，docker将程序以及程序所有的依赖都打包到 docker container，这样你的程序可以在任何环境都会有一致的表现。 这里程序运行的依赖也就是容器就好比集装箱（相互独立），容器所处的操作系统环境就好比货船或港口，程序的表现只和集装箱有关系(容器)，和集装箱放在哪个货船或者哪个港口(操作">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker从0到1">
+<meta property="og:url" content="https://www.nayst.top/2022/04/13/Docker/index.html">
+<meta property="og:site_name" content="Nayst-Blog">
+<meta property="og:description" content="Docker - 介绍 Docker 是一个用_Go语言_实现的开源项目，可以让我们方便的创建和使用容器，docker将程序以及程序所有的依赖都打包到 docker container，这样你的程序可以在任何环境都会有一致的表现。 这里程序运行的依赖也就是容器就好比集装箱（相互独立），容器所处的操作系统环境就好比货船或港口，程序的表现只和集装箱有关系(容器)，和集装箱放在哪个货船或者哪个港口(操作">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-13T03:06:22.000Z">
+<meta property="article:modified_time" content="2022-07-31T08:45:48.608Z">
+<meta property="article:author" content="Nayst">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="环境">
+<meta name="twitter:card" content="summary"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Nayst"><img width="96" loading="lazy" src="/images/kakashi.png" alt="Nayst"><span class="site-author-status" title="努力做一个对社会有贡献的人">🤣</span></a><div class="site-author-name"><a href="/about/">Nayst</a></div><span class="site-name">Nayst-Blog</span><sub class="site-subtitle">远离舒适圈</sub><div class="site-description">已入江湖，未配良剑</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">17</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">4</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">6</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:settings-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" title="2495582918" target="_blank" style="color:#007722"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="y1049843745" target="_blank" style="color:#1AAD19"><span class="icon iconify" data-icon="ri:wechat-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/N4YST" title="GitHub" target="_blank" style="color:#6e5494"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/1579790" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/jizhideyunyoujun" title="微博" target="_blank" style="color:#E6162D"><span class="icon iconify" data-icon="ri:weibo-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=277777144" title="网易云音乐" target="_blank" style="color:#C20C0C"><span class="icon iconify" data-icon="ri:netease-cloud-music-line"></span></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><span class="icon iconify" data-icon="ri:genderless-line"></span></a><a class="links-item hty-icon-button" href="/girls/" title="我的老婆们" style="color:pink"><span class="icon iconify" data-icon="ri:women-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker-%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">Docker - 介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker-%E7%BB%84%E6%88%90"><span class="toc-number">2.</span> <span class="toc-text">Docker - 组成</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%95%9C%E5%83%8F%EF%BC%88image%EF%BC%89"><span class="toc-number">2.1.</span> <span class="toc-text">镜像（image）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%B9%E5%99%A8%EF%BC%88container%EF%BC%89"><span class="toc-number">2.2.</span> <span class="toc-text">容器（container）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%93%E5%BA%93%EF%BC%88repository%EF%BC%89"><span class="toc-number">2.3.</span> <span class="toc-text">仓库（repository）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker-%E5%AE%89%E8%A3%85"><span class="toc-number">3.</span> <span class="toc-text">Docker - 安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker-%E5%8D%B8%E8%BD%BD"><span class="toc-number">4.</span> <span class="toc-text">Docker - 卸载</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker-%E5%AE%B9%E5%99%A8%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B"><span class="toc-number">5.</span> <span class="toc-text">Docker - 容器运行流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker-%E5%91%BD%E4%BB%A4"><span class="toc-number">6.</span> <span class="toc-text">Docker - 命令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4"><span class="toc-number">6.1.</span> <span class="toc-text">基础命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%9C%AC%E5%9C%B0%E4%B8%BB%E6%9C%BA%E7%9A%84%E6%89%80%E6%9C%89%E9%95%9C%E5%83%8F"><span class="toc-number">6.2.</span> <span class="toc-text">查看本地主机的所有镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%90%9C%E7%B4%A2%E9%95%9C%E5%83%8F"><span class="toc-number">6.3.</span> <span class="toc-text">搜索镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E9%95%9C%E5%83%8F"><span class="toc-number">6.4.</span> <span class="toc-text">下载镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E4%BA%A4%E9%95%9C%E5%83%8F"><span class="toc-number">6.5.</span> <span class="toc-text">提交镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E9%95%9C%E5%83%8F"><span class="toc-number">6.6.</span> <span class="toc-text">删除镜像</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AE%B9%E5%99%A8"><span class="toc-number">6.7.</span> <span class="toc-text">创建容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%80%E5%87%BA%E5%AE%B9%E5%99%A8"><span class="toc-number">6.8.</span> <span class="toc-text">退出容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2%E5%AE%B9%E5%99%A8"><span class="toc-number">6.9.</span> <span class="toc-text">历史容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E5%AE%B9%E5%99%A8"><span class="toc-number">6.10.</span> <span class="toc-text">删除容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E5%92%8C%E5%81%9C%E6%AD%A2%E5%AE%B9%E5%99%A8"><span class="toc-number">6.11.</span> <span class="toc-text">启动和停止容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%AE%B9%E5%99%A8%E6%97%A5%E5%BF%97%E6%97%A5%E5%BF%97"><span class="toc-number">6.12.</span> <span class="toc-text">查看容器日志日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%AE%B9%E5%99%A8%E8%BF%9B%E7%A8%8B%E4%BF%A1%E6%81%AF"><span class="toc-number">6.13.</span> <span class="toc-text">查看容器进程信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%AE%B9%E5%99%A8%E5%85%83%E6%95%B0%E6%8D%AE"><span class="toc-number">6.14.</span> <span class="toc-text">查看容器元数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E5%85%A5%E5%90%8E%E5%8F%B0%E8%BF%90%E8%A1%8C%E7%9A%84%E5%AE%B9%E5%99%A8"><span class="toc-number">6.15.</span> <span class="toc-text">进入后台运行的容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6"><span class="toc-number">6.16.</span> <span class="toc-text">复制文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Docker-%E5%AE%9E%E4%BE%8B"><span class="toc-number">7.</span> <span class="toc-text">Docker - 实例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Portaniner"><span class="toc-number">8.</span> <span class="toc-text">Portaniner</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%8D%B7"><span class="toc-number">9.</span> <span class="toc-text">数据卷</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">10.</span> <span class="toc-text">参考</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.nayst.top/2022/04/13/Docker/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Nayst"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Nayst-Blog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Docker从0到1</h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2022-04-13 11:06:22" itemprop="dateCreated datePublished" datetime="2022-04-13T11:06:22+08:00">2022-04-13</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-07-31 16:45:48" itemprop="dateModified" datetime="2022-07-31T16:45:48+08:00">2022-07-31</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><span class="icon iconify" data-icon="ri:file-word-line"></span></span> <span title="本文字数">1.9k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><span class="icon iconify" data-icon="ri:timer-line"></span></span> <span title="阅读时长">7m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E5%89%8D%E5%90%8E%E7%AB%AF/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">前后端</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/%E7%AC%94%E8%AE%B0/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">笔记</span></a><a class="tag-item" href="/tags/%E7%8E%AF%E5%A2%83/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">环境</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h1 id="Docker-介绍"><a href="#Docker-介绍" class="headerlink" title="Docker - 介绍"></a>Docker - 介绍</h1><blockquote>
+<p><a target="_blank" rel="noopener" href="https://docs.docker.com/">Docker</a> 是一个用_Go语言_实现的开源项目，可以让我们方便的创建和使用容器，docker将程序以及程序所有的依赖都打包到 docker container，这样你的程序可以在任何环境都会有一致的表现。</p>
+<p>这里程序运行的依赖也就是容器就好比集装箱（相互独立），容器所处的操作系统环境就好比货船或港口，<strong>程序的表现只和集装箱有关系(容器)，和集装箱放在哪个货船或者哪个港口(操作系统)没有关系</strong>。</p>
+</blockquote>
+<p>因此我们可以看到 Docker 可以屏蔽环境差异，也就是说，只要你的程序打包到了 Docker 中，那么无论运行在什么环境下程序的行为都是一致的。</p>
+<p>Docker从 17.03 版本之后分为 CE（Community Edition: 社区版） 和 EE（Enterprise Edition: 企业版），我们用社区版就可以了。</p>
+<p>Docker 的优势就是<strong>快速部署</strong>，这是当前互联网公司最常见的一个应用场景，一个原因在于容器启动速度非常快，另一个原因在于只要确保一个容器中的程序正确运行，那么你就能确信无论在生产环境部署多少都能正确运行。</p>
+<h1 id="Docker-组成"><a href="#Docker-组成" class="headerlink" title="Docker - 组成"></a>Docker - 组成</h1>
+
+<h2 id="镜像（image）"><a href="#镜像（image）" class="headerlink" title="镜像（image）"></a>镜像（image）</h2><p>Docker 的镜像好比为一个_模板_，可以通过这个模板来创建容器服务，例如：Tomcat 镜像 &#x3D;&#x3D;&#x3D;&gt; run &#x3D;&#x3D;&gt; Tomcat1 容器（提供服务器），通过一个镜像可以创建很多容器。</p>
+<h2 id="容器（container）"><a href="#容器（container）" class="headerlink" title="容器（container）"></a>容器（container）</h2><p>Docker 利用容器技术，独立运行一个或者一个组应用，通过镜像来创建的。</p>
+<p>可以理解为一个简易的 linux 系统。</p>
+<h2 id="仓库（repository）"><a href="#仓库（repository）" class="headerlink" title="仓库（repository）"></a>仓库（repository）</h2><p>仓库就是存放镜像的地方。</p>
+<p>官方仓库：<a target="_blank" rel="noopener" href="https://hub.docker.com/">Docker Hub</a></p>
+<h1 id="Docker-安装"><a href="#Docker-安装" class="headerlink" title="Docker - 安装"></a>Docker - 安装</h1><p>在安装之前先检查系统版本是否符合<a target="_blank" rel="noopener" href="https://docs.docker.com/engine/install/">官网文档</a>的要求。</p>
+
+
+<ol>
+<li><p>查看系统内核版本</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">uname</span> -r</code></pre>
+
+
+</li>
+<li><p>查看系统配置</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">cat</span> /etc/os-release</code></pre>
+
+
+</li>
+<li><p>卸载旧版本</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">apt-get</span> remove <span class="token function">docker</span> docker-engine docker.io containerd runc</code></pre>
+</li>
+<li><p>更新<code>apt</code>包索引并安装包以允许<code>apt</code>通过 HTTPS 使用存储库</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">apt-get</span> update
+$ <span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> <span class="token punctuation">\</span>
+    ca-certificates <span class="token punctuation">\</span>
+    <span class="token function">curl</span> <span class="token punctuation">\</span>
+    gnupg <span class="token punctuation">\</span>
+    lsb-release</code></pre>
+</li>
+<li><p>添加官方的GPG秘钥</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">curl</span> -fsSL https://download.docker.com/linux/ubuntu/gpg <span class="token operator">|</span> <span class="token function">sudo</span> gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg</code></pre>
+</li>
+<li><p>设置<strong>稳定</strong>存储库</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token builtin class-name">echo</span> <span class="token punctuation">\</span>
+  <span class="token string">"deb [arch=<span class="token variable"><span class="token variable">$(</span>dpkg --print-architecture<span class="token variable">)</span></span> signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  <span class="token variable"><span class="token variable">$(</span>lsb_release -cs<span class="token variable">)</span></span> stable"</span> <span class="token operator">|</span> <span class="token function">sudo</span> <span class="token function">tee</span> /etc/apt/sources.list.d/docker.list <span class="token operator">></span> /dev/null</code></pre>
+</li>
+<li><p>安装 Docker 引擎</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">apt-get</span> update
+$ <span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> docker-ce docker-ce-cli containerd.io</code></pre>
+</li>
+<li><p>测试</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 启动 docker</span>
+$ systemctl start <span class="token function">docker</span>
+<span class="token comment"># 查看当前版本号</span>
+$ <span class="token function">docker</span> version</code></pre>
+
+<p>出现版本号则表示安装成功。</p>
+</li>
+</ol>
+<h1 id="Docker-卸载"><a href="#Docker-卸载" class="headerlink" title="Docker - 卸载"></a>Docker - 卸载</h1><ol>
+<li><p>卸载依赖</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">apt-get</span> remove <span class="token function">docker</span> docker-engine docker.io containerd runc</code></pre>
+</li>
+<li><p>卸载资源</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">sudo</span> <span class="token function">rm</span> -rf /var/lib/docker</code></pre></li>
+</ol>
+<h1 id="Docker-容器运行流程"><a href="#Docker-容器运行流程" class="headerlink" title="Docker - 容器运行流程"></a>Docker - 容器运行流程</h1><p>当执行<code>docker run 容器名</code>命令时的运行流程：</p>
+
+
+<h1 id="Docker-命令"><a href="#Docker-命令" class="headerlink" title="Docker - 命令"></a>Docker - 命令</h1><p>操作 Docker 的常用命令，可以参考<a target="_blank" rel="noopener" href="https://docs.docker.com/engine/reference/commandline/docker/">官方文档</a></p>
+<h2 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h2><pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> version          <span class="token comment">#查看docker的版本信息</span>
+$ <span class="token function">docker</span> info             <span class="token comment">#查看docker的系统信息,包括镜像和容器的数量</span>
+$ <span class="token function">docker</span> 命令 --help       <span class="token comment">#帮助命令(可查看可选的参数)</span></code></pre>
+
+<h2 id="查看本地主机的所有镜像"><a href="#查看本地主机的所有镜像" class="headerlink" title="查看本地主机的所有镜像"></a>查看本地主机的所有镜像</h2><pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> images		<span class="token comment"># 查看本地主机的所有镜像</span></code></pre>
+
+
+
+<p><em>各字段含义</em></p>
+<table>
+<thead>
+<tr>
+<th align="center">字段</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">REPOSITORY</td>
+<td align="center">镜像的仓库源</td>
+</tr>
+<tr>
+<td align="center">TAG</td>
+<td align="center">镜像的标签</td>
+</tr>
+<tr>
+<td align="center">IMAGE ID</td>
+<td align="center">镜像的id</td>
+</tr>
+<tr>
+<td align="center">CREATED</td>
+<td align="center">镜像的创建时间</td>
+</tr>
+<tr>
+<td align="center">SIZE</td>
+<td align="center">镜像的大小</td>
+</tr>
+</tbody></table>
+<p><em>可选参数</em></p>
+<p>-a&#x2F;–all 列出所有镜像</p>
+<p>-q&#x2F;–quiet 只显示镜像的id</p>
+<h2 id="搜索镜像"><a href="#搜索镜像" class="headerlink" title="搜索镜像"></a>搜索镜像</h2><pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> search 关键字		<span class="token comment"># 搜索镜像</span></code></pre>
+
+
+
+<p><em>可选参数</em></p>
+<p>-f, –filter filter Filter output based on conditions provided<br>–format string Pretty-print search using a Go template<br>–limit int Max number of search results (default 25)<br>–no-trunc Don’t truncate output</p>
+<h2 id="下载镜像"><a href="#下载镜像" class="headerlink" title="下载镜像"></a>下载镜像</h2><pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> pull 镜像名<span class="token punctuation">[</span>:tag<span class="token punctuation">]</span> 	<span class="token comment"># 下载镜像，未标注 tag 时默认为最新版本</span>
+
+$ <span class="token function">docker</span> pull mysql:5.7		  <span class="token comment"># 下载 mysql 5.7</span></code></pre>
+
+
+
+<h2 id="提交镜像"><a href="#提交镜像" class="headerlink" title="提交镜像"></a>提交镜像</h2><p>下载镜像版本，加入我们需要的内容，提交后就可以直接使用修改后的版本。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> commit -m<span class="token operator">=</span><span class="token string">"提交的信息"</span> -a<span class="token operator">=</span><span class="token string">"作者"</span> 容器id 目标镜像名:<span class="token punctuation">[</span>TAG<span class="token punctuation">]</span></code></pre>
+
+
+
+<h2 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h2><pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> rmi -f 镜像id （镜像id 镜像id      <span class="token comment"># 根据镜像id删除一个或多个镜像</span>
+$ <span class="token function">docker</span> rmi -f <span class="token variable"><span class="token variable">$(</span><span class="token function">docker</span> images -aq<span class="token variable">)</span></span>	 <span class="token comment"># 删除所有镜像</span></code></pre>
+
+
+
+<h2 id="创建容器"><a href="#创建容器" class="headerlink" title="创建容器"></a>创建容器</h2><pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> pull centos 	<span class="token comment"># 拉取 centos 镜像</span>
+$ <span class="token function">docker</span> run <span class="token punctuation">[</span>可选参数<span class="token punctuation">]</span> 镜像名 	<span class="token comment"># 创建并运行容器</span>
+
+<span class="token comment"># 参数说明</span>
+--name<span class="token operator">=</span><span class="token string">"名字"</span>          <span class="token comment"># 指定容器名字</span>
+-d                    <span class="token comment"># 后台方式运行</span>
+-it                   <span class="token comment"># 使用交互方式运行,进入容器查看内容</span>
+-p                    <span class="token comment"># 指定容器的端口</span>
+	-p ip:主机端口:容器端口		<span class="token comment"># 配置主机端口映射到容器端口</span>
+	-p 主机端口:容器端口
+	-p 容器端口
+-P                    <span class="token comment"># 随机指定端口(大写的P)</span></code></pre>
+
+
+
+<h2 id="退出容器"><a href="#退出容器" class="headerlink" title="退出容器"></a>退出容器</h2><pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token builtin class-name">exit</span> 		<span class="token comment"># 停止并退出当前容器</span></code></pre>
+
+<p><code>Ctrl</code> + <code>P</code> + <code>Q</code>：退出但不停止当前容器</p>
+<h2 id="历史容器"><a href="#历史容器" class="headerlink" title="历史容器"></a>历史容器</h2><pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> <span class="token function">ps</span> 	<span class="token comment"># 列出当前正在运行的容器</span>
+-a   			<span class="token comment"># 列出所有容器的运行记录</span>
+-n<span class="token operator">=</span>? 			<span class="token comment"># 显示最近创建的?个容器</span>
+-q   			<span class="token comment"># 只显示容器的编号</span></code></pre>
+
+
+
+<h2 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h2><pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> <span class="token function">rm</span> 容器id 	<span class="token comment"># 根据容器id删除容器，不能删除正在运行的容器，强制删除加入 -f 参数</span>
+$ <span class="token function">docker</span> <span class="token function">rm</span> -f <span class="token variable"><span class="token variable">$(</span><span class="token function">docker</span> <span class="token function">ps</span> -aq<span class="token variable">)</span></span>   	<span class="token comment"># 删除所有的容器</span>
+$ <span class="token function">docker</span> <span class="token function">ps</span> -a -q<span class="token operator">|</span><span class="token function">xargs</span> <span class="token function">docker</span> <span class="token function">rm</span> 	<span class="token comment"># 删除所有的容器</span></code></pre>
+
+<h2 id="启动和停止容器"><a href="#启动和停止容器" class="headerlink" title="启动和停止容器"></a>启动和停止容器</h2><pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> start 容器id          <span class="token comment"># 启动容器</span>
+$ <span class="token function">docker</span> restart 容器id        <span class="token comment"># 重启容器</span>
+$ <span class="token function">docker</span> stop 容器id           <span class="token comment"># 停止当前运行的容器</span>
+$ <span class="token function">docker</span> <span class="token function">kill</span> 容器id           <span class="token comment"># 强制停止当前容器</span></code></pre>
+
+<h2 id="查看容器日志日志"><a href="#查看容器日志日志" class="headerlink" title="查看容器日志日志"></a>查看容器日志日志</h2><pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> logs -tf 容器id				<span class="token comment"># 动态显示容器完整日志</span>
+$ <span class="token function">docker</span> logs --tail number 容器id 	<span class="token comment"># 显示最后number条日志</span></code></pre>
+
+
+
+<h2 id="查看容器进程信息"><a href="#查看容器进程信息" class="headerlink" title="查看容器进程信息"></a>查看容器进程信息</h2><pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> <span class="token function">top</span> 容器id</code></pre>
+
+
+
+<h2 id="查看容器元数据"><a href="#查看容器元数据" class="headerlink" title="查看容器元数据"></a>查看容器元数据</h2><pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> inspect 容器id</code></pre>
+
+
+
+<h2 id="进入后台运行的容器"><a href="#进入后台运行的容器" class="headerlink" title="进入后台运行的容器"></a>进入后台运行的容器</h2><pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> <span class="token builtin class-name">exec</span> -it 容器id 终端		<span class="token comment"># 进入容器后开启一个新的终端</span>
+$ <span class="token function">docker</span> attach 容器id			 <span class="token comment"># 进入容器正在运行的终端，不会启动新的进程</span></code></pre>
+
+<h2 id="复制文件"><a href="#复制文件" class="headerlink" title="复制文件"></a>复制文件</h2><pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> <span class="token function">cp</span> 容器id:容器内路径  目的主机路径		<span class="token comment"># 拷贝容器的文件到主机中</span>
+$ <span class="token function">docker</span> <span class="token function">cp</span> 目的主机路径 容器id:容器内路径		<span class="token comment"># 拷贝宿主机的文件到容器中</span></code></pre>
+
+<h1 id="Docker-实例"><a href="#Docker-实例" class="headerlink" title="Docker - 实例"></a>Docker - 实例</h1><p>关于端口暴露</p>
+
+
+<ol>
+<li><p>Nginx</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> search nginx
+$ <span class="token function">docker</span> pull nginx
+$ <span class="token function">docker</span> run -d --name nginx01 -p <span class="token number">1234</span>:80 nginx
+
+	-d 后台运行
+	--name 给容器命名
+	-p <span class="token number">1234</span>:80 将宿主机的1234端口映射到该容器的80端口</code></pre>
+
+
+</li>
+<li><p>Tomcat</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> search tomcat
+$ <span class="token function">docker</span> pull tomcat
+$ <span class="token function">docker</span> run -d --name myTomcat -p <span class="token number">2234</span>:8080 tomcat
+
+	-d 后台运行
+	--name 给容器命名
+	-p <span class="token number">2234</span>:80 将宿主机的2234端口映射到该容器的8080端口</code></pre>
+
+
+
+<p>404 的原因是<code>webapps</code>无项目</p>
+
+
+<p>初始项目在<code>webapps.dist</code>下，把整个目录复制到<code>webapps</code>下</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">cp</span> -r webapps.dist/* webapps</code></pre>
+
+
+</li>
+<li><p>MySQL</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> search mysql
+$ <span class="token function">docker</span> pull mysql
+$ <span class="token function">docker</span> run -d -p <span class="token number">3310</span>:3306 -v /home/mysql/conf:/etc/mysql/conf.d -v /home/mysql/data:/var/lib/mysql -e <span class="token assign-left variable">MYSQL_ROOT_PASSWORD</span><span class="token operator">=</span><span class="token number">123456</span> --name mysql01 mysql</code></pre>
+
+<p>成功连接数据库</p>
+
+
+<p>成功映射数据</p>
+
+
+<p>映射后，即便容器被删数据依旧存在</p>
+</li>
+</ol>
+<h1 id="Portaniner"><a href="#Portaniner" class="headerlink" title="Portaniner"></a>Portaniner</h1><p>Portaniner 是 Docker 的图形化管理工具，类似的工具还有 Rancher</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> run -d -p <span class="token number">3234</span>:9000 --name myPort --restart<span class="token operator">=</span>always -v /var/run/docker.sock:/var/run/docker.sock --privileged<span class="token operator">=</span>true portainer/portainer</code></pre>
+
+<p>注册账号</p>
+
+
+<p>选择本地</p>
+
+
+<p>创建成功</p>
+
+
+<h1 id="数据卷"><a href="#数据卷" class="headerlink" title="数据卷"></a>数据卷</h1><p>作用：<strong>把容器内的数据挂载到主机</strong></p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">docker</span> run -it -v 主机地址:容器地址 centos /bin/bash		<span class="token comment"># 将容器地址映射到主机</span>
+$ <span class="token function">docker</span> inspect 容器id		<span class="token comment"># 查看映射情况</span></code></pre>
+
+<p>映射成功</p>
+
+
+<p>数据卷内容为<strong>双向绑定</strong>，不会占用双倍存储，可以参考C语言中指针的定义理解。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/187505981">什么是Docker？看这一篇干货文章就够了！</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/huangjhai/article/details/118854733">Docker快速入门总结笔记</a></p>
+</div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><span class="icon iconify" data-icon="ri:hand-coin-line"></span></span><div id="reward-comment">竟然有用？！赏！</div><div id="qr" style="display:none;"><div style="display:inline-block"><a href="/images/Alipay.png"><img loading="lazy" src="/images/Alipay.png" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><span class="icon iconify" data-icon="ri:alipay-line"></span></span></div></div><div style="display:inline-block"><a href="/images/WechatPay.png"><img loading="lazy" src="/images/WechatPay.png" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><span class="icon iconify" data-icon="ri:wechat-pay-line"></span></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>Nayst</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.nayst.top/2022/04/13/Docker/" title="Docker从0到1">https://www.nayst.top/2022/04/13/Docker/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2022/04/20/VulnHub-DC-5/" rel="prev" title="VulnHub-DC-5"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">VulnHub-DC-5</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/04/10/VulnHub-DC-4/" rel="next" title="VulnHub-DC-4"><span class="post-nav-text">VulnHub-DC-4</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2021 – 2022 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> Nayst</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.6</span></div><div class="live-time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2021-07-01T18:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="https://fastly.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js"></script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div class="search-result-container"></div></div><script src="https://fastly.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script><script>const images = [...document.querySelectorAll('.markdown-body img')]
+mediumZoom(images)</script><style>.medium-zoom-image {
+  z-index: 99;
+}</style></body></html>
