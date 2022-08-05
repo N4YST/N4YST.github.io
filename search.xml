@@ -2079,6 +2079,7 @@ $ <span class="token function">docker</span> inspect 容器id		<span class="toke
       </categories>
       <tags>
         <tag>ctf</tag>
+        <tag>php</tag>
       </tags>
   </entry>
   <entry>
@@ -5458,7 +5459,7 @@ SELECT &#39;&lt;?php phpinfo();?&gt;&#39;;					# 写马</code></pre>
       </tags>
   </entry>
   <entry>
-    <title>反序列化</title>
+    <title>反序列化-PHP</title>
     <url>/2021/09/17/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</url>
     <content><![CDATA[<h1 id="序列化与反序列化"><a href="#序列化与反序列化" class="headerlink" title="序列化与反序列化"></a>序列化与反序列化</h1><p>为了有效地存储或传递数据，同时不丢失其类型和结构，经常需要利用序列化和反序列化函数对数据进行处理</p>
 <p>序列化函数返回字符串，此字符串包含了表示值的字节流，可以存储于任何地方</p>
@@ -5777,6 +5778,7 @@ __invoke() &#x2F;&#x2F;当尝试将对象调用为函数时触发</code></pre>
       <tags>
         <tag>ctf</tag>
         <tag>web漏洞</tag>
+        <tag>php</tag>
       </tags>
   </entry>
   <entry>
@@ -6131,7 +6133,7 @@ $ <span class="token function">find</span> ./ -name nayst -exec <span class="tok
       </tags>
   </entry>
   <entry>
-    <title>命令执行</title>
+    <title>命令执行-PHP</title>
     <url>/2021/07/17/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/</url>
     <content><![CDATA[<h1 id="什么是命令执行漏洞"><a href="#什么是命令执行漏洞" class="headerlink" title="什么是命令执行漏洞"></a>什么是命令执行漏洞</h1><p>命令执行漏洞，就是指用户通过浏览器或其他辅助程序提交执行命令，由于服务器端没有针对执行函数做过滤，导致在没有指定绝对路径的情况下就执行命令。</p>
 <p>用户可以在命令执行函数内直接调用<strong>操作系统命令</strong>。</p>
@@ -6572,10 +6574,11 @@ $ <span class="token function">find</span> ./ -name nayst -exec <span class="tok
       <tags>
         <tag>ctf</tag>
         <tag>web漏洞</tag>
+        <tag>php</tag>
       </tags>
   </entry>
   <entry>
-    <title>文件包含</title>
+    <title>文件包含-PHP</title>
     <url>/2021/07/20/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB/</url>
     <content><![CDATA[<h1 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h1><h2 id="什么是文件包含"><a href="#什么是文件包含" class="headerlink" title="什么是文件包含"></a>什么是文件包含</h2><blockquote>
 <p>和sql注入攻击方式类似，文件包含本质上就是输入一段用户能够控制的脚本或者代码，并让服务器执行。</p>
@@ -6821,6 +6824,84 @@ $ <span class="token function">find</span> ./ -name nayst -exec <span class="tok
       <tags>
         <tag>ctf</tag>
         <tag>web漏洞</tag>
+        <tag>php</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>正则表达式</title>
+    <url>/2022/08/05/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/</url>
+    <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p><em>正则表达式</em>(regular expression)描述了一种字符串匹配的模式（pattern），常见于匹配子串。</p>
+<p>基本语法为：</p>
+<pre class="language-none"><code class="language-none">&#x2F;pattern&#x2F;flags</code></pre>
+
+<p>这在各种语言中都有出现，比如PHP中的正则函数<code>grep_match</code>就是用来匹配字符串。</p>
+<p>当然不仅仅局限于编程语言当中，他可以出现在任何需要匹配字符子串的场景中，比如处理文档时检索某个内容：</p>
+<ul>
+<li><p>检索当前文件中的变量</p>
+<img src="/2022/08/05/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220805222331828.png" class="" loading="lazy"></li>
+</ul>
+<p>巧妙的使用正则匹配可以大幅提升工作效率。</p>
+<h1 id="基础用法"><a href="#基础用法" class="headerlink" title="基础用法"></a>基础用法</h1><ol>
+<li><p>直接在<code>/</code>中输入想要匹配的内容，最基本的用法，只能匹配到一模一样的字符串，跟搜索没有区别。</p>
+<img src="/2022/08/05/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220805222829510.png" class="" loading="lazy">
+</li>
+<li><p><code>[abc]</code>：括号意为可选项，即匹配<code>[...]</code>中所有字符的其中一个。</p>
+<img src="/2022/08/05/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220805200436292.png" class="" loading="lazy">
+</li>
+<li><p><code>[a-z]</code>：表示一个区间，匹配区间内的所有字符，包括边界。</p>
+<img src="/2022/08/05/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220805200520343.png" class="" loading="lazy"></li>
+</ol>
+<h1 id="修饰符"><a href="#修饰符" class="headerlink" title="修饰符"></a>修饰符</h1><p>标记也称为修饰符，正则表达式的标记用于指定额外的匹配策略。</p>
+<ol>
+<li><p><code>i</code>：ignore - 不区分大小写。</p>
+<img src="/2022/08/05/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220806012733414.png" class="" loading="lazy">
+</li>
+<li><p><code>g</code>：global - 全局匹配。查找所有的匹配项。</p>
+<img src="/2022/08/05/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220806012805337.png" class="" title="image-20220806012805337" loading="lazy">
+</li>
+<li><p><code>m</code>：multi line - 多行匹配。使边界字符 <strong>^</strong> 和 <strong>$</strong> 匹配每一行的开头和结尾，记住是多行，而不是整个字符串的开头和结尾。</p>
+<img src="/2022/08/05/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220806013312632.png" class="" loading="lazy">
+</li>
+<li><p><code>s</code>：特殊字符圆点 <strong>.</strong> 中包含换行符 <strong>\n</strong>。</p>
+<img src="/2022/08/05/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220806013422770.png" class="" loading="lazy"></li>
+</ol>
+<h1 id="特殊的字符集"><a href="#特殊的字符集" class="headerlink" title="特殊的字符集"></a>特殊的字符集</h1><p>有些字符可以代表一些常用的字符集。通常大写与小写的集合是完全相对立的。</p>
+<ol>
+<li><p><code>\w</code>&#x2F;<code>\W</code>：小写<code>w</code>匹配字母、数字、下划线，等价于 <code>[A-Za-z0-9_]</code>。大写则相反。</p>
+<img src="/2022/08/05/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220805224603872.png" class="" loading="lazy">
+</li>
+<li><p><code>\s</code>&#x2F;<code>\S</code>：匹配任何空白字符，包括空格、制表符、换页符等等。等价于 <code>[ \f\n\r\t\v]</code>。大写则相反。</p>
+<img src="/2022/08/05/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220805230219729.png" class="" loading="lazy">
+</li>
+<li><p><code>\d</code>&#x2F;<code>\D</code>：匹配一个数字字符。等价于 [0-9]。大写则相反。</p>
+<img src="/2022/08/05/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220805230310445.png" class="" loading="lazy">
+</li>
+<li><p><code>\b</code>&#x2F;<code>\B</code>：匹配一个单词边界，也就是指单词和空格间的位置。例如，<code>er\b</code>可以匹配<strong>never</strong>中的<strong>er</strong>，但不能匹配<strong>verb</strong>中的 <strong>er</strong>。大写则相反。</p>
+<img src="/2022/08/05/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/image-20220806010503317.png" class="" loading="lazy"></li>
+</ol>
+<h1 id="特殊的符号"><a href="#特殊的符号" class="headerlink" title="特殊的符号"></a>特殊的符号</h1><p>符号在正则中也有一些特殊的含义。</p>
+<ol>
+<li><code>\</code>：转义符。</li>
+<li><code>^</code>：匹配输入字符串的开始位置。在<code>[]</code>中则为取反。</li>
+<li><code>$</code>：匹配输入字符串的结束位置。</li>
+<li><code>*</code>：匹配前面的子表达式0或n次。</li>
+<li><code>+</code>：匹配前面的子表达式1或n次。</li>
+<li><code>?</code>：匹配前面的子表达式0或1次。</li>
+<li><code>&#123;n&#125;</code>：n 是一个非负整数。匹配确定的 n 次。例如：<code>a&#123;2&#125;</code>&#x3D;匹配2个a、<code>a&#123;2,&#125;</code>&#x3D;匹配2个以上的a、<code>a&#123;2,4&#125;</code>&#x3D;匹配2-4个a。</li>
+<li><code>.</code>：匹配除换行符（\n、\r）之外的任何单个字符。</li>
+<li><code>x|y</code>：匹配 x 或 y。</li>
+<li><code>\f</code>：匹配一个换页符。</li>
+<li><code>\n</code>：匹配一个换行符。</li>
+<li><code>\r</code>：匹配一个回车符。</li>
+<li><code>\t</code>：匹配一个制表符。</li>
+<li><code>\v</code>：匹配一个垂直制表符。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>语法</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
       </tags>
   </entry>
 </search>
